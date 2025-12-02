@@ -1,0 +1,580 @@
+/* CSS Variables & Global Styles (Dark Theme with Neumorphism) */
+:root {
+  --color-primary: #ff014f; /* Bright Pink accent */
+  --color-light: #c4c4c4; /* Light gray text */
+  --color-dark: #212428; /* Main Background Dark (Base) */
+  --color-dark-alt: #24262b; /* Card background */
+  --color-text-gradient-start: #ff014f;
+  --color-text-gradient-end: #d10078;
+
+  /* NEUMORPHISM SHADOWS (The 'bulky' look) */
+  --shadow-dark: 10px 10px 19px #1c1e22, -10px -10px 19px #262a2e;
+  --shadow-lift: 5px 5px 15px rgba(0, 0, 0, 0.5),
+    -5px -5px 15px rgba(40, 40, 40, 0.3); /* Lighter shadow for hover */
+  --shadow-inset-active: inset 3px 3px 5px #1c1e22, inset -3px -3px 5px #262a2e; /* Pressed button/social icon */
+
+  --font-family: "Poppins", sans-serif;
+  --transition-speed: 0.4s;
+}
+
+/* Basic Reset & Typography */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: var(--font-family); /* Default to Poppins */
+}
+
+body {
+  background-color: var(--color-dark);
+  color: var(--color-light);
+  line-height: 1.6;
+  scroll-behavior: smooth;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  color: white;
+  line-height: 1.2;
+  font-family: var(--font-heading); /* Montserrat */
+}
+
+a {
+  text-decoration: none;
+  color: var(--color-light);
+  /* Smooth Transition */
+  transition: color var(--transition-speed) ease;
+}
+
+a:hover {
+  color: var(--color-primary);
+}
+
+ul {
+  list-style: none;
+}
+
+/* Utility Classes */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 15px 30px;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  border-radius: 6px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  background: transparent;
+  transition: all var(--transition-speed) ease-in-out;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: var(--color-primary);
+  color: white;
+  box-shadow: 0 5px 15px rgba(255, 1, 79, 0.5);
+}
+
+/* --- Header/Navigation --- */
+.header {
+  position: fixed;
+  width: 100%;
+  background-color: var(--color-dark);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+}
+
+/* Logo Container Styling (Includes Avatar) */
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo a {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-left: 10px; /* Space from avatar */
+}
+
+.profile-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+  overflow: hidden;
+  box-shadow: var(--shadow-dark);
+}
+
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.nav-links li {
+  display: inline-block;
+  margin-left: 30px;
+}
+
+/* --- Hero Section & Image Styling (Soft UI) --- */
+.hero {
+  padding: 150px 0 100px;
+  display: flex;
+  align-items: center;
+  min-height: 100vh;
+}
+.hero-content {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 50px;
+  align-items: center;
+}
+
+.hero-text h4 {
+  color: var(--color-light);
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.hero-text h1 {
+  font-size: 64px;
+  margin-bottom: 20px;
+}
+
+.hero-text .role-text {
+  color: var(--color-primary);
+}
+
+.hero-text p {
+  font-size: 18px;
+  margin-bottom: 40px;
+}
+
+.social-icons a {
+  display: inline-flex;
+  width: 50px;
+  height: 50px;
+  background-color: var(--color-dark-alt);
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  margin-right: 15px;
+  /* Applying Soft UI Shadows */
+  box-shadow: var(--shadow-dark);
+  transition: all var(--transition-speed) ease;
+}
+
+.social-icons a:hover {
+  color: var(--color-primary);
+  /* Simulating the "pressed" state (inset shadow) */
+  box-shadow: var(--shadow-inset-active);
+  transform: scale(0.95);
+}
+
+/* Hero Image Container (Replacing Video) */
+.hero-image {
+  background-color: var(--color-dark-alt); /* Background for the image box */
+  padding: 20px; /* Padding inside the shadow box */
+  border-radius: 10px;
+  box-shadow: var(--shadow-dark);
+  text-align: center;
+}
+
+.hero-image img {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  border-radius: 10px;
+  object-fit: cover;
+  /* Remove shadow on the image itself, let container handle it */
+  box-shadow: none;
+  display: block;
+  margin: 0 auto;
+}
+/* --- Global Section Styling --- */
+.section {
+  padding: 100px 0;
+}
+
+.section-title {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.section-title h4 {
+  color: var(--color-primary);
+  font-size: 18px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.section-title h2 {
+  font-size: 48px;
+}
+
+/* --- Service Card Styling (Soft UI with new hover) --- */
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+.service-card {
+  background-color: var(--color-dark-alt);
+  padding: 40px;
+  border-radius: 10px;
+  text-align: left;
+  cursor: pointer;
+  /* Applying Soft UI Shadows (Bulky Look) */
+  box-shadow: var(--shadow-dark);
+  transition: all var(--transition-speed) ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.service-card:hover {
+  background-color: var(--color-dark-alt);
+  box-shadow: var(--shadow-lift);
+  transform: translateY(-5px);
+}
+
+.service-card .icon-img {
+  width: 60px;
+  height: 60px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  filter: grayscale(100%);
+  transition: filter var(--transition-speed) ease;
+}
+
+.service-card:hover .icon-img {
+  filter: grayscale(0%);
+}
+
+.service-card h3 {
+  margin-bottom: 15px;
+  font-size: 24px;
+}
+
+.service-card p {
+  margin-bottom: 30px;
+  color: var(--color-light);
+  font-size: 16px;
+}
+
+.service-card .arrow-icon {
+  position: absolute;
+  bottom: 40px;
+  right: 40px;
+  font-size: 24px;
+  color: var(--color-primary);
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: opacity var(--transition-speed) ease,
+    transform var(--transition-speed) ease;
+}
+
+.service-card:hover .arrow-icon {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* --- Portfolio Styling --- */
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 30px;
+}
+
+.portfolio-item {
+  background-color: var(--color-dark-alt);
+  padding: 25px;
+  border-radius: 10px;
+  text-align: left;
+  /* Applying Soft UI Shadows (Bulky Look) */
+  box-shadow: var(--shadow-dark);
+  transition: all var(--transition-speed) ease;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.portfolio-item:hover {
+  /* Light lifting effect on hover */
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lift); /* Lighter, lifting shadow */
+}
+
+.portfolio-image {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.portfolio-image img {
+  width: 100%;
+  height: 250px;
+  display: block;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.portfolio-item:hover .portfolio-image img {
+  transform: scale(1.05);
+}
+
+/* =================================== */
+/* --- 4. Resume Section Styling ---   */
+/* =================================== */
+.resume-tabs {
+  max-width: 800px;
+  margin: 0 auto 50px;
+  display: flex;
+  justify-content: space-around;
+  background-color: var(--color-dark-alt); /* This is the "plate" */
+  padding: 3px; /* Minimal padding on the container */
+  border-radius: 10px;
+  box-shadow: var(--shadow-dark); /* Shadow for the whole tab container */
+}
+
+.resume-tab-btn {
+  flex-grow: 1;
+  text-align: center;
+  padding: 12px 10px;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--color-light);
+  cursor: pointer;
+  border: none;
+  outline: none;
+  border-radius: 8px;
+  background: transparent;
+  transition: all var(--transition-speed) ease-in-out;
+  margin: 3px;
+}
+
+/* Active state: This button is ELEVATED */
+.resume-tab-btn.active {
+  color: var(--color-primary);
+  background-color: var(--color-dark);
+  box-shadow: var(--shadow-dark);
+  margin: 0;
+}
+
+/* Hover state for inactive tabs: Make them slightly raised or give feedback */
+.resume-tab-btn:hover:not(.active) {
+  color: var(--color-primary);
+  background-color: var(--color-dark);
+  box-shadow: var(--shadow-lift);
+}
+
+/* Resume Content Grid */
+.resume-content-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 70px; /* Increased gap for better separation */
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.resume-tab-content {
+  opacity: 0;
+  transition: opacity var(--transition-speed) ease;
+}
+.resume-tab-content.active {
+  opacity: 1;
+}
+
+/* Timeline Card Style */
+.timeline-card {
+  background-color: var(--color-dark-alt);
+  padding: 30px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+  position: relative;
+  box-shadow: var(--shadow-dark);
+  transition: all var(--transition-speed) ease;
+}
+
+.timeline-card:hover {
+  box-shadow: var(--shadow-lift);
+  transform: translateY(-5px);
+}
+
+.timeline-card:before {
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  top: 40px;
+  left: -8px;
+  z-index: 10;
+}
+
+.timeline-card .meta .rating,
+.timeline-card .meta .location {
+  background-color: var(--color-dark);
+  color: var(--color-primary);
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: var(--shadow-inset-active);
+}
+
+.timeline-card .meta .location {
+  background-color: var(--color-primary);
+  color: white;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  box-shadow: none;
+}
+
+/* Vertical Divider Line for Timeline (FIXED POSITIONING) */
+.timeline-column {
+  position: relative;
+  padding-left: 30px;
+}
+
+.timeline-column:before {
+  content: "";
+  position: absolute;
+  width: 2px;
+  background: var(--color-dark-alt);
+  height: calc(100% - 70px);
+  left: 0;
+  top: 45px;
+}
+
+/* --- Professional Skills Layout (Progress Bars) --- */
+.skill-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+
+.skill-item {
+  margin-bottom: 25px;
+}
+
+.skill-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.progress-bar {
+  height: 8px;
+  background-color: var(--color-dark);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: var(--shadow-inset-active);
+}
+
+.progress-bar-fill {
+  height: 100%;
+  /* Gradient Fill (Updated to use variables) */
+  background: linear-gradient(
+    90deg,
+    var(--color-text-gradient-start),
+    var(--color-text-gradient-end)
+  );
+  /* Smooth Transition */
+  transition: width 1s ease-in-out;
+}
+
+/* --- Footer --- */
+.footer {
+  text-align: center;
+  padding: 50px 0 30px;
+}
+
+/* --- Scroll Animation (Scroll Reveal) CSS --- */
+.reveal {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 1s ease, transform 1s ease;
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --- Media Queries for Responsiveness --- */
+@media (max-width: 900px) {
+  .hero-content {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .hero-image {
+    order: -1;
+    text-align: center;
+  }
+
+  .navbar {
+    flex-direction: column;
+    padding: 15px 0;
+  }
+
+  .nav-links {
+    margin-top: 15px;
+  }
+
+  .nav-links li {
+    margin: 0 10px;
+  }
+
+  .resume-tabs {
+    flex-wrap: wrap;
+  }
+  .resume-tab-btn {
+    flex-basis: 45%;
+    margin: 5px;
+  }
+  .resume-tab-btn.active {
+    margin: 0;
+  }
+  .resume-content-grid,
+  .skill-list {
+    grid-template-columns: 1fr;
+  }
+  .timeline-column:before {
+    display: none;
+  }
+  .timeline-card:before {
+    left: 0;
+    top: -15px;
+  }
+  .timeline-card {
+    margin-left: 20px;
+    border-left: 2px solid var(--color-primary);
+    padding-left: 30px;
+  }
+}
