@@ -1,11 +1,29 @@
-/* CSS Variables & Global Styles (Dark Theme with Neumorphism) */
+body {
+  scrollbar-color: #555 #1e1e1e; /* thumb color, track color */
+}
+::-webkit-scrollbar-track {
+  background: #1e1e1e; /* Dark background for the scrollbar track */
+}
+::-webkit-scrollbar-thumb {
+  background: #555; /* Darker grey for the scrollbar thumb */
+  border-radius: 4px; /* Optional: adds rounded corners to the thumb */
+}
+/* CSS Variables & Global Styles (Metamorphism/Soft UI Dark Theme) */
 :root {
-  --color-primary: #ff014f; /* Bright Pink accent */
+  --color-primary: #fe1d6e; /* More vibrant Pink/Red accent */
   --color-light: #c4c4c4; /* Light gray text */
   --color-dark: #212428; /* Main Background Dark (Base) */
   --color-dark-alt: #24262b; /* Card background */
-  --color-text-gradient-start: #ff014f;
-  --color-text-gradient-end: #d10078;
+
+  /* UPDATED GRADIENT COLORS for Progress Bar and Text */
+  --color-text-gradient-start: #fe1d6e;
+  --color-text-gradient-end: #b01c9c; /* Purple gradient end */
+  --color-dark-hover-overlay: rgba(
+    0,
+    0,
+    0,
+    0.3
+  ); /* Dark overlay color for card hover */
 
   /* NEUMORPHISM SHADOWS (The 'bulky' look) */
   --shadow-dark: 10px 10px 19px #1c1e22, -10px -10px 19px #262a2e;
@@ -36,7 +54,7 @@ h1,
 h2,
 h3,
 h4 {
-  color: white;
+  color: #c4cfde;
   line-height: 1.2;
   font-family: var(--font-heading); /* Montserrat */
 }
@@ -64,23 +82,47 @@ ul {
 }
 
 .btn {
-  display: inline-block;
-  padding: 15px 30px;
-  color: var(--color-primary);
-  border: 2px solid var(--color-primary);
   border-radius: 6px;
+  background: linear-gradient(145deg, #1e2024, #23272b);
+  box-shadow: 10px 10px 19px #1c1e22, -10px -10px 19px #262a2e;
+  transition: 0.4s;
+  position: relative;
+  z-index: 2;
+  font-size: 14px;
   font-weight: 500;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  background: transparent;
-  transition: all var(--transition-speed) ease-in-out;
-  cursor: pointer;
+  border: 0 none;
+  display: inline-block;
+  padding: 15px 35px;
+  list-style: none;
+  text-decoration: none;
+  color: #fe1d6e;
 }
 
 .btn:hover {
-  background-color: var(--color-primary);
-  color: white;
-  box-shadow: 0 5px 15px rgba(255, 1, 79, 0.5);
+  transform: translateY(-5px);
+}
+.btn:hover::before,
+.btn:hover::before {
+  opacity: 1;
+}
+.btn::before,
+.btn::before {
+  content: "";
+  position: absolute;
+  transition: var(--transition);
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+  top: 0;
+  left: 0;
+  background: linear-gradient(to right bottom, #212428, #16181c);
+  opacity: 0;
+  z-index: -1;
+}
+/* Load More Container */
+.load-more-container {
+  text-align: center;
+  margin-top: 50px;
 }
 
 /* --- Header/Navigation --- */
@@ -88,7 +130,7 @@ ul {
   position: fixed;
   width: 100%;
   background-color: var(--color-dark);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); */
   z-index: 1000;
 }
 
@@ -106,7 +148,7 @@ ul {
 }
 
 .logo a {
-  font-size: 28px;
+  font-size: 19px;
   font-weight: 700;
   color: var(--color-primary);
   margin-left: 10px; /* Space from avatar */
@@ -137,19 +179,22 @@ ul {
   padding: 150px 0 100px;
   display: flex;
   align-items: center;
-  min-height: 100vh;
 }
 .hero-content {
-  display: grid;
+  display: flex;
   grid-template-columns: 3fr 2fr;
   gap: 50px;
-  align-items: center;
+  align-items: start;
 }
 
 .hero-text h4 {
-  color: var(--color-light);
-  font-size: 18px;
-  margin-bottom: 10px;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 300;
+  color: var(--color-lightn);
+  display: inline-block;
+  margin-bottom: 20px;
 }
 
 .hero-text h1 {
@@ -166,26 +211,31 @@ ul {
   margin-bottom: 40px;
 }
 
+/* Shared Social Icons Style (Used in Hero and Modal) */
 .social-icons a {
   display: inline-flex;
   width: 50px;
   height: 50px;
   background-color: var(--color-dark-alt);
-  border-radius: 50%;
+  border-radius: 4px;
   justify-content: center;
   align-items: center;
   font-size: 20px;
   margin-right: 15px;
+  margin-bottom: 16px;
   /* Applying Soft UI Shadows */
   box-shadow: var(--shadow-dark);
   transition: all var(--transition-speed) ease;
 }
 
 .social-icons a:hover {
-  color: var(--color-primary);
-  /* Simulating the "pressed" state (inset shadow) */
-  box-shadow: var(--shadow-inset-active);
-  transform: scale(0.95);
+  background-color: var(--color-dark);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lift);
+}
+
+.social-icons img {
+  height: 36px;
 }
 
 /* Hero Image Container (Replacing Video) */
@@ -199,7 +249,7 @@ ul {
 
 .hero-image img {
   width: 100%;
-  max-width: 400px;
+  max-width: 650px;
   height: auto;
   border-radius: 10px;
   object-fit: cover;
@@ -229,7 +279,7 @@ ul {
   font-size: 48px;
 }
 
-/* --- Service Card Styling (Soft UI with new hover) --- */
+/* --- Service Card Styling (Soft UI with advanced hover) --- */
 .service-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -242,32 +292,71 @@ ul {
   border-radius: 10px;
   text-align: left;
   cursor: pointer;
-  /* Applying Soft UI Shadows (Bulky Look) */
   box-shadow: var(--shadow-dark);
   transition: all var(--transition-speed) ease;
   position: relative;
   overflow: hidden;
+  z-index: 1; /* Essential for overlay stacking */
+}
+
+/* Hover Gradient Overlay */
+.service-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  opacity: 0; /* Start invisible */
+  transition: opacity var(--transition-speed) ease;
+  /* Dark radial gradient from the bottom right corner */
+  background: radial-gradient(
+    circle at bottom right,
+    var(--color-dark-hover-overlay) 0%,
+    transparent 70%
+  );
+  z-index: 2; /* Sits over the content */
 }
 
 .service-card:hover {
-  background-color: var(--color-dark-alt);
   box-shadow: var(--shadow-lift);
   transform: translateY(-5px);
 }
 
+.service-card:hover::after {
+  opacity: 1; /* Fade the dark gradient in */
+}
+
+/* Content Lift: Apply transform to immediate children */
+.service-card > * {
+  position: relative;
+  z-index: 3; /* Ensure content is on top of the gradient overlay */
+  transition: transform var(--transition-speed) ease;
+}
+
+.service-card:hover > * {
+  transform: translateY(-8px); /* Lift content upward */
+}
+
+/* Thumbnail Styling with Scaling (FIXED) */
 .service-card .icon-img {
   width: 60px;
   height: 60px;
-  background-size: cover;
+  background-size: cover; /* BASE SIZE */
   background-position: center;
   border-radius: 8px;
   margin-bottom: 20px;
   filter: grayscale(100%);
-  transition: filter var(--transition-speed) ease;
+  /* ADD background-size and filter to transition properties */
+  transition: filter var(--transition-speed) ease,
+    background-size var(--transition-speed) ease,
+    transform var(--transition-speed) ease;
 }
 
 .service-card:hover .icon-img {
   filter: grayscale(0%);
+  background-size: 115%; /* Zoom in the image inside the box */
 }
 
 .service-card h3 {
@@ -291,14 +380,15 @@ ul {
   transform: translateX(-10px);
   transition: opacity var(--transition-speed) ease,
     transform var(--transition-speed) ease;
+  z-index: 4; /* Ensure arrow is visible */
 }
 
 .service-card:hover .arrow-icon {
   opacity: 1;
-  transform: translateX(0);
+  transform: translateX(0) translateY(-8px); /* Match content lift */
 }
 
-/* --- Portfolio Styling --- */
+/* --- Portfolio Styling (UPDATED with Service Card Hover logic) --- */
 .portfolio-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -306,28 +396,87 @@ ul {
 }
 
 .portfolio-item {
-  background-color: var(--color-dark-alt);
+  background-color: linear-gradient(145deg, #1e2024, #23272b);
   padding: 25px;
   border-radius: 10px;
   text-align: left;
-  /* Applying Soft UI Shadows (Bulky Look) */
-  box-shadow: var(--shadow-dark);
+  box-shadow: 10px 10px 19px #1c1e22, -10px -10px 19px #262a2e;
   transition: all var(--transition-speed) ease;
-  display: flex;
+  display: flex; /* Changed from default to flex to ensure correct layout */
   flex-direction: column;
   overflow: hidden;
+  position: relative;
+  z-index: 1;
+  cursor: pointer;
 }
 
+/* Hidden class for load more functionality */
+.portfolio-item.hidden {
+  display: none;
+}
+
+/* Hover Gradient Overlay for Portfolio Items */
+.portfolio-item::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  opacity: 0;
+  transition: opacity var(--transition-speed) ease;
+  /* Dark radial gradient from the bottom right corner */
+  background: radial-gradient(
+    circle at bottom right,
+    var(--color-dark-hover-overlay) 0%,
+    transparent 70%
+  );
+  z-index: 2;
+}
+
+.portfolio-item:hover::before {
+  opacity: 1;
+}
+.rn-portfolio::before {
+  content: "";
+  position: absolute;
+  transition: var(--transition);
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  top: 0;
+  left: 0;
+  background: linear-gradient(to right bottom, #212428, #16181c);
+  opacity: 0;
+  z-index: -1;
+}
 .portfolio-item:hover {
-  /* Light lifting effect on hover */
   transform: translateY(-5px);
-  box-shadow: var(--shadow-lift); /* Lighter, lifting shadow */
+  background: linear-gradient(to right bottom, #212428, #16181c);
 }
 
+/* Content Lift for Portfolio Items */
+.portfolio-item > * {
+  position: relative;
+  z-index: 3;
+  transition: transform var(--transition-speed) ease;
+}
+
+.portfolio-item:hover > * {
+  transform: translateY(-8px); /* Lift content upward */
+}
+
+.portfolio-item .portfolio-title {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  display: block;
+}
 .portfolio-image {
   position: relative;
   overflow: hidden;
-  border-radius: 10px;
+  border-radius: 5px;
   margin-bottom: 20px;
 }
 
@@ -336,11 +485,229 @@ ul {
   height: 250px;
   display: block;
   object-fit: cover;
-  transition: transform 0.6s ease;
+  /* UNIFIED TRANSITION SPEED (FIXED) */
+  transition: transform var(--transition-speed) ease;
 }
 
 .portfolio-item:hover .portfolio-image img {
-  transform: scale(1.05);
+  transform: scale(1.08); /* Zoom in the image inside its container */
+}
+.portfolio-meta {
+  display: flex;
+  justify-content: ;
+  align-items: flex-end;
+  gap: 12px;
+}
+.portfolio-meta span {
+  color: #fe1d6e;
+  max-width: fit-content;
+  margin-top: 16px;
+  font-size: 12px;
+  font-weight: 400;
+  padding: 8px 15px;
+  height: 36px;
+  border-radius: 6px;
+  background: linear-gradient(145deg, #1e2024, #23272b);
+  box-shadow: 10px 10px 19px #1c1e22, -10px -10px 19px #262a2e;
+  transition: 0.4s;
+  font-weight: 500;
+  margin-top: 8px;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+/* Portfolio Arrow Icon Styling (Replicating Service Card Arrow) */
+.portfolio-item .arrow-icon {
+  font-size: 24px;
+  color: var(--color-primary);
+  opacity: 0;
+  transform: translateX(-10px); /* Starts slightly off-screen */
+  transition: opacity var(--transition-speed) ease,
+    transform var(--transition-speed) ease;
+  z-index: 4; /* Ensure it is on top of the gradient */
+  text-align: right;
+  display: none !important;
+}
+
+.portfolio-item:hover .arrow-icon {
+  opacity: 1;
+  transform: translateX(0) translateY(-8px); /* Moves into view and lifts with content */
+}
+
+/* =================================== */
+/* --- MODAL STYLES (NEW) --- */
+/* =================================== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85); /* Slightly transparent dark */
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s ease;
+  backdrop-filter: blur(5px);
+}
+
+.modal-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-content {
+  background: linear-gradient(145deg, #1e2024, #23272b) !important;
+  width: 90%;
+  max-width: 1000px;
+  max-height: 90vh;
+  border-radius: 10px;
+  box-shadow: 10px 10px 19px #1c1e22, -10px -10px 19px #262a2e;
+  position: relative;
+  overflow-y: auto; /* Scroll if content is tall */
+  padding: 40px;
+  transform: translateY(50px);
+  transition: transform 0.4s ease;
+}
+
+.modal-overlay.open .modal-content {
+  transform: translateY(0);
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: var(--color-dark);
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: var(--color-primary);
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: var(--shadow-dark);
+  transition: all 0.3s;
+  z-index: 10;
+}
+
+.modal-close-btn:hover {
+  transform: scale(1.1);
+  box-shadow: var(--shadow-lift);
+}
+
+.modal-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+}
+
+/* Image Column */
+.modal-image-col img {
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: var(--shadow-dark);
+  object-fit: cover;
+}
+
+/* Text Column */
+.modal-category {
+  color: var(--color-primary);
+  text-transform: uppercase;
+  font-size: 14px;
+  letter-spacing: 1px;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.modal-info-col h2 {
+  font-size: 32px;
+  margin-bottom: 20px;
+  color: #e4e6ea;
+  line-height: 1.3;
+}
+
+.modal-info-col p {
+  color: var(--color-light);
+  font-size: 16px;
+  margin-bottom: 30px;
+  line-height: 1.8;
+}
+
+/* Details Grid (Client, Date, etc.) */
+.modal-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px 30px;
+  margin-bottom: 30px;
+}
+
+.detail-label {
+  display: block;
+  font-size: 13px;
+  color: #8c9096;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+
+.detail-value {
+  color: #e4e6ea;
+  font-weight: 500;
+  font-size: 15px;
+}
+
+/* Buttons (Social Icons in Modal) */
+.modal-buttons {
+  margin-top: 20px;
+}
+
+.modal-buttons .social-icons a {
+  margin-right: 15px;
+  cursor: pointer;
+}
+
+/* Responsive Modal */
+@media (max-width: 784px) {
+  .hero-content {
+    display: grid;
+  }
+
+  .hero-image {
+    max-width: 210px;
+    margin: auto;
+  }
+}
+@media (max-width: 768px) {
+  .modal-body {
+    grid-template-columns: 1fr;
+  }
+  .modal-content {
+    padding: 20px;
+  }
+}
+@media (max-width: 510px) {
+  .resume-tabs {
+    display: block !important;
+  }
+  .resume-tab-btn {
+    /* flex-basis: 45%; */
+    margin: 5px;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .portfolio-grid {
+    display: block;
+  }
+  .portfolio-item {
+    margin-bottom: 16px !important;
+  }
 }
 
 /* =================================== */
@@ -405,6 +772,15 @@ ul {
   opacity: 1;
 }
 
+/* --- TIMELINE COLUMN FIXES: Equal Height and Line Alignment --- */
+
+.timeline-column {
+  position: relative;
+  padding-left: 40px;
+  display: flex; /* Enable Flexbox for equal card height */
+  flex-direction: column; /* Stack children vertically */
+}
+
 /* Timeline Card Style */
 .timeline-card {
   background-color: var(--color-dark-alt);
@@ -414,27 +790,49 @@ ul {
   position: relative;
   box-shadow: var(--shadow-dark);
   transition: all var(--transition-speed) ease;
+  flex-grow: 1; /* FORCES equal height among siblings in the column */
 }
 
-.timeline-card:hover {
-  box-shadow: var(--shadow-lift);
-  transform: translateY(-5px);
+/* Remove bottom margin on the last card for cleaner column bottom edge */
+.timeline-column .timeline-card:last-of-type {
+  margin-bottom: 0;
 }
 
+/* CORRECTED DOT STYLING (Hollow circle with border, positioned OUTSIDE the card padding) */
 .timeline-card:before {
   content: "";
   position: absolute;
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: var(--color-primary);
-  top: 40px;
-  left: -8px;
+  background: #212428;
+  border: 4px solid #1c1e22;
+  left: -33px; /* Positions the dot centered on the line (15px) + its width (12/2 = 6) = 21px */
+  top: 32px;
   z-index: 10;
+  transition: background 0.4s ease, border-color 0.4s ease;
+}
+.timeline-card:after {
+  position: absolute;
+  content: "";
+  width: 15px;
+  height: 4px;
+  right: 100%;
+  top: 47px;
+  transform: translateY(-7px);
+  background: #1b1c1d;
+  z-index: 0;
+}
+#education .timeline-card:after {
+  display: none !important;
+}
+.timeline-card:hover:before {
+  background: var(--color-primary);
+  border-color: #1b1c1d;
 }
 
-.timeline-card .meta .rating,
-.timeline-card .meta .location {
+/* Education Rating Tag Styling */
+.timeline-card .meta .rating {
   background-color: var(--color-dark);
   color: var(--color-primary);
   padding: 5px 10px;
@@ -444,30 +842,73 @@ ul {
   box-shadow: var(--shadow-inset-active);
 }
 
+/* Experience Location Tag Styling (Overrides common rules) */
 .timeline-card .meta .location {
-  background-color: var(--color-primary);
-  color: white;
-  padding: 3px 8px;
-  border-radius: 4px;
+  color: #fe1d6e;
+  max-width: fit-content;
+  margin-top: 16px;
   font-size: 12px;
+  font-weight: 400;
+  padding: 8px 15px;
+  height: 36px;
+  border-radius: 6px;
+  background: linear-gradient(145deg, #1e2024, #23272b);
+  box-shadow: 10px 10px 19px #1c1e22, -10px -10px 19px #262a2e;
+  transition: 0.4s;
   font-weight: 500;
-  box-shadow: none;
+  margin-top: 8px;
+  display: inline-block;
+  margin-right: 8px;
+  margin-bottom: 16px;
 }
 
-/* Vertical Divider Line for Timeline (FIXED POSITIONING) */
-.timeline-column {
-  position: relative;
-  padding-left: 30px;
-}
-
+/* Vertical Divider Line for Timeline - FIX APPLIED for dot-to-dot appearance */
 .timeline-column:before {
   content: "";
   position: absolute;
-  width: 2px;
-  background: var(--color-dark-alt);
-  height: calc(100% - 70px);
-  left: 0;
-  top: 45px;
+  width: 4px;
+  background: #1c1e22;
+  height: calc(100% - 53px);
+  left: 15px;
+  top: 47px;
+  z-index: 5;
+}
+
+/* Education tab specific resets (as it doesn't use the timeline structure) */
+#education .timeline-column:before {
+  content: initial;
+  position: initial;
+  width: initial;
+  background: none;
+  height: auto;
+}
+
+#education .timeline-card:before {
+  content: initial;
+  position: initial;
+  width: auto;
+  height: auto;
+  border-radius: 50%;
+  background: none;
+  border: none;
+  transition: initial;
+}
+.timeline-card.college-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.timeline-card.college-wrapper img {
+  width: 100px;
+}
+
+/* Adjust header margin to create gap and ensure line runs correctly */
+.resume-heading {
+  margin-bottom: 0;
+  padding-bottom: 25px; /* Creates space between heading and first card */
+  position: relative;
+  z-index: 6;
+  background-color: var(--color-dark);
 }
 
 /* --- Professional Skills Layout (Progress Bars) --- */
@@ -482,28 +923,30 @@ ul {
 }
 
 .skill-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
+  color: #c3cedd;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  opacity: 0.9;
+  font-weight: 400;
 }
 
 .progress-bar {
-  height: 8px;
-  background-color: var(--color-dark);
+  height: 7px;
+  background: #212428;
+  box-shadow: inset 7px 7px 17px rgb(0 0 0 / 46%),
+    inset -8px -8px 10px rgb(70 70 70 / 46%);
   border-radius: 4px;
   overflow: hidden;
-  box-shadow: var(--shadow-inset-active);
 }
 
+/* PROGRESS BAR FILL GRADIENT - UPDATED */
 .progress-bar-fill {
+  border-radius: 20px;
   height: 100%;
-  /* Gradient Fill (Updated to use variables) */
-  background: linear-gradient(
-    90deg,
-    var(--color-text-gradient-start),
-    var(--color-text-gradient-end)
-  );
+  /* Diagonal Gradient Fill using the new vibrant colors */
+  background: linear-gradient(145deg, #6a67ce 0%, #fc636b 100%);
   /* Smooth Transition */
   transition: width 1s ease-in-out;
 }
@@ -528,6 +971,22 @@ ul {
 
 /* --- Media Queries for Responsiveness --- */
 @media (max-width: 900px) {
+  .timeline-column {
+    padding-left: 0 !important;
+  }
+  .timeline-card:before {
+    display: none;
+  }
+  .timeline-card:after {
+    display: none;
+  }
+  .timeline-card {
+    border-left: none !important;
+    margin-left: 0 !important;
+  }
+  .resume-content-grid {
+    gap: 24px !important;
+  }
   .hero-content {
     grid-template-columns: 1fr;
     text-align: center;
@@ -540,11 +999,11 @@ ul {
 
   .navbar {
     flex-direction: column;
-    padding: 15px 0;
+    padding: 25px 0 15px 0;
   }
 
   .nav-links {
-    margin-top: 15px;
+    margin: 15px 0 0;
   }
 
   .nav-links li {
@@ -555,7 +1014,7 @@ ul {
     flex-wrap: wrap;
   }
   .resume-tab-btn {
-    flex-basis: 45%;
+    /* flex-basis: 45%; */
     margin: 5px;
   }
   .resume-tab-btn.active {
@@ -565,16 +1024,20 @@ ul {
   .skill-list {
     grid-template-columns: 1fr;
   }
+  /* Mobile: Remove the custom timeline line and use the border-left on cards */
   .timeline-column:before {
     display: none;
+  }
+  /* On mobile, remove flex-grow to allow cards to stack naturally without stretching vertically */
+  .timeline-card {
+    flex-grow: initial;
+    margin-left: 20px;
+    border-left: 2px solid var(--color-primary);
+    padding-left: 30px;
+    margin-top: 0;
   }
   .timeline-card:before {
     left: 0;
     top: -15px;
-  }
-  .timeline-card {
-    margin-left: 20px;
-    border-left: 2px solid var(--color-primary);
-    padding-left: 30px;
   }
 }
