@@ -397,6 +397,18 @@ document.addEventListener("DOMContentLoaded", function () {
       xdLink: "assets/files/aeon_consumer.xd",
       websiteLink: "",
     },
+    22: {
+      title: "KicksMart E-Commerce App - Figma Make(AI)",
+      desc: "This is just a personal project that demonstrates a high-speed approach to mobile e-commerce design and prototyping. I designed and built the foundational Splash Screen and Home Page mockups. For efficiency, the remaining app pages were generated using Figma AI and quickly assembled into an interactive prototype. This exercise prioritizes showcasing rapid ideation and leveraging AI tools in the design workflow, resulting in a functional, albeit unpolished, proof-of-concept.",
+      created: "2018-2019",
+      role: "Designer",
+      image: "assets/img/project-24.png",
+      // LINKS: Testing conditional hiding (Only Web visible)
+      figmaLink:
+        "https://www.figma.com/design/SVqMjYICFN33aFoWVmD5ej/Kicksmart?node-id=0-1&p=f",
+      xdLink: "",
+      websiteLink: "https://export-glad-87190303.figma.site/",
+    },
   };
   const modal = document.getElementById("portfolio-modal");
   const closeBtn = document.getElementById("modal-close");
