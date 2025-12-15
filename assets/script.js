@@ -399,7 +399,7 @@ document.addEventListener("DOMContentLoaded", function () {
     },
     22: {
       title: "KicksMart E-Commerce App - Figma Make(AI)",
-      desc: "This is just a personal project that demonstrates a high-speed approach to mobile e-commerce design and prototyping. I designed and built the foundational Splash Screen and Home Page mockups. For efficiency, the remaining app pages were generated using Figma AI and quickly assembled into an interactive prototype. This exercise prioritizes showcasing rapid ideation and leveraging AI tools in the design workflow, resulting in a functional, albeit unpolished, proof-of-concept. This design is for mobile only",
+      desc: "This is just a personal project that demonstrates a high-speed approach to mobile e-commerce design and prototyping. I designed and built the foundational Splash Screen and Home Page mockups. For efficiency, the remaining app pages were generated using Figma AI and quickly assembled into an interactive prototype. This exercise prioritizes showcasing rapid ideation and leveraging AI tools in the design workflow, resulting in a functional, albeit unpolished, proof-of-concept. This design is for mobile only.",
       created: "2025",
       role: "Designer",
       image: "assets/img/project-24.png",
@@ -408,6 +408,18 @@ document.addEventListener("DOMContentLoaded", function () {
         "https://www.figma.com/design/SVqMjYICFN33aFoWVmD5ej/Kicksmart?node-id=0-1&p=f",
       xdLink: "",
       websiteLink: "https://export-glad-87190303.figma.site/",
+    },
+    23: {
+      title: "Vanguard Admin Dashboard - Figma Make(AI)",
+      desc: "This UI/UX design project for the Vanguard Admin Dashboard utilized a modern, efficient workflow. I designed the main dashboard pages, including the complete visual system for both the Light Mode and the high-contrast Dark Mode. After these core interfaces were completed, the remaining pages, secondary screens, and interactive components of the website were automatically built using AI technology through Figma Make. This dual workflow serves as proof of concept, demonstrating my ability to effectively integrate and utilize AI tools to enhance and scale my design output.",
+      created: "2025",
+      role: "Designer",
+      image: "assets/img/project-25.png",
+      // LINKS: Testing conditional hiding (Only Web visible)
+      figmaLink:
+        "https://www.figma.com/design/gs2Nkkk9qEV8Ya0mRc6vvn/Vanguar---Admin-Dashboard?node-id=0-1&t=7tKlPFrrco00moGz-1",
+      xdLink: "",
+      websiteLink: "https://found-grasp-74066159.figma.site",
     },
   };
   const modal = document.getElementById("portfolio-modal");
