@@ -421,6 +421,18 @@ document.addEventListener("DOMContentLoaded", function () {
       xdLink: "",
       websiteLink: "https://found-grasp-74066159.figma.site",
     },
+    24: {
+      title: "Vanguard Landing Page - Figma Make(AI)",
+      desc: "This personal project was created to explore the frontier of AI-assisted UI design, specifically showcasing my proficiency with Figma Make. By leveraging Figma’s AI capabilities, I built a cohesive and modern landing page for Vanguard, focusing on how AI can be directed to produce high-quality, brand-aligned layouts. This project demonstrates my ability to integrate emerging technologies into the design process to accelerate production without losing sight of the core user experience.",
+      created: "2025",
+      role: "Designer",
+      image: "assets/img/project-26.png",
+      // LINKS: Testing conditional hiding (Only Web visible)
+      figmaLink:
+        "https://www.figma.com/design/hjJ1SeflUvchY1X6Wq3C7Y/Vanguard-Landing-Page?node-id=0-1&t=uqzJgVTmhkbcRpC6-1",
+      xdLink: "",
+      websiteLink: "https://pear-jeep-99379078.figma.site",
+    },
   };
   const modal = document.getElementById("portfolio-modal");
   const closeBtn = document.getElementById("modal-close");
