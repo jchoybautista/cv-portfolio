@@ -433,6 +433,17 @@ document.addEventListener("DOMContentLoaded", function () {
       xdLink: "",
       websiteLink: "https://pear-jeep-99379078.figma.site",
     },
+    25: {
+      title: "Gacha Social App - Designed and built using Figma Make(AI)",
+      desc: "I developed this gacha platform as a primary showcase of my AI skills, utilizing Figma AI to architect a system where users can pull and collect unique characters while engaging in a highly interactive community. The application facilitates deep social engagement through features like player battling, liking, commenting, and direct messaging. My extensive front-end development experience provided a significant advantage during the build; because I deeply understand the code the AI generates, I was able to refine every component to ensure the entire system functions perfectly. This technical oversight was key to achieving a fully mobile-web responsive design, allowing the platform to work seamlessly on both desktop and mobile browsers. Users can enjoy a high-fidelity, app-like experience on any device without the need for a separate download, maintaining a consistent and polished feel across all screens.",
+      created: "2025",
+      role: "Designer",
+      image: "assets/img/project-27.png",
+      // LINKS: Testing conditional hiding (Only Web visible)
+      figmaLink: "",
+      xdLink: "",
+      websiteLink: "https://try-undo-36289219.figma.site",
+    },
   };
   const modal = document.getElementById("portfolio-modal");
   const closeBtn = document.getElementById("modal-close");
