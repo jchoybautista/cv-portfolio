@@ -401,7 +401,7 @@ document.addEventListener("DOMContentLoaded", function () {
       title: "KicksMart E-Commerce App - Figma Make(AI)",
       desc: "This is just a personal project that demonstrates a high-speed approach to mobile e-commerce design and prototyping. I designed and built the foundational Splash Screen and Home Page mockups. For efficiency, the remaining app pages were generated using Figma AI and quickly assembled into an interactive prototype. This exercise prioritizes showcasing rapid ideation and leveraging AI tools in the design workflow, resulting in a functional, albeit unpolished, proof-of-concept. This design is for mobile only.",
       created: "2025",
-      role: "Designer",
+      role: "Designer and Developer",
       image: "assets/img/project-24.png",
       // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
@@ -413,7 +413,7 @@ document.addEventListener("DOMContentLoaded", function () {
       title: "Vanguard Admin Dashboard - Figma Make(AI)",
       desc: "This UI/UX design project for the Vanguard Admin Dashboard utilized a modern, efficient workflow. I designed the main dashboard pages, including the complete visual system for both the Light Mode and the high-contrast Dark Mode. After these core interfaces were completed, the remaining pages, secondary screens, and interactive components of the website were automatically built using AI technology through Figma Make. Crucially, I directed the AI to ensure the entire output was fully mobile web responsive. Furthermore, thanks to my solid understanding of frontend development, I was able to review and comprehend the underlying code created by the AI. This dual workflow serves as proof of concept, demonstrating my ability to effectively integrate and utilize AI tools to enhance and efficiently scale my design output while maintaining technical control.",
       created: "2025",
-      role: "Designer",
+      role: "Designer and Developerr",
       image: "assets/img/project-25.png",
       // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
@@ -425,7 +425,7 @@ document.addEventListener("DOMContentLoaded", function () {
       title: "Vanguard Landing Page - Figma Make(AI)",
       desc: "This personal project was created to explore the frontier of AI-assisted UI design, specifically showcasing my proficiency with Figma Make. By leveraging Figma’s AI capabilities, I built a cohesive and modern landing page for Vanguard, focusing on how AI can be directed to produce high-quality, brand-aligned layouts. This project demonstrates my ability to integrate emerging technologies into the design process to accelerate production without losing sight of the core user experience.",
       created: "2025",
-      role: "Designer",
+      role: "Designer and Developer",
       image: "assets/img/project-26.png",
       // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
@@ -435,9 +435,9 @@ document.addEventListener("DOMContentLoaded", function () {
     },
     25: {
       title: "Gacha Social App - Designed and built using Figma Make(AI)",
-      desc: "I developed this gacha platform as a primary showcase of my AI skills, utilizing Figma AI to architect a system where users can pull and collect unique characters while engaging in a highly interactive community. The application facilitates deep social engagement through features like player battling, liking, commenting, and direct messaging. My extensive front-end development experience provided a significant advantage during the build; because I deeply understand the code the AI generates, I was able to refine every component to ensure the entire system functions perfectly. This technical oversight was key to achieving a fully mobile-web responsive design, allowing the platform to work seamlessly on both desktop and mobile browsers. Users can enjoy a high-fidelity, app-like experience on any device without the need for a separate download, maintaining a consistent and polished feel across all screens.",
+      desc: "I developed and designed this gacha platform as a primary showcase of my AI skills, utilizing Figma AI to architect a system where users can pull and collect unique characters while engaging in a highly interactive community. The application facilitates deep social engagement through features like player battling, liking, commenting, and direct messaging. My extensive front-end development experience provided a significant advantage during the build; because I deeply understand the code the AI generates, I was able to refine every component to ensure the entire system functions perfectly. This technical oversight was key to achieving a fully mobile-web responsive design, allowing the platform to work seamlessly on both desktop and mobile browsers. Users can enjoy a high-fidelity, app-like experience on any device without the need for a separate download, maintaining a consistent and polished feel across all screens.",
       created: "2025",
-      role: "Designer",
+      role: "Designer and Developer",
       image: "assets/img/project-27.png",
       // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink: "",
@@ -448,7 +448,7 @@ document.addEventListener("DOMContentLoaded", function () {
     26: {
       title:
         "Dragon Ball Flappy Goku Game (Retro Style) - Designed and built using Figma Make(AI)",
-      desc: "I developed this Retro Style Dragon Ball Flappy Goku game as a dedicated showcase of my AI skills, utilizing Figma AI to bring this Flappy Bird-inspired experience to life. My background in front-end development provided the necessary technical foundation to ensure the game functions perfectly; because I have a deep understanding of the code the AI generates, I was able to bridge the gap between AI-driven design and a fully playable, high-performance product. This project highlights a completely mobile-web responsive design, ensuring that the fast-paced gameplay remains smooth and intuitive whether you are playing on a desktop or a smartphone. By focusing on a seamless browser-based experience, I’ve ensured that the game delivers a polished, app-like feel on any device without the need for an external download.",
+      desc: "I developed and designed this Retro Style Dragon Ball Flappy Goku game as a dedicated showcase of my AI skills, utilizing Figma AI to bring this Flappy Bird-inspired experience to life. My background in front-end development provided the necessary technical foundation to ensure the game functions perfectly; because I have a deep understanding of the code the AI generates, I was able to bridge the gap between AI-driven design and a fully playable, high-performance product. This project highlights a completely mobile-web responsive design, ensuring that the fast-paced gameplay remains smooth and intuitive whether you are playing on a desktop or a smartphone. By focusing on a seamless browser-based experience, I’ve ensured that the game delivers a polished, app-like feel on any device without the need for an external download.",
       created: "2025",
       role: "Designer",
       image: "assets/img/project-28.png",
