@@ -444,6 +444,19 @@ document.addEventListener("DOMContentLoaded", function () {
       xdLink: "",
       websiteLink: "https://try-undo-36289219.figma.site",
     },
+
+    26: {
+      title:
+        "Dragon Ball Flappy Goku Game (Retro Style) - Designed and built using Figma Make(AI)",
+      desc: "I developed this Retro Style Dragon Ball Flappy Goku game as a dedicated showcase of my AI skills, utilizing Figma AI to bring this Flappy Bird-inspired experience to life. My background in front-end development provided the necessary technical foundation to ensure the game functions perfectly; because I have a deep understanding of the code the AI generates, I was able to bridge the gap between AI-driven design and a fully playable, high-performance product. This project highlights a completely mobile-web responsive design, ensuring that the fast-paced gameplay remains smooth and intuitive whether you are playing on a desktop or a smartphone. By focusing on a seamless browser-based experience, I’ve ensured that the game delivers a polished, app-like feel on any device without the need for an external download.",
+      created: "2025",
+      role: "Designer",
+      image: "assets/img/project-28.png",
+      // LINKS: Testing conditional hiding (Only Web visible)
+      figmaLink: "",
+      xdLink: "",
+      websiteLink: "https://sniff-ahead-92042786.figma.site",
+    },
   };
   const modal = document.getElementById("portfolio-modal");
   const closeBtn = document.getElementById("modal-close");
