@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Find the initially active content and set its display to block
   const initialActiveContent = contentContainer.querySelector(
-    ".resume-tab-content.active"
+    ".resume-tab-content.active",
   );
   if (initialActiveContent) {
     initialActiveContent.style.display = "block";
@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // 3. Hide all content with a fade effect
       const allContents = contentContainer.querySelectorAll(
-        ".resume-tab-content"
+        ".resume-tab-content",
       );
       allContents.forEach((content) => {
         content.classList.remove("active"); // Remove active for opacity transition
@@ -457,6 +457,19 @@ document.addEventListener("DOMContentLoaded", function () {
       xdLink: "",
       websiteLink: "https://sniff-ahead-92042786.figma.site",
     },
+
+    27: {
+      title:
+        "Final Fantasy VII Marketing Landing Page - Designed and built using Claude",
+      desc: "I developed this Final Fantasy VII marketing landing page to showcase my ability to leverage Claude Code for end-to-end web development. By using this agentic tool, I managed the entire design and implementation process directly from my terminal, while my front-end expertise allowed me to refine and optimize the AI-generated code for production-level performance. The result is a fully mobile-web responsive experience that maintains its cinematic impact and fluid navigation across both desktop and mobile. This project demonstrates how combining technical oversight with AI-driven workflows produces polished, high-performance results without the need for a separate app.",
+      created: "2026",
+      role: "Designer and Developer",
+      image: "assets/img/project-29.png",
+      // LINKS: Testing conditional hiding (Only Web visible)
+      figmaLink: "",
+      xdLink: "",
+      claudeLink: "https://final-fantasy-7.vercel.app/",
+    },
   };
   const modal = document.getElementById("portfolio-modal");
   const closeBtn = document.getElementById("modal-close");
@@ -466,6 +479,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const figmaBtn = modal.querySelector(".figma-link");
   const xdBtn = modal.querySelector(".xd-link");
   const webBtn = modal.querySelector(".website-link");
+  const claudebBtn = modal.querySelector(".claude-link");
 
   // Function to Open Modal
   items.forEach((item) => {
@@ -509,6 +523,14 @@ document.addEventListener("DOMContentLoaded", function () {
           webBtn.style.display = "inline-flex"; // Show
         } else {
           webBtn.style.display = "none"; // Hide
+        }
+
+        // 4. Claude Link
+        if (data.claudeLink) {
+          claudebBtn.href = data.claudeLink;
+          claudebBtn.style.display = "inline-flex"; // Show
+        } else {
+          claudebBtn.style.display = "none"; // Hide
         }
 
         // Show Modal
