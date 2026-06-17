@@ -82,6 +82,20 @@
     });
   }
 
+  /* ---------- Hero background slideshow ---------- */
+  (function heroSlides() {
+    const slides = document.querySelectorAll(".hero__slides img");
+    if (!slides.length) return;
+    let i = 0;
+    slides[0].classList.add("is-active");
+    if (slides.length < 2 || prefersReduced) return;
+    setInterval(() => {
+      slides[i].classList.remove("is-active");
+      i = (i + 1) % slides.length;
+      slides[i].classList.add("is-active");
+    }, 4200);
+  })();
+
   /* ---------- Reveal on scroll (IntersectionObserver) ---------- */
   const revealEls = document.querySelectorAll(".reveal");
   if ("IntersectionObserver" in window) {
@@ -231,10 +245,10 @@
   });
 
   /* ---------- Load more ---------- */
-  const cards = Array.from(document.querySelectorAll(".card"));
+  const cards = Array.from(document.querySelectorAll(".hof-card"));
   const loadMoreBtn = document.getElementById("load-more-btn");
-  const PER_LOAD = 9;
-  let visible = 9;
+  const PER_LOAD = 12;
+  let visible = 12;
   cards.forEach((c, i) => {
     if (i >= visible) c.classList.add("hidden");
   });
@@ -246,7 +260,7 @@
         c.classList.remove("hidden");
         c.classList.add("in"); // already in view region; ensure visible
       });
-      if (!document.querySelector(".card.hidden")) {
+      if (!document.querySelector(".hof-card.hidden")) {
         loadMoreBtn.style.display = "none";
       }
       if (window.ScrollTrigger) window.ScrollTrigger.refresh();

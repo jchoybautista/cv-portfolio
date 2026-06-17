@@ -9,8 +9,6 @@
       content="Jonathan Bautista — Senior UI/UX Designer & Front-End Developer. 13+ years turning messy ideas into digital products people genuinely enjoy using."
     />
 
-    <!-- Make JS-only states active before paint, and guarantee the hero
-         reveal fires even if the external script fails to load. -->
     <script>
       document.documentElement.classList.remove("no-js");
       document.documentElement.classList.add("js");
@@ -22,516 +20,288 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Caveat:wght@600;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="assets/style.css" />
   </head>
 
   <body>
-    <!-- Grain / noise overlay -->
     <div class="grain" aria-hidden="true"></div>
-
-    <!-- Scroll progress bar -->
     <div class="scroll-progress" aria-hidden="true"><span></span></div>
 
     <!-- ===================== NAV ===================== -->
     <header class="nav" id="nav">
-      <a class="nav__brand" href="#top" aria-label="Jonathan Bautista — home">
-        <span class="nav__avatar">
-          <img src="assets/img/profile-thumb.jpg" alt="" onerror="this.style.display='none'" />
-        </span>
-        <span class="nav__name">Jonathan&nbsp;Bautista</span>
+      <a class="nav__brand" href="#home" aria-label="Jonathan Bautista — home">
+        <span class="nav__avatar"><img src="assets/img/profile-thumb.jpg" alt="" onerror="this.style.display='none'" /></span>
+        <span class="nav__name">Jonathan Bautista</span>
       </a>
-
       <nav class="nav__links" id="nav-links">
+        <a href="#home">Home</a>
+        <a href="#disciplines">Design</a>
         <a href="#work">Work</a>
-        <a href="#resume">Resume</a>
-        <a href="#contact">Contact</a>
-        <a href="assets/files/jonathan_bautista_CV.docx" class="btn btn--ghost" download>Download CV</a>
+        <a href="#clients">Clients</a>
+        <a href="#resume">Journey</a>
+        <a href="mailto:jchoybautista@gmail.com" class="nav__enquiry">Work enquiries</a>
       </nav>
-
-      <button class="nav__toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false">
-        <span></span><span></span>
-      </button>
+      <div class="nav__social">
+        <a href="https://www.linkedin.com/in/jonathan-bautista-92038839/" target="_blank" rel="noopener" aria-label="LinkedIn"><img src="assets/img/linkedin-logo.svg" alt="" /></a>
+        <a href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener" aria-label="Instagram"><img src="assets/img/instagram-logo.svg" alt="" /></a>
+        <a href="https://www.facebook.com/jonathanndroid" target="_blank" rel="noopener" aria-label="Facebook"><img src="assets/img/facebook-logo.svg" alt="" /></a>
+      </div>
+      <button class="nav__toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
     </header>
 
     <main>
       <!-- ===================== HERO ===================== -->
-      <section class="hero" id="top">
+      <section class="hero" id="home">
+        <div class="hero__bg" aria-hidden="true">
+          <div class="hero__slides">
+            <img src="assets/img/project-30.png" alt="" />
+            <img src="assets/img/project-29.png" alt="" />
+            <img src="assets/img/project-27.png" alt="" />
+            <img src="assets/img/project-16.png" alt="" />
+          </div>
+          <div class="hero__bg-veil"></div>
+        </div>
         <div class="hero__glow" aria-hidden="true"></div>
-        <div class="hero__grid-lines" aria-hidden="true"></div>
 
-        <p class="hero__eyebrow" data-hero>
-          <span class="dot"></span> Senior UI/UX Designer &amp; Front-End Developer
-        </p>
+        <p class="hero__kicker" data-hero><span class="dot"></span> Designing &amp; building since 2010</p>
 
         <h1 class="hero__name" aria-label="Jonathan Bautista">
-          <span class="hero__name-line" data-hero>JONATHAN</span>
-          <span class="hero__name-line" data-hero>BAUTISTA</span>
+          <span data-hero>JONATHAN</span>
+          <span data-hero>BAUTISTA</span>
         </h1>
 
+        <p class="hero__sub" data-hero>Senior UI/UX Designer &amp; Front-End Developer</p>
+
         <div class="hero__portrait" data-hero-portrait>
-          <img
-            src="assets/img/hero-cutout.png"
-            alt="Jonathan Bautista"
-            onerror="this.closest('.hero__portrait').classList.add('hero__portrait--missing')"
-          />
+          <img src="assets/img/hero-cutout.png" alt="Jonathan Bautista"
+               onerror="this.closest('.hero__portrait').classList.add('is-missing')" />
         </div>
 
-        <div class="hero__footer">
-          <p class="hero__tagline" data-hero>
-            <em class="accent">Design-led.</em> Code-fluent. AI-accelerated.
-          </p>
-          <div class="hero__socials" data-hero>
-            <a href="https://www.linkedin.com/in/jonathan-bautista-92038839/" target="_blank" rel="noopener" aria-label="LinkedIn">
-              <img src="assets/img/linkedin-logo.svg" alt="" />
-            </a>
-            <a href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener" aria-label="Instagram">
-              <img src="assets/img/instagram-logo.svg" alt="" />
-            </a>
-            <a href="https://www.facebook.com/jonathanndroid" target="_blank" rel="noopener" aria-label="Facebook">
-              <img src="assets/img/facebook-logo.svg" alt="" />
-            </a>
-            <a href="mailto:jchoybautista@gmail.com" aria-label="Email">
-              <img src="assets/img/gmail-logo.svg" alt="" />
-            </a>
-          </div>
-        </div>
+        <!-- "Next Race" analog → Latest Build -->
+        <button class="next-card" data-id="28" data-hero aria-label="View latest build: Velocità E-Commerce">
+          <span class="next-card__label">Latest build</span>
+          <span class="next-card__title">Velocità E-Commerce</span>
+          <span class="next-card__meta">React · Tailwind · Supabase — 2026 <span class="next-card__arrow">→</span></span>
+        </button>
 
-        <a class="hero__scroll" href="#about" aria-label="Scroll to content">
-          <span>Scroll</span>
+        <a class="hero__scroll" href="#message" aria-label="Scroll">
+          <span>This is a vertical drive</span>
           <span class="hero__scroll-line"></span>
         </a>
       </section>
 
-      <!-- ===================== MANIFESTO ===================== -->
-      <section class="manifesto" id="about">
-        <p class="eyebrow"><span class="eyebrow__idx">01</span> — About</p>
-        <h2 class="manifesto__text reveal">
-          I turn the <span class="accent">messiest ideas</span> into digital products people
-          <span class="accent">genuinely enjoy</span> using — from research and wireframes to
-          high-fidelity <span class="accent">prototypes</span>, then into clean,
-          production-ready <span class="accent">code</span>.
+      <!-- ===================== MESSAGE FROM JONATHAN ===================== -->
+      <section class="message" id="message">
+        <p class="eyebrow"><span class="eyebrow__idx">01</span> — Message from Jonathan</p>
+        <div class="message__grid">
+          <div class="message__text">
+            <h2 class="message__copy reveal">
+              <span class="accent">Design-led, code-fluent, AI-accelerated.</span>
+              I turn the messiest ideas into digital products people genuinely
+              enjoy using — and then I build them.
+            </h2>
+            <p class="signature reveal">Jonathan Bautista</p>
+          </div>
+          <div class="message__photo reveal">
+            <img src="assets/img/hero_image2.jpg" alt="Jonathan Bautista" onerror="this.src='assets/img/hero_image.png'" />
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== QUOTE + LABELED MOMENTS ===================== -->
+      <section class="moments" id="moments">
+        <div class="moments__quote">
+          <h2 class="quote reveal">"It's not about where the idea starts — it's how far you take it."</h2>
+          <p class="signature signature--sm reveal">Jonathan Bautista</p>
+        </div>
+        <div class="moments__rail" id="moments-rail">
+          <figure class="moment"><img src="assets/img/project-30.png" alt="Velocità" loading="lazy" /><figcaption>Velocità · 2026</figcaption></figure>
+          <figure class="moment"><img src="assets/img/project-29.png" alt="Final Fantasy VII" loading="lazy" /><figcaption>Final Fantasy VII · 2026</figcaption></figure>
+          <figure class="moment"><img src="assets/img/project-23.png" alt="Content House" loading="lazy" /><figcaption>Content House · 2020</figcaption></figure>
+          <figure class="moment"><img src="assets/img/project-18.png" alt="Yamaha Motors" loading="lazy" /><figcaption>Yamaha Motors · 2018</figcaption></figure>
+          <figure class="moment"><img src="assets/img/project-21.png" alt="AEON Cambodia" loading="lazy" /><figcaption>AEON Cambodia · 2019</figcaption></figure>
+          <figure class="moment"><img src="assets/img/project-19.png" alt="Figaro Coffee" loading="lazy" /><figcaption>Figaro Coffee · 2018</figcaption></figure>
+          <figure class="moment"><img src="assets/img/project-14.png" alt="MyPocketDoctor" loading="lazy" /><figcaption>MyPocketDoctor · 2016</figcaption></figure>
+          <figure class="moment"><img src="assets/img/project-12.jpg" alt="Travelbook PH" loading="lazy" /><figcaption>Travelbook PH · 2014</figcaption></figure>
+        </div>
+      </section>
+
+      <!-- ===================== ORIGIN / BIO ===================== -->
+      <section class="bio" id="bio">
+        <h2 class="bio__copy reveal">
+          Since 2010, when I built my first website as a freelance designer, I've
+          worked tirelessly to bridge the gap between <span class="accent">design vision</span>
+          and <span class="accent">technical reality</span> — across 13+ years, two
+          disciplines, and dozens of brands.
         </h2>
+        <p class="signature signature--green reveal">Jonathan Bautista</p>
+      </section>
 
-        <div class="stats">
-          <div class="stat reveal">
-            <span class="stat__num" data-count="13">0</span><span class="stat__suffix">+</span>
-            <span class="stat__label">Years of experience</span>
-          </div>
-          <div class="stat reveal">
-            <span class="stat__num" data-count="30">0</span><span class="stat__suffix">+</span>
-            <span class="stat__label">Projects shipped</span>
-          </div>
-          <div class="stat reveal">
-            <span class="stat__num" data-count="20">0</span><span class="stat__suffix">+</span>
-            <span class="stat__label">Brands &amp; clients</span>
-          </div>
-          <div class="stat reveal">
-            <span class="stat__num" data-count="2">0</span>
-            <span class="stat__label">Disciplines — design &amp; code</span>
-          </div>
+      <!-- ===================== SPLIT: DESIGN / CODE ===================== -->
+      <section class="split" id="disciplines">
+        <div class="split__col reveal">
+          <span class="split__top">UI / UX</span>
+          <span class="split__big">DESIGN</span>
+          <p class="split__copy">Research, wireframes and high-fidelity prototypes for websites and mobile apps — the craft behind products people love.</p>
+          <a class="link-cta" href="#work"><span>View design work</span> <span class="link-cta__arrow">→</span></a>
         </div>
-
-        <!-- Brand marquee -->
-        <div class="marquee" aria-hidden="true">
-          <div class="marquee__track">
-            <span>AEON&nbsp;Cambodia</span><span class="marquee__dot">✦</span>
-            <span>Yamaha&nbsp;Motors</span><span class="marquee__dot">✦</span>
-            <span>Figaro&nbsp;Coffee</span><span class="marquee__dot">✦</span>
-            <span>Travelbook&nbsp;PH</span><span class="marquee__dot">✦</span>
-            <span>Smart&nbsp;Communications</span><span class="marquee__dot">✦</span>
-            <span>PRU&nbsp;Life&nbsp;UK</span><span class="marquee__dot">✦</span>
-            <span>Angel's&nbsp;Pizza</span><span class="marquee__dot">✦</span>
-            <span>Content&nbsp;House</span><span class="marquee__dot">✦</span>
-            <!-- duplicate for seamless loop -->
-            <span>AEON&nbsp;Cambodia</span><span class="marquee__dot">✦</span>
-            <span>Yamaha&nbsp;Motors</span><span class="marquee__dot">✦</span>
-            <span>Figaro&nbsp;Coffee</span><span class="marquee__dot">✦</span>
-            <span>Travelbook&nbsp;PH</span><span class="marquee__dot">✦</span>
-            <span>Smart&nbsp;Communications</span><span class="marquee__dot">✦</span>
-            <span>PRU&nbsp;Life&nbsp;UK</span><span class="marquee__dot">✦</span>
-            <span>Angel's&nbsp;Pizza</span><span class="marquee__dot">✦</span>
-            <span>Content&nbsp;House</span><span class="marquee__dot">✦</span>
-          </div>
+        <div class="split__media reveal">
+          <img src="assets/img/project-8.png" alt="" loading="lazy" />
+          <img src="assets/img/project-6.png" alt="" loading="lazy" />
+          <img src="assets/img/project-25.png" alt="" loading="lazy" />
+        </div>
+        <div class="split__col split__col--right reveal">
+          <span class="split__top">Front-End</span>
+          <span class="split__big outline">CODE</span>
+          <p class="split__copy">Responsive, production-ready builds — translated from design into clean code, now AI-accelerated with Claude &amp; modern tooling.</p>
+          <a class="link-cta" href="#builds"><span>View dev work</span> <span class="link-cta__arrow">→</span></a>
         </div>
       </section>
 
-      <!-- ===================== FEATURED WORK ===================== -->
-      <section class="featured" id="work">
+      <!-- ===================== WORK — HALL OF FAME (hover grid) ===================== -->
+      <section class="hof" id="work">
         <div class="section-head">
-          <p class="eyebrow"><span class="eyebrow__idx">02</span> — Featured</p>
-          <h2 class="section-title reveal">Selected<br /><span class="outline">Work</span></h2>
-        </div>
-
-        <div class="features">
-          <article class="feature reveal" data-id="28">
-            <div class="feature__media">
-              <img src="assets/img/project-30.png" alt="Velocità E-Commerce Website" loading="lazy" />
-              <span class="feature__view">View project →</span>
-            </div>
-            <div class="feature__info">
-              <span class="feature__index">01</span>
-              <h3 class="feature__title">Velocità E-Commerce</h3>
-              <p class="feature__meta">Designer &amp; Developer · Claude Code · 2026</p>
-              <p class="feature__desc">
-                A full e-commerce storefront built with React, Tailwind &amp; Supabase —
-                designed and shipped end-to-end with Claude Code.
-              </p>
-            </div>
-          </article>
-
-          <article class="feature reveal" data-id="27">
-            <div class="feature__media">
-              <img src="assets/img/project-29.png" alt="Final Fantasy VII Marketing Landing Page" loading="lazy" />
-              <span class="feature__view">View project →</span>
-            </div>
-            <div class="feature__info">
-              <span class="feature__index">02</span>
-              <h3 class="feature__title">Final Fantasy VII Landing</h3>
-              <p class="feature__meta">Designer &amp; Developer · Claude Code · 2026</p>
-              <p class="feature__desc">
-                A cinematic marketing landing page — fully responsive, built end-to-end
-                from the terminal with Claude Code.
-              </p>
-            </div>
-          </article>
-
-          <article class="feature reveal" data-id="29">
-            <div class="feature__media">
-              <img src="assets/img/project-31.png" alt="Velocità Admin Page" loading="lazy" />
-              <span class="feature__view">View project →</span>
-            </div>
-            <div class="feature__info">
-              <span class="feature__index">03</span>
-              <h3 class="feature__title">Velocità Admin</h3>
-              <p class="feature__meta">Designer &amp; Developer · Claude Code · 2026</p>
-              <p class="feature__desc">
-                The command center for the Velocità store — product &amp; order
-                management, fully responsive across every device.
-              </p>
-            </div>
-          </article>
-
-          <article class="feature reveal" data-id="25">
-            <div class="feature__media">
-              <img src="assets/img/project-27.png" alt="Gacha Social App" loading="lazy" />
-              <span class="feature__view">View project →</span>
-            </div>
-            <div class="feature__info">
-              <span class="feature__index">04</span>
-              <h3 class="feature__title">Gacha Social App</h3>
-              <p class="feature__meta">Designer &amp; Developer · Figma Make · 2025</p>
-              <p class="feature__desc">
-                A character-collection platform with battling, feeds and DMs —
-                AI-architected, then hand-refined to ship.
-              </p>
-            </div>
-          </article>
-
-          <article class="feature reveal" data-id="24">
-            <div class="feature__media">
-              <img src="assets/img/project-26.png" alt="Vanguard Landing Page" loading="lazy" />
-              <span class="feature__view">View project →</span>
-            </div>
-            <div class="feature__info">
-              <span class="feature__index">05</span>
-              <h3 class="feature__title">Vanguard Landing</h3>
-              <p class="feature__meta">Designer &amp; Developer · Figma Make · 2025</p>
-              <p class="feature__desc">
-                A bold, brand-aligned SaaS landing page exploring the frontier of
-                AI-assisted UI design.
-              </p>
-            </div>
-          </article>
-
-          <article class="feature reveal" data-id="22">
-            <div class="feature__media">
-              <img src="assets/img/project-24.png" alt="KicksMart Mobile App" loading="lazy" />
-              <span class="feature__view">View project →</span>
-            </div>
-            <div class="feature__info">
-              <span class="feature__index">06</span>
-              <h3 class="feature__title">KicksMart Mobile</h3>
-              <p class="feature__meta">Designer &amp; Developer · Figma Make · 2025</p>
-              <p class="feature__desc">
-                A sneaker e-commerce mobile concept — rapid ideation from hand-designed
-                screens to interactive prototype.
-              </p>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <!-- ===================== ALL WORK (ARCHIVE) ===================== -->
-      <section class="archive" id="all-work">
-        <div class="section-head">
-          <p class="eyebrow"><span class="eyebrow__idx">03</span> — Archive</p>
-          <h2 class="section-title reveal">All Projects</h2>
-          <p class="note reveal">
-            <strong>Note:</strong> Most of my work from 2012–2019 is under NDA. For some
-            projects I couldn't back up the original files, so a few appear as screenshots
-            imported into Figma. Live apps/sites may also look different now, as these were
-            designed years ago.
+          <h2 class="hof__title reveal">Work</h2>
+          <p class="hof__sub reveal">Hall of Fame</p>
+          <p class="hof__lead reveal">
+            13+ years of UI/UX design and front-end development — for major brands and,
+            more recently, AI-accelerated builds. Hover a project, tap to open the case.
           </p>
         </div>
 
-        <div class="grid" id="portfolio-grid">
-          <article class="card reveal" data-id="28">
-            <div class="card__media"><img src="assets/img/project-30.png" alt="Velocità E-Commerce Website" loading="lazy" /></div>
-            <div class="card__body">
-              <h3 class="card__title">Velocità E-Commerce Website</h3>
-              <div class="card__tags"><span>Designer &amp; Developer</span><span class="tag--accent">Claude</span></div>
-            </div>
-          </article>
-
-          <article class="card reveal" data-id="29">
-            <div class="card__media"><img src="assets/img/project-31.png" alt="Velocità Admin Page" loading="lazy" /></div>
-            <div class="card__body">
-              <h3 class="card__title">Velocità Admin Page</h3>
-              <div class="card__tags"><span>Designer &amp; Developer</span><span class="tag--accent">Claude</span></div>
-            </div>
-          </article>
-
-          <article class="card reveal" data-id="27">
-            <div class="card__media"><img src="assets/img/project-29.png" alt="Final Fantasy VII Marketing Landing Page" loading="lazy" /></div>
-            <div class="card__body">
-              <h3 class="card__title">Final Fantasy VII Marketing Landing Page</h3>
-              <div class="card__tags"><span>Designer &amp; Developer</span><span class="tag--accent">Claude</span></div>
-            </div>
-          </article>
-
-          <article class="card reveal" data-id="26">
-            <div class="card__media"><img src="assets/img/project-28.png" alt="Dragon Ball Flappy Goku Game" loading="lazy" /></div>
-            <div class="card__body">
-              <h3 class="card__title">Dragon Ball Flappy Goku Game (Retro Style)</h3>
-              <div class="card__tags"><span>Designer &amp; Developer</span><span class="tag--accent">Figma Make</span></div>
-            </div>
-          </article>
-
-          <article class="card reveal" data-id="25">
-            <div class="card__media"><img src="assets/img/project-27.png" alt="Gacha Social App" loading="lazy" /></div>
-            <div class="card__body">
-              <h3 class="card__title">Gacha Social App</h3>
-              <div class="card__tags"><span>Designer &amp; Developer</span><span class="tag--accent">Figma Make</span></div>
-            </div>
-          </article>
-
-          <article class="card reveal" data-id="24">
-            <div class="card__media"><img src="assets/img/project-26.png" alt="Vanguard Landing Page" loading="lazy" /></div>
-            <div class="card__body">
-              <h3 class="card__title">Vanguard Landing Page</h3>
-              <div class="card__tags"><span>Designer &amp; Developer</span><span class="tag--accent">Figma Make</span></div>
-            </div>
-          </article>
-
-          <article class="card reveal" data-id="23">
-            <div class="card__media"><img src="assets/img/project-25.png" alt="Vanguard Admin Dashboard" loading="lazy" /></div>
-            <div class="card__body">
-              <h3 class="card__title">Vanguard Admin Dashboard</h3>
-              <div class="card__tags"><span>Designer &amp; Developer</span><span class="tag--accent">Figma Make</span></div>
-            </div>
-          </article>
-
-          <article class="card reveal" data-id="22">
-            <div class="card__media"><img src="assets/img/project-24.png" alt="KicksMart Mobile App" loading="lazy" /></div>
-            <div class="card__body">
-              <h3 class="card__title">KicksMart Mobile App</h3>
-              <div class="card__tags"><span>Designer &amp; Developer</span><span class="tag--accent">Figma Make</span></div>
-            </div>
-          </article>
-
-          <article class="card reveal" data-id="1">
-            <div class="card__media"><img src="assets/img/project-1.png" alt="NBL Basketball Website Redesign Concept" loading="lazy" /></div>
-            <div class="card__body">
-              <h3 class="card__title">NBL Basketball Website Redesign Concept</h3>
-              <div class="card__tags"><span>Designer</span><span>Developer</span></div>
-            </div>
-          </article>
-
-          <article class="card reveal" data-id="2">
-            <div class="card__media"><img src="assets/img/project-3.png" alt="Playtech E-Commerce Concept" loading="lazy" /></div>
-            <div class="card__body">
-              <h3 class="card__title">Playtech E-Commerce Website &amp; Mobile App Concept</h3>
-              <div class="card__tags"><span>Designer</span></div>
-            </div>
-          </article>
-
-          <article class="card reveal" data-id="3">
-            <div class="card__media"><img src="assets/img/project-4.png" alt="Codecrafted CV Website Concept" loading="lazy" /></div>
-            <div class="card__body">
-              <h3 class="card__title">Codecrafted CV Website Concept</h3>
-              <div class="card__tags"><span>Designer</span></div>
-            </div>
-          </article>
-
-          <article class="card reveal" data-id="4">
-            <div class="card__media"><img src="assets/img/project-5.png" alt="Gamestop E-Commerce Website Concept" loading="lazy" /></div>
-            <div class="card__body">
-              <h3 class="card__title">Gamestop E-Commerce Website Concept</h3>
-              <div class="card__tags"><span>Designer</span></div>
-            </div>
-          </article>
-
-          <article class="card reveal" data-id="5">
-            <div class="card__media"><img src="assets/img/project-23.png" alt="Content House Web App" loading="lazy" /></div>
-            <div class="card__body">
-              <h3 class="card__title">Content House Web App</h3>
-              <div class="card__tags"><span>Designer</span></div>
-            </div>
-          </article>
-
-          <article class="card reveal" data-id="6">
-            <div class="card__media"><img src="assets/img/project-22.png" alt="Content House Mobile App" loading="lazy" /></div>
-            <div class="card__body">
-              <h3 class="card__title">Content House Mobile App</h3>
-              <div class="card__tags"><span>Designer</span></div>
-            </div>
-          </article>
-
-          <article class="card reveal" data-id="7">
-            <div class="card__media"><img src="assets/img/project-6.png" alt="Content House Inc. Marketing Website" loading="lazy" /></div>
-            <div class="card__body">
-              <h3 class="card__title">Content House Inc. Marketing Website</h3>
-              <div class="card__tags"><span>Designer</span><span>Developer</span></div>
-            </div>
-          </article>
-
-          <article class="card reveal" data-id="8">
-            <div class="card__media"><img src="assets/img/project-7.png" alt="Agents Space Artwork Editor" loading="lazy" /></div>
-            <div class="card__body">
-              <h3 class="card__title">Agents Space Artwork Editor</h3>
-              <div class="card__tags"><span>Designer</span><span>Developer</span></div>
-            </div>
-          </article>
-
-          <article class="card reveal" data-id="9">
-            <div class="card__media"><img src="assets/img/project-8.png" alt="Agents Space Web App" loading="lazy" /></div>
-            <div class="card__body">
-              <h3 class="card__title">Agents Space Web App</h3>
-              <div class="card__tags"><span>Designer</span></div>
-            </div>
-          </article>
-
-          <article class="card reveal" data-id="10">
-            <div class="card__media"><img src="assets/img/project-9.png" alt="Agents Space Mobile App" loading="lazy" /></div>
-            <div class="card__body">
-              <h3 class="card__title">Agents Space Mobile App</h3>
-              <div class="card__tags"><span>Designer</span></div>
-            </div>
-          </article>
-
-          <article class="card reveal" data-id="11">
-            <div class="card__media"><img src="assets/img/project-10.png" alt="Agents Space Marketing Website" loading="lazy" /></div>
-            <div class="card__body">
-              <h3 class="card__title">Agents Space Marketing Website</h3>
-              <div class="card__tags"><span>Designer</span><span>Developer</span></div>
-            </div>
-          </article>
-
-          <article class="card reveal" data-id="21">
-            <div class="card__media"><img src="assets/img/project-21.png" alt="Aeon Cambodia Mobile App Redesign" loading="lazy" /></div>
-            <div class="card__body">
-              <h3 class="card__title">Aeon Cambodia Mobile App Redesign</h3>
-              <div class="card__tags"><span>Designer</span></div>
-            </div>
-          </article>
-
-          <article class="card reveal" data-id="18">
-            <div class="card__media"><img src="assets/img/project-18.png" alt="Yamaha Motors Philippines Mobile App" loading="lazy" /></div>
-            <div class="card__body">
-              <h3 class="card__title">Yamaha Motors Philippines Mobile App</h3>
-              <div class="card__tags"><span>Designer</span></div>
-            </div>
-          </article>
-
-          <article class="card reveal" data-id="14">
-            <div class="card__media"><img src="assets/img/project-14.png" alt="MyPocketDoctor Website and Mobile App" loading="lazy" /></div>
-            <div class="card__body">
-              <h3 class="card__title">MyPocketDoctor Website &amp; Mobile App</h3>
-              <div class="card__tags"><span>Designer</span><span>Developer</span></div>
-            </div>
-          </article>
-
-          <article class="card reveal" data-id="15">
-            <div class="card__media"><img src="assets/img/project-15.png" alt="It's More Fun in the Philippines Website" loading="lazy" /></div>
-            <div class="card__body">
-              <h3 class="card__title">It's More Fun in the Philippines Website</h3>
-              <div class="card__tags"><span>Designer</span><span>Developer</span></div>
-            </div>
-          </article>
-
-          <article class="card reveal" data-id="16">
-            <div class="card__media"><img src="assets/img/project-16.png" alt="Coreproc Inc. Website" loading="lazy" /></div>
-            <div class="card__body">
-              <h3 class="card__title">Coreproc Inc. Website</h3>
-              <div class="card__tags"><span>Designer</span><span>Developer</span></div>
-            </div>
-          </article>
-
-          <article class="card reveal" data-id="17">
-            <div class="card__media"><img src="assets/img/project-17.png" alt="Mansmith Conference 2020 Mobile App" loading="lazy" /></div>
-            <div class="card__body">
-              <h3 class="card__title">Mansmith Conference 2020 Mobile App</h3>
-              <div class="card__tags"><span>Designer</span></div>
-            </div>
-          </article>
-
-          <article class="card reveal" data-id="19">
-            <div class="card__media"><img src="assets/img/project-19.png" alt="Figaro Coffee Mobile App" loading="lazy" /></div>
-            <div class="card__body">
-              <h3 class="card__title">Figaro Coffee Mobile App</h3>
-              <div class="card__tags"><span>Designer</span></div>
-            </div>
-          </article>
-
-          <article class="card reveal" data-id="20">
-            <div class="card__media"><img src="assets/img/project-20.png" alt="Angels Pizza Mobile App" loading="lazy" /></div>
-            <div class="card__body">
-              <h3 class="card__title">Angels Pizza Mobile App</h3>
-              <div class="card__tags"><span>Designer</span></div>
-            </div>
-          </article>
-
-          <article class="card reveal" data-id="12">
-            <div class="card__media"><img src="assets/img/project-12.jpg" alt="Travelbook PH Website Revamp and Mobile App" loading="lazy" /></div>
-            <div class="card__body">
-              <h3 class="card__title">Travelbook PH Website Revamp &amp; Mobile App</h3>
-              <div class="card__tags"><span>Designer</span><span>Developer</span></div>
-            </div>
-          </article>
-
-          <article class="card reveal" data-id="13">
-            <div class="card__media"><img src="assets/img/project-13.png" alt="Nexgo Website" loading="lazy" /></div>
-            <div class="card__body">
-              <h3 class="card__title">Nexgo Express Website</h3>
-              <div class="card__tags"><span>Designer</span><span>Developer</span></div>
-            </div>
-          </article>
+        <div class="hof__grid" id="portfolio-grid">
+          <button class="hof-card reveal" data-id="28"><span class="hof-card__img"><img src="assets/img/project-30.png" alt="Velocità E-Commerce Website" loading="lazy" /></span><span class="hof-card__name">Velocità E-Commerce</span><span class="hof-card__year">2026</span></button>
+          <button class="hof-card reveal" data-id="29"><span class="hof-card__img"><img src="assets/img/project-31.png" alt="Velocità Admin Page" loading="lazy" /></span><span class="hof-card__name">Velocità Admin</span><span class="hof-card__year">2026</span></button>
+          <button class="hof-card reveal" data-id="27"><span class="hof-card__img"><img src="assets/img/project-29.png" alt="Final Fantasy VII Landing" loading="lazy" /></span><span class="hof-card__name">Final Fantasy VII Landing</span><span class="hof-card__year">2026</span></button>
+          <button class="hof-card reveal" data-id="26"><span class="hof-card__img"><img src="assets/img/project-28.png" alt="Dragon Ball Flappy Goku" loading="lazy" /></span><span class="hof-card__name">Flappy Goku Game</span><span class="hof-card__year">2025</span></button>
+          <button class="hof-card reveal" data-id="25"><span class="hof-card__img"><img src="assets/img/project-27.png" alt="Gacha Social App" loading="lazy" /></span><span class="hof-card__name">Gacha Social App</span><span class="hof-card__year">2025</span></button>
+          <button class="hof-card reveal" data-id="24"><span class="hof-card__img"><img src="assets/img/project-26.png" alt="Vanguard Landing Page" loading="lazy" /></span><span class="hof-card__name">Vanguard Landing</span><span class="hof-card__year">2025</span></button>
+          <button class="hof-card reveal" data-id="23"><span class="hof-card__img"><img src="assets/img/project-25.png" alt="Vanguard Admin Dashboard" loading="lazy" /></span><span class="hof-card__name">Vanguard Admin</span><span class="hof-card__year">2025</span></button>
+          <button class="hof-card reveal" data-id="22"><span class="hof-card__img"><img src="assets/img/project-24.png" alt="KicksMart Mobile App" loading="lazy" /></span><span class="hof-card__name">KicksMart Mobile</span><span class="hof-card__year">2025</span></button>
+          <button class="hof-card reveal" data-id="1"><span class="hof-card__img"><img src="assets/img/project-1.png" alt="NBL Basketball Website" loading="lazy" /></span><span class="hof-card__name">NBL Basketball Redesign</span><span class="hof-card__year">2025</span></button>
+          <button class="hof-card reveal" data-id="2"><span class="hof-card__img"><img src="assets/img/project-3.png" alt="Playtech E-Commerce" loading="lazy" /></span><span class="hof-card__name">Playtech E-Commerce</span><span class="hof-card__year">2025</span></button>
+          <button class="hof-card reveal" data-id="3"><span class="hof-card__img"><img src="assets/img/project-4.png" alt="Codecrafted CV Website" loading="lazy" /></span><span class="hof-card__name">Codecrafted CV</span><span class="hof-card__year">2025</span></button>
+          <button class="hof-card reveal" data-id="4"><span class="hof-card__img"><img src="assets/img/project-5.png" alt="Gamestop E-Commerce" loading="lazy" /></span><span class="hof-card__name">Gamestop E-Commerce</span><span class="hof-card__year">2025</span></button>
+          <button class="hof-card reveal" data-id="5"><span class="hof-card__img"><img src="assets/img/project-23.png" alt="Content House Web App" loading="lazy" /></span><span class="hof-card__name">Content House Web App</span><span class="hof-card__year">2020</span></button>
+          <button class="hof-card reveal" data-id="6"><span class="hof-card__img"><img src="assets/img/project-22.png" alt="Content House Mobile App" loading="lazy" /></span><span class="hof-card__name">Content House Mobile</span><span class="hof-card__year">2020</span></button>
+          <button class="hof-card reveal" data-id="7"><span class="hof-card__img"><img src="assets/img/project-6.png" alt="Content House Marketing Website" loading="lazy" /></span><span class="hof-card__name">Content House Website</span><span class="hof-card__year">2024</span></button>
+          <button class="hof-card reveal" data-id="8"><span class="hof-card__img"><img src="assets/img/project-7.png" alt="Agents Space Artwork Editor" loading="lazy" /></span><span class="hof-card__name">Agents Space Editor</span><span class="hof-card__year">2025</span></button>
+          <button class="hof-card reveal" data-id="9"><span class="hof-card__img"><img src="assets/img/project-8.png" alt="Agents Space Web App" loading="lazy" /></span><span class="hof-card__name">Agents Space Web</span><span class="hof-card__year">2023</span></button>
+          <button class="hof-card reveal" data-id="10"><span class="hof-card__img"><img src="assets/img/project-9.png" alt="Agents Space Mobile App" loading="lazy" /></span><span class="hof-card__name">Agents Space Mobile</span><span class="hof-card__year">2023</span></button>
+          <button class="hof-card reveal" data-id="11"><span class="hof-card__img"><img src="assets/img/project-10.png" alt="Agents Space Marketing Website" loading="lazy" /></span><span class="hof-card__name">Agents Space Website</span><span class="hof-card__year">2024</span></button>
+          <button class="hof-card reveal" data-id="21"><span class="hof-card__img"><img src="assets/img/project-21.png" alt="Aeon Cambodia Mobile App" loading="lazy" /></span><span class="hof-card__name">AEON Cambodia App</span><span class="hof-card__year">2019</span></button>
+          <button class="hof-card reveal" data-id="18"><span class="hof-card__img"><img src="assets/img/project-18.png" alt="Yamaha Motors Mobile App" loading="lazy" /></span><span class="hof-card__name">Yamaha Motors App</span><span class="hof-card__year">2018</span></button>
+          <button class="hof-card reveal" data-id="14"><span class="hof-card__img"><img src="assets/img/project-14.png" alt="MyPocketDoctor" loading="lazy" /></span><span class="hof-card__name">MyPocketDoctor</span><span class="hof-card__year">2016</span></button>
+          <button class="hof-card reveal" data-id="15"><span class="hof-card__img"><img src="assets/img/project-15.png" alt="It's More Fun in the Philippines" loading="lazy" /></span><span class="hof-card__name">It's More Fun in PH</span><span class="hof-card__year">2014</span></button>
+          <button class="hof-card reveal" data-id="16"><span class="hof-card__img"><img src="assets/img/project-16.png" alt="Coreproc Inc. Website" loading="lazy" /></span><span class="hof-card__name">Coreproc Website</span><span class="hof-card__year">2018</span></button>
+          <button class="hof-card reveal" data-id="17"><span class="hof-card__img"><img src="assets/img/project-17.png" alt="Mansmith Conference App" loading="lazy" /></span><span class="hof-card__name">Mansmith 2020 App</span><span class="hof-card__year">2019</span></button>
+          <button class="hof-card reveal" data-id="19"><span class="hof-card__img"><img src="assets/img/project-19.png" alt="Figaro Coffee Mobile App" loading="lazy" /></span><span class="hof-card__name">Figaro Coffee App</span><span class="hof-card__year">2018</span></button>
+          <button class="hof-card reveal" data-id="20"><span class="hof-card__img"><img src="assets/img/project-20.png" alt="Angels Pizza Mobile App" loading="lazy" /></span><span class="hof-card__name">Angel's Pizza App</span><span class="hof-card__year">2018</span></button>
+          <button class="hof-card reveal" data-id="12"><span class="hof-card__img"><img src="assets/img/project-12.jpg" alt="Travelbook PH" loading="lazy" /></span><span class="hof-card__name">Travelbook PH</span><span class="hof-card__year">2014</span></button>
+          <button class="hof-card reveal" data-id="13"><span class="hof-card__img"><img src="assets/img/project-13.png" alt="Nexgo Express Website" loading="lazy" /></span><span class="hof-card__name">Nexgo Express</span><span class="hof-card__year">2016</span></button>
         </div>
 
-        <div class="archive__more">
-          <button class="btn" id="load-more-btn">Load more projects</button>
-        </div>
+        <div class="hof__more"><button class="btn" id="load-more-btn">View all work</button></div>
       </section>
 
-      <!-- ===================== RESUME ===================== -->
+      <!-- ===================== LIVE BUILDS (Store analog) ===================== -->
+      <section class="builds" id="builds">
+        <div class="builds__head">
+          <h2 class="builds__title reveal">Live Builds</h2>
+          <p class="builds__sub reveal">Shipped with AI</p>
+          <p class="builds__lead reveal">Real, deployed products I designed and built end-to-end with Claude Code &amp; Figma Make — refined by hand for production.</p>
+        </div>
+        <div class="builds__rail" id="builds-rail">
+          <a class="build" href="https://scooter-store.vercel.app/" target="_blank" rel="noopener">
+            <span class="build__img"><img src="assets/img/project-30.png" alt="Velocità E-Commerce" loading="lazy" /></span>
+            <span class="build__name">Velocità E-Commerce</span>
+            <span class="build__tag">React · Tailwind · Supabase</span>
+          </a>
+          <a class="build" href="https://scooter-store-admin.vercel.app/dashboard/" target="_blank" rel="noopener">
+            <span class="build__img"><img src="assets/img/project-31.png" alt="Velocità Admin" loading="lazy" /></span>
+            <span class="build__name">Velocità Admin</span>
+            <span class="build__tag">Dashboard · CRUD</span>
+          </a>
+          <a class="build" href="https://final-fantasy-7.vercel.app/" target="_blank" rel="noopener">
+            <span class="build__img"><img src="assets/img/project-29.png" alt="Final Fantasy VII Landing" loading="lazy" /></span>
+            <span class="build__name">Final Fantasy VII Landing</span>
+            <span class="build__tag">Cinematic landing page</span>
+          </a>
+          <a class="build" href="https://try-undo-36289219.figma.site" target="_blank" rel="noopener">
+            <span class="build__img"><img src="assets/img/project-27.png" alt="Gacha Social App" loading="lazy" /></span>
+            <span class="build__name">Gacha Social App</span>
+            <span class="build__tag">Figma Make</span>
+          </a>
+          <a class="build" href="https://pear-jeep-99379078.figma.site" target="_blank" rel="noopener">
+            <span class="build__img"><img src="assets/img/project-26.png" alt="Vanguard Landing" loading="lazy" /></span>
+            <span class="build__name">Vanguard Landing</span>
+            <span class="build__tag">Figma Make</span>
+          </a>
+        </div>
+        <div class="builds__cta reveal"><a class="btn" href="https://scooter-store.vercel.app/" target="_blank" rel="noopener">Visit a live site →</a></div>
+      </section>
+
+      <!-- ===================== CLIENTS & BRANDS (Partners analog) ===================== -->
+      <section class="clients" id="clients">
+        <div class="section-head">
+          <h2 class="clients__title reveal">clients</h2>
+          <p class="clients__sub reveal">&amp; brands</p>
+          <p class="clients__lead reveal">Over 13+ years I've designed and built for brands across fintech, food, automotive, travel, real estate and telco.</p>
+        </div>
+        <div class="clients__grid">
+          <span class="client reveal">AEON Cambodia</span>
+          <span class="client reveal">Yamaha Motors</span>
+          <span class="client reveal">Figaro Coffee</span>
+          <span class="client reveal">Angel's Pizza</span>
+          <span class="client reveal">Travelbook PH</span>
+          <span class="client reveal">Content House</span>
+          <span class="client reveal">Coreproc</span>
+          <span class="client reveal">Smart Communications</span>
+          <span class="client reveal">Talk 'N Text</span>
+          <span class="client reveal">PRU Life UK</span>
+          <span class="client reveal">MyPocketDoctor</span>
+          <span class="client reveal">Mansmith</span>
+          <span class="client reveal">It's More Fun in PH</span>
+          <span class="client reveal">Nexgo Express</span>
+          <span class="client reveal">DXC Technology</span>
+          <span class="client reveal">East West Bank</span>
+        </div>
+        <div class="clients__cta reveal"><a class="link-cta" href="#resume"><span>View the journey</span> <span class="link-cta__arrow">→</span></a></div>
+      </section>
+
+      <!-- ===================== THE JOURNEY (Calendar analog → résumé) ===================== -->
       <section class="resume" id="resume">
         <div class="section-head">
-          <p class="eyebrow"><span class="eyebrow__idx">04</span> — Resume</p>
-          <h2 class="section-title reveal">13+ Years<br /><span class="outline">In the craft</span></h2>
+          <h2 class="resume__title reveal">The Journey</h2>
+          <p class="resume__sub reveal">13+ years in the craft</p>
         </div>
 
         <div class="tabs reveal" role="tablist">
-          <button class="tab active" data-tab="skills" role="tab">Skills</button>
-          <button class="tab" data-tab="experience" role="tab">Experience</button>
+          <button class="tab active" data-tab="experience" role="tab">Experience</button>
+          <button class="tab" data-tab="skills" role="tab">Skills</button>
           <button class="tab" data-tab="education" role="tab">Education</button>
         </div>
 
         <div class="tab-panels">
+          <!-- EXPERIENCE -->
+          <div class="panel active" id="experience" role="tabpanel">
+            <div class="timeline">
+              <article class="tcard"><div class="tcard__head"><h3>Sr. UI/UX Designer</h3><span class="tcard__loc">Content House Inc. · 2017–Present</span></div>
+                <ul><li>Lead a small UI/UX design team.</li><li>Design websites &amp; mobile apps in Adobe XD / Figma.</li><li>Build responsive Squarespace sites with custom HTML, CSS, JS &amp; jQuery.</li><li>Create all company marketing materials.</li><li>Support devs building Vue/React components.</li></ul></article>
+              <article class="tcard"><div class="tcard__head"><h3>Lead UI/UX Designer &amp; Front-End Developer</h3><span class="tcard__loc">Coreproc Inc. · 2015–2020</span></div>
+                <ul><li>UI/UX for websites &amp; mobile apps; PSD slicing.</li><li>Converted designs into responsive front-end builds.</li><li>Guided the team toward excellent UI/UX.</li><li>Client communication via meetings, calls &amp; email.</li></ul></article>
+              <article class="tcard"><div class="tcard__head"><h3>UI/UX Designer</h3><span class="tcard__loc">DXC Technology · Taguig</span></div>
+                <ul><li>UI/UX designs for web applications.</li><li>RPA automations with WinAutomation.</li><li>Added pages &amp; features to a SharePoint site.</li></ul></article>
+              <article class="tcard"><div class="tcard__head"><h3>UI/UX Designer &amp; Web Developer</h3><span class="tcard__loc">Freelance · 2010–2014</span></div>
+                <ul><li>Photo editing, coupons &amp; posters in Photoshop.</li><li>Designed websites and converted them into WordPress.</li></ul></article>
+            </div>
+          </div>
+
           <!-- SKILLS -->
-          <div class="panel active" id="skills" role="tabpanel">
+          <div class="panel" id="skills" role="tabpanel">
             <div class="skills">
               <div class="skills__col">
                 <h3 class="skills__heading">Skills</h3>
@@ -542,107 +312,30 @@
                 <div class="bar"><div class="bar__head"><span>Prototyping</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
                 <div class="bar"><div class="bar__head"><span>Vibe Coding</span><span>87%</span></div><div class="bar__track"><div class="bar__fill" data-width="87"></div></div></div>
                 <div class="bar"><div class="bar__head"><span>Generative AI</span><span>85%</span></div><div class="bar__track"><div class="bar__fill" data-width="85"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>Leadership</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>Communication (clients &amp; team)</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
                 <div class="bar"><div class="bar__head"><span>HTML5</span><span>97%</span></div><div class="bar__track"><div class="bar__fill" data-width="97"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>CSS3</span><span>95%</span></div><div class="bar__track"><div class="bar__fill" data-width="95"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>SASS / LESS</span><span>95%</span></div><div class="bar__track"><div class="bar__fill" data-width="95"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>CSS3 / SASS</span><span>95%</span></div><div class="bar__track"><div class="bar__fill" data-width="95"></div></div></div>
                 <div class="bar"><div class="bar__head"><span>JavaScript ES6</span><span>45%</span></div><div class="bar__track"><div class="bar__fill" data-width="45"></div></div></div>
                 <div class="bar"><div class="bar__head"><span>jQuery</span><span>55%</span></div><div class="bar__track"><div class="bar__fill" data-width="55"></div></div></div>
                 <div class="bar"><div class="bar__head"><span>React.js</span><span>25%</span></div><div class="bar__track"><div class="bar__fill" data-width="25"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>Vue.js</span><span>18%</span></div><div class="bar__track"><div class="bar__fill" data-width="18"></div></div></div>
                 <div class="bar"><div class="bar__head"><span>Mobile-Web Responsive</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
                 <div class="bar"><div class="bar__head"><span>CSS Frameworks (Bootstrap, Tailwind, MUI)</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>Command Line</span><span>35%</span></div><div class="bar__track"><div class="bar__fill" data-width="35"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>WordPress</span><span>60%</span></div><div class="bar__track"><div class="bar__fill" data-width="60"></div></div></div>
                 <div class="bar"><div class="bar__head"><span>Squarespace</span><span>85%</span></div><div class="bar__track"><div class="bar__fill" data-width="85"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>Shopify</span><span>50%</span></div><div class="bar__track"><div class="bar__fill" data-width="50"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>Leadership &amp; Communication</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
               </div>
-
               <div class="skills__col">
                 <h3 class="skills__heading">Tools</h3>
                 <div class="bar"><div class="bar__head"><span>Figma</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
                 <div class="bar"><div class="bar__head"><span>Adobe XD</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>AI Tools (Claude Code, ChatGPT, Gemini, Veo3, Figma Make)</span><span>87%</span></div><div class="bar__track"><div class="bar__fill" data-width="87"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>AI Tools (Claude Code, ChatGPT, Gemini, Figma Make)</span><span>87%</span></div><div class="bar__track"><div class="bar__fill" data-width="87"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>Adobe Photoshop</span><span>90%</span></div><div class="bar__track"><div class="bar__fill" data-width="90"></div></div></div>
                 <div class="bar"><div class="bar__head"><span>Balsamiq Mockups</span><span>90%</span></div><div class="bar__track"><div class="bar__fill" data-width="90"></div></div></div>
                 <div class="bar"><div class="bar__head"><span>InVision</span><span>90%</span></div><div class="bar__track"><div class="bar__fill" data-width="90"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>Adobe Photoshop</span><span>90%</span></div><div class="bar__track"><div class="bar__fill" data-width="90"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>Adobe Illustrator</span><span>30%</span></div><div class="bar__track"><div class="bar__fill" data-width="30"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>Adobe Premiere Pro</span><span>55%</span></div><div class="bar__track"><div class="bar__fill" data-width="55"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>Windows OS</span><span>97%</span></div><div class="bar__track"><div class="bar__fill" data-width="97"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>Mac OS</span><span>97%</span></div><div class="bar__track"><div class="bar__fill" data-width="97"></div></div></div>
                 <div class="bar"><div class="bar__head"><span>VS Code</span><span>80%</span></div><div class="bar__track"><div class="bar__fill" data-width="80"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>IntelliJ IDEA</span><span>75%</span></div><div class="bar__track"><div class="bar__fill" data-width="75"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>Sublime Text</span><span>75%</span></div><div class="bar__track"><div class="bar__fill" data-width="75"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>Google Docs</span><span>80%</span></div><div class="bar__track"><div class="bar__fill" data-width="80"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>MS Office</span><span>75%</span></div><div class="bar__track"><div class="bar__fill" data-width="75"></div></div></div>
                 <div class="bar"><div class="bar__head"><span>Jira</span><span>80%</span></div><div class="bar__track"><div class="bar__fill" data-width="80"></div></div></div>
                 <div class="bar"><div class="bar__head"><span>Webflow</span><span>50%</span></div><div class="bar__track"><div class="bar__fill" data-width="50"></div></div></div>
                 <div class="bar"><div class="bar__head"><span>Framer</span><span>50%</span></div><div class="bar__track"><div class="bar__fill" data-width="50"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>Chrome DevTools</span><span>50%</span></div><div class="bar__track"><div class="bar__fill" data-width="50"></div></div></div>
                 <div class="bar"><div class="bar__head"><span>Git</span><span>30%</span></div><div class="bar__track"><div class="bar__fill" data-width="30"></div></div></div>
               </div>
-            </div>
-          </div>
-
-          <!-- EXPERIENCE -->
-          <div class="panel" id="experience" role="tabpanel">
-            <div class="timeline">
-              <article class="tcard">
-                <div class="tcard__head">
-                  <h3>Sr. UI/UX Designer</h3>
-                  <span class="tcard__loc">Quezon City, PH</span>
-                </div>
-                <p class="tcard__org">Content House Inc. · 2017 – Present</p>
-                <ul>
-                  <li>Lead a small UI/UX design team.</li>
-                  <li>Design websites and mobile apps using Adobe XD &amp; Figma.</li>
-                  <li>Build responsive Squarespace sites with custom HTML, CSS, JS &amp; jQuery.</li>
-                  <li>Create all marketing materials for the company.</li>
-                  <li>Support developers building Vue/React components with HTML &amp; CSS.</li>
-                  <li>Collaborate with developers, the PM and the CEO.</li>
-                </ul>
-              </article>
-
-              <article class="tcard">
-                <div class="tcard__head">
-                  <h3>Lead UI/UX Designer &amp; Front-End Developer</h3>
-                  <span class="tcard__loc">Pasig City, PH</span>
-                </div>
-                <p class="tcard__org">Coreproc Inc. · 2015 – 2020</p>
-                <ul>
-                  <li>Created UI/UX for websites &amp; mobile apps in Photoshop and Adobe XD.</li>
-                  <li>Converted designs into responsive front-end builds; PSD slicing.</li>
-                  <li>Guided the team toward excellent UI/UX.</li>
-                  <li>Solved cross-team web/mobile UI issues with deep HTML/CSS knowledge.</li>
-                  <li>Communicated with clients via meetings, calls and email.</li>
-                </ul>
-              </article>
-
-              <article class="tcard">
-                <div class="tcard__head">
-                  <h3>UI/UX Designer</h3>
-                  <span class="tcard__loc">Taguig City, PH</span>
-                </div>
-                <p class="tcard__org">DXC Technology</p>
-                <ul>
-                  <li>Created UI/UX designs for web applications.</li>
-                  <li>Built RPA automations with WinAutomation.</li>
-                  <li>Added pages and features to a SharePoint website.</li>
-                </ul>
-              </article>
-
-              <article class="tcard">
-                <div class="tcard__head">
-                  <h3>UI/UX Designer &amp; Web Developer</h3>
-                  <span class="tcard__loc">Remote</span>
-                </div>
-                <p class="tcard__org">Freelance · 2010 – 2014</p>
-                <ul>
-                  <li>Photo editing, coupons and posters in Adobe Photoshop.</li>
-                  <li>Designed websites and converted them into WordPress sites.</li>
-                </ul>
-              </article>
             </div>
           </div>
 
@@ -650,35 +343,60 @@
           <div class="panel" id="education" role="tabpanel">
             <article class="edu">
               <img src="assets/img/college-logo.svg" alt="Far Eastern University" onerror="this.style.display='none'" />
-              <div>
-                <h3>Bachelor of Science, Major in Marketing</h3>
-                <p>Far Eastern University — Manila · 2003 – 2007</p>
-              </div>
+              <div><h3>Bachelor of Science, Major in Marketing</h3><p>Far Eastern University — Manila · 2003–2007</p></div>
             </article>
           </div>
         </div>
       </section>
+
+      <!-- ===================== SOCIALS ===================== -->
+      <section class="socials" id="socials">
+        <div class="section-head">
+          <h2 class="socials__title reveal">What's up</h2>
+          <p class="socials__sub reveal">on socials</p>
+        </div>
+        <div class="socials__rail" id="socials-rail">
+          <img src="assets/img/project-27.png" alt="" loading="lazy" />
+          <img src="assets/img/project-28.png" alt="" loading="lazy" />
+          <img src="assets/img/project-26.png" alt="" loading="lazy" />
+          <img src="assets/img/project-29.png" alt="" loading="lazy" />
+          <img src="assets/img/project-30.png" alt="" loading="lazy" />
+          <img src="assets/img/project-17.png" alt="" loading="lazy" />
+          <img src="assets/img/project-20.png" alt="" loading="lazy" />
+        </div>
+        <div class="socials__links">
+          <a href="https://www.linkedin.com/in/jonathan-bautista-92038839/" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://www.facebook.com/jonathanndroid" target="_blank" rel="noopener">Facebook</a>
+          <a href="mailto:jchoybautista@gmail.com">Email</a>
+        </div>
+      </section>
     </main>
 
-    <!-- ===================== CONTACT / FOOTER ===================== -->
+    <!-- ===================== FOOTER ===================== -->
     <footer class="footer" id="contact">
-      <p class="eyebrow"><span class="eyebrow__idx">05</span> — Contact</p>
-      <h2 class="footer__cta reveal">Let's build<br />something <span class="accent">great.</span></h2>
+      <h2 class="footer__tag reveal">Design it.<br />Build it.</h2>
       <a class="footer__email reveal" href="mailto:jchoybautista@gmail.com">jchoybautista@gmail.com</a>
 
-      <div class="footer__row">
-        <a href="tel:+639171825114" class="footer__phone">+63 917 182 5114</a>
-        <div class="footer__socials">
+      <div class="footer__grid">
+        <nav class="footer__nav">
+          <a href="#home">Home</a>
+          <a href="#disciplines">Design</a>
+          <a href="#work">Work</a>
+          <a href="#clients">Clients</a>
+          <a href="#resume">Journey</a>
+          <a href="assets/files/jonathan_bautista_CV.docx" download>Download CV</a>
+        </nav>
+        <div class="footer__social">
           <a href="https://www.linkedin.com/in/jonathan-bautista-92038839/" target="_blank" rel="noopener" aria-label="LinkedIn"><img src="assets/img/linkedin-logo.svg" alt="" /></a>
           <a href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener" aria-label="Instagram"><img src="assets/img/instagram-logo.svg" alt="" /></a>
           <a href="https://www.facebook.com/jonathanndroid" target="_blank" rel="noopener" aria-label="Facebook"><img src="assets/img/facebook-logo.svg" alt="" /></a>
-          <a href="mailto:jchoybautista@gmail.com" aria-label="Email"><img src="assets/img/gmail-logo.svg" alt="" /></a>
+          <a href="tel:+639171825114" aria-label="Phone"><img src="assets/img/phone-logo.svg" alt="" /></a>
         </div>
-        <a href="assets/files/jonathan_bautista_CV.docx" class="btn" download>Download CV</a>
       </div>
 
       <div class="footer__base">
-        <span>© 2026 Jonathan Bautista</span>
+        <span>© 2026 Jonathan Bautista. All rights reserved.</span>
         <span>Designed &amp; built with Claude Code</span>
       </div>
     </footer>
@@ -688,9 +406,7 @@
       <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="modal-title">
         <button class="modal__close" id="modal-close" aria-label="Close">&times;</button>
         <div class="modal__body">
-          <div class="modal__media">
-            <img id="modal-img" src="" alt="" />
-          </div>
+          <div class="modal__media"><img id="modal-img" src="" alt="" /></div>
           <div class="modal__info">
             <h2 id="modal-title"></h2>
             <p id="modal-desc"></p>
@@ -709,7 +425,6 @@
       </div>
     </div>
 
-    <!-- Libraries (CDN) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
     <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js" defer></script>
