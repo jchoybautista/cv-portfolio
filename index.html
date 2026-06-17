@@ -32,89 +32,63 @@
 
     <!-- ===================== NAV ===================== -->
     <header class="nav" id="nav">
-      <a class="nav__mark" href="#home" aria-label="Jonathan Bautista — home"><span>Jonathan</span><span>Bautista</span></a>
-      <a class="nav__mono" href="#home" aria-label="JB">JB</a>
-      <div class="nav__right">
-        <a class="btn btn--pill" href="assets/files/jonathan_bautista_CV.docx" download>Résumé</a>
-        <button class="nav__toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
-      </div>
-      <nav class="nav__overlay" id="nav-overlay">
+      <a class="nav__brand" href="#home" aria-label="Jonathan Bautista — home">
+        <span class="nav__avatar"><img src="assets/img/profile-thumb.jpg" alt="" onerror="this.style.display='none'" /></span>
+        <span class="nav__name">Jonathan Bautista</span>
+      </a>
+      <nav class="nav__links" id="nav-links">
         <a href="#home">Home</a>
-        <a href="#disciplines">Design &amp; Code</a>
+        <a href="#disciplines">Design</a>
         <a href="#work">Work</a>
-        <a href="#builds">Live Builds</a>
         <a href="#clients">Clients</a>
         <a href="#resume">Journey</a>
-        <a href="mailto:jchoybautista@gmail.com">Work enquiries</a>
-        <div class="nav__overlay-social">
-          <a href="https://www.linkedin.com/in/jonathan-bautista-92038839/" target="_blank" rel="noopener">LinkedIn</a>
-          <a href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener">Instagram</a>
-          <a href="https://www.facebook.com/jonathanndroid" target="_blank" rel="noopener">Facebook</a>
-        </div>
+        <a href="mailto:jchoybautista@gmail.com" class="nav__enquiry">Work enquiries</a>
       </nav>
+      <div class="nav__social">
+        <a href="https://www.linkedin.com/in/jonathan-bautista-92038839/" target="_blank" rel="noopener" aria-label="LinkedIn"><img src="assets/img/linkedin-logo.svg" alt="" /></a>
+        <a href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener" aria-label="Instagram"><img src="assets/img/instagram-logo.svg" alt="" /></a>
+        <a href="https://www.facebook.com/jonathanndroid" target="_blank" rel="noopener" aria-label="Facebook"><img src="assets/img/facebook-logo.svg" alt="" /></a>
+      </div>
+      <button class="nav__toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
     </header>
 
     <main>
       <!-- ===================== HERO ===================== -->
       <section class="hero" id="home">
-        <div class="hero__topo" aria-hidden="true"></div>
-
-        <div class="hero__stage">
-          <!-- craft artifacts cycling over the head (the "helmet" analog) -->
-          <div class="craft" id="craft" aria-hidden="true">
-            <!-- 1. wireframe (sketches in) -->
-            <div class="craft__item craft__item--wire is-active">
-              <svg viewBox="0 0 220 150" fill="none">
-                <rect class="craft__wire-stroke" x="6" y="6" width="208" height="138" rx="10" />
-                <path class="craft__wire-stroke" d="M6 34 H214" />
-                <rect class="craft__wire-stroke" x="18" y="48" width="86" height="52" rx="6" />
-                <path class="craft__wire-stroke" d="M18 48 L104 100 M104 48 L18 100" />
-                <path class="craft__wire-stroke" d="M120 54 H198 M120 68 H186 M120 82 H198" />
-                <rect class="craft__accent" x="120" y="92" width="52" height="16" rx="8" />
-                <path class="craft__wire-stroke" d="M18 116 H202" />
-              </svg>
-            </div>
-            <!-- 2. hi-fi UI -->
-            <div class="craft__item craft__item--ui">
-              <div class="ui-mock">
-                <div class="ui-mock__bar"><i></i><i></i><i></i></div>
-                <div class="ui-mock__img"></div>
-                <div class="ui-mock__body">
-                  <div class="ui-mock__line"></div>
-                  <div class="ui-mock__line short"></div>
-                  <div class="ui-mock__btn"></div>
-                </div>
-              </div>
-            </div>
-            <!-- 3. code -->
-            <div class="craft__item craft__item--code">
-              <div class="code-mock">
-                <div><span class="k">const</span> ui = <span class="k">design</span>(</div>
-                <div class="i"><span class="s">"research"</span>,</div>
-                <div class="i"><span class="s">"prototype"</span>,</div>
-                <div>) <span class="c">// then ship it</span></div>
-                <div><span class="k">return</span> &lt;App /&gt;;</div>
-              </div>
-            </div>
+        <div class="hero__bg" aria-hidden="true">
+          <div class="hero__slides">
+            <img src="assets/img/project-30.png" alt="" />
+            <img src="assets/img/project-29.png" alt="" />
+            <img src="assets/img/project-27.png" alt="" />
+            <img src="assets/img/project-16.png" alt="" />
           </div>
+          <div class="hero__bg-veil"></div>
+        </div>
+        <div class="hero__glow" aria-hidden="true"></div>
 
-          <div class="hero__head" data-hero-portrait>
-            <img src="assets/img/hero-head.png" alt="Jonathan Bautista"
-                 onerror="this.closest('.hero__head').classList.add('is-missing')" />
-          </div>
+        <p class="hero__kicker" data-hero><span class="dot"></span> Designing &amp; building since 2010</p>
+
+        <h1 class="hero__name" aria-label="Jonathan Bautista">
+          <span data-hero>JONATHAN</span>
+          <span data-hero>BAUTISTA</span>
+        </h1>
+
+        <p class="hero__sub" data-hero>Senior UI/UX Designer &amp; Front-End Developer</p>
+
+        <div class="hero__portrait" data-hero-portrait>
+          <img src="assets/img/hero-cutout.png" alt="Jonathan Bautista"
+               onerror="this.closest('.hero__portrait').classList.add('is-missing')" />
         </div>
 
-        <p class="hero__role" data-hero>Senior UI/UX Designer &amp; Front-End Developer · since 2010</p>
-
         <!-- "Next Race" analog → Latest Build -->
-        <button class="next-card" data-id="28" aria-label="View latest build: Velocità E-Commerce">
+        <button class="next-card" data-id="28" data-hero aria-label="View latest build: Velocità E-Commerce">
           <span class="next-card__label">Latest build</span>
           <span class="next-card__title">Velocità E-Commerce</span>
-          <span class="next-card__meta">Designed &amp; built · 2026 <span class="next-card__arrow">→</span></span>
+          <span class="next-card__meta">React · Tailwind · Supabase — 2026 <span class="next-card__arrow">→</span></span>
         </button>
 
         <a class="hero__scroll" href="#message" aria-label="Scroll">
-          <span>Scroll to explore</span>
+          <span>This is a vertical drive</span>
           <span class="hero__scroll-line"></span>
         </a>
       </section>

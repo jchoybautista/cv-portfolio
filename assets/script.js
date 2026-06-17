@@ -82,18 +82,18 @@
     });
   }
 
-  /* ---------- Hero craft cycle (design -> UI -> code) ---------- */
-  (function craftCycle() {
-    const craft = document.getElementById("craft");
-    if (!craft) return;
-    const items = craft.querySelectorAll(".craft__item");
-    if (items.length < 2 || prefersReduced) return;
+  /* ---------- Hero background slideshow ---------- */
+  (function heroSlides() {
+    const slides = document.querySelectorAll(".hero__slides img");
+    if (!slides.length) return;
     let i = 0;
+    slides[0].classList.add("is-active");
+    if (slides.length < 2 || prefersReduced) return;
     setInterval(() => {
-      items[i].classList.remove("is-active");
-      i = (i + 1) % items.length;
-      items[i].classList.add("is-active");
-    }, 3000);
+      slides[i].classList.remove("is-active");
+      i = (i + 1) % slides.length;
+      slides[i].classList.add("is-active");
+    }, 4200);
   })();
 
   /* ---------- Reveal on scroll (IntersectionObserver) ---------- */
@@ -174,15 +174,54 @@
     const gsap = window.gsap;
     gsap.registerPlugin(window.ScrollTrigger);
 
-    gsap.to(".hero__head", {
-      yPercent: 10,
+    gsap.to(".hero__portrait", {
+      yPercent: 14,
       ease: "none",
-      scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true },
+      scrollTrigger: {
+        trigger: ".hero",
+        start: "top top",
+        end: "bottom top",
+        scrub: true,
+      },
     });
-    gsap.to(".craft", {
-      yPercent: -16,
+    gsap.to(".hero__name", {
+      yPercent: -24,
+      opacity: 0.25,
       ease: "none",
-      scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true },
+      scrollTrigger: {
+        trigger: ".hero",
+        start: "top top",
+        end: "bottom top",
+        scrub: true,
+      },
+    });
+    gsap.to(".hero__glow", {
+      scale: 1.3,
+      ease: "none",
+      scrollTrigger: {
+        trigger: ".hero",
+        start: "top top",
+        end: "bottom top",
+        scrub: true,
+      },
+    });
+
+    // Featured media subtle parallax
+    gsap.utils.toArray(".feature__media img").forEach((img) => {
+      gsap.fromTo(
+        img,
+        { yPercent: -8 },
+        {
+          yPercent: 8,
+          ease: "none",
+          scrollTrigger: {
+            trigger: img,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          },
+        }
+      );
     });
   }
 

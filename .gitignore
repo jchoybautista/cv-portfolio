@@ -15,7 +15,3 @@
 
 # Logs
 *.log
-
-# Local design-reference material (not part of the site)
-lando_video.mp4
-_frames/
