@@ -470,6 +470,30 @@ document.addEventListener("DOMContentLoaded", function () {
       xdLink: "",
       claudeLink: "https://final-fantasy-7.vercel.app/",
     },
+
+    28: {
+      title: "Velocità E-Commerce Website - Designed and built using Claude",
+      desc: "I built the Velocità E-Commerce platform and its companion admin dashboard as a personal project to showcase my design and development workflow using Claude. By leveraging Claude Code to build the system with React, Tailwind, and Supabase, I managed everything from initial design to final deployment. My front-end expertise was essential for refining the code to ensure a robust, high-performance experience. Both applications are fully mobile-web responsive, providing a seamless experience across all devices. This project highlights my ability to use AI as a force multiplier while maintaining the technical oversight required to deliver professional, scalable solutions.",
+      created: "2026",
+      role: "Designer and Developer",
+      image: "assets/img/project-30.png",
+      // LINKS: Testing conditional hiding (Only Web visible)
+      figmaLink: "",
+      xdLink: "",
+      claudeLink: "https://scooter-store.vercel.app/",
+    },
+
+    29: {
+      title: "Velocità Admin Page - Designed and built using Claude",
+      desc: "As the companion admin page for the Velocità E-Commerce platform, I built this dashboard as a personal project to showcase my end-to-end design and development workflow using Claude. By leveraging Claude Code to build this system with React, Tailwind, and Supabase, I handled everything from the initial interface design to final deployment. My front-end expertise was essential for refining the code to ensure a robust, high-performance experience. This dashboard serves as the command center for the store, allowing for seamless management of product content and orders. Fully mobile-web responsive, it provides a fluid, professional experience across any device, highlighting my ability to use AI as a force multiplier while maintaining the technical oversight required to deliver complete, scalable solutions.",
+      created: "2026",
+      role: "Designer and Developer",
+      image: "assets/img/project-31.png",
+      // LINKS: Testing conditional hiding (Only Web visible)
+      figmaLink: "",
+      xdLink: "",
+      claudeLink: "https://scooter-store-admin.vercel.app/dashboard/",
+    },
   };
   const modal = document.getElementById("portfolio-modal");
   const closeBtn = document.getElementById("modal-close");
