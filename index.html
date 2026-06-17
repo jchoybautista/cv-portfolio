@@ -1,1421 +1,718 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Jonathan Bautista CV . Portfolio</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
+    <title>Jonathan Bautista — Senior UI/UX Designer & Front-End Developer</title>
+    <meta
+      name="description"
+      content="Jonathan Bautista — Senior UI/UX Designer & Front-End Developer. 13+ years turning messy ideas into digital products people genuinely enjoy using."
     />
 
+    <!-- Make JS-only states active before paint, and guarantee the hero
+         reveal fires even if the external script fails to load. -->
+    <script>
+      document.documentElement.classList.remove("no-js");
+      document.documentElement.classList.add("js");
+      window.addEventListener("load", function () {
+        document.documentElement.classList.add("loaded");
+      });
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
     />
     <link rel="stylesheet" href="assets/style.css" />
   </head>
+
   <body>
-    <header class="header">
-      <div class="container">
-        <nav class="navbar">
-          <div class="logo-container">
-            <div class="profile-avatar">
-              <img
-                src="assets/img/profile-thumb.jpg"
-                alt="Profile Avatar"
-                onerror="this.src='https://via.placeholder.com/30'"
-              />
-            </div>
-            <div class="logo">
-              <a href="#" style="color: #c4cfde; font-weight: 400"
-                >Jonathan Bautista</a
-              >
-            </div>
-          </div>
-          <ul class="nav-links">
-            <!-- <li><a href="#home">Home</a></li>
-            <li><a href="#portfolio">Portfolio</a></li>
-            <li><a href="#resume">Resume</a></li> -->
-            <!-- <li>
-              <a
-                href="assets/files/jonathan_bautista_CV.docx"
-                class="btn"
-                download
-                >Download CV</a
-              >
-            </li> -->
-          </ul>
-        </nav>
-      </div>
+    <!-- Grain / noise overlay -->
+    <div class="grain" aria-hidden="true"></div>
+
+    <!-- Scroll progress bar -->
+    <div class="scroll-progress" aria-hidden="true"><span></span></div>
+
+    <!-- ===================== NAV ===================== -->
+    <header class="nav" id="nav">
+      <a class="nav__brand" href="#top" aria-label="Jonathan Bautista — home">
+        <span class="nav__avatar">
+          <img src="assets/img/profile-thumb.jpg" alt="" onerror="this.style.display='none'" />
+        </span>
+        <span class="nav__name">Jonathan&nbsp;Bautista</span>
+      </a>
+
+      <nav class="nav__links" id="nav-links">
+        <a href="#work">Work</a>
+        <a href="#resume">Resume</a>
+        <a href="#contact">Contact</a>
+        <a href="assets/files/jonathan_bautista_CV.docx" class="btn btn--ghost" download>Download CV</a>
+      </nav>
+
+      <button class="nav__toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span>
+      </button>
     </header>
 
-    <section class="hero" id="home">
-      <div class="container">
-        <div class="hero-content">
-          <div class="hero-image reveal active">
-            <img
-              src="assets/img/hero_image2.jpg"
-              alt="Developer Profile Image"
-              onerror="this.src='https://via.placeholder.com/400x500'"
-            />
-          </div>
-          <div class="hero-text reveal active">
-            <h1 style="margin-bottom: 0; font-size: 50px">
-              I’m <span class="role-text">Jonathan Bautista</span>
-            </h1>
-            <h2 style="font-size: 36px; margin-bottom: 24px">
-              <span style="font-weight: 100">{</span>
-              <span id="rotating-text">UI/UX Designer.</span>
-              <span style="font-weight: 100">}</span>
-            </h2>
-            <p style="margin-bottom: 12px">
-              I've spent 13+ years as a Senior UI/UX Designer, tackling the
-              messiest ideas and sculpting them into digital products people
-              genuinely enjoy using. I manage the whole process, from initial
-              research and wireframes all the way through to polished,
-              high-fidelity prototypes then translate it perfectly into code.
-              <br />
-            </p>
+    <main>
+      <!-- ===================== HERO ===================== -->
+      <section class="hero" id="top">
+        <div class="hero__glow" aria-hidden="true"></div>
+        <div class="hero__grid-lines" aria-hidden="true"></div>
 
-            <p style="margin-bottom: 16px">
-              My comprehensive portfolio includes
-              <strong style="font-size: 24px">UI/UX Designs</strong> for
-              websites and mobile applications for major brands, such as:
-            </p>
-            <p style="margin-bottom: 16px">
-              <strong style="color: #fe1d6e; font-weight: 500"
-                >AEON Cambodia</strong
-              >,
-              <strong style="color: #fe1d6e; font-weight: 500"
-                >Travelbook PH</strong
-              >,
-              <strong style="color: #fe1d6e; font-weight: 500"
-                >Content House Inc.</strong
-              >,
-              <strong style="color: #fe1d6e; font-weight: 500"
-                >Angel's Pizza</strong
-              >,
-              <strong style="color: #fe1d6e; font-weight: 500"
-                >Figaro Coffee</strong
-              >,
-              <strong style="color: #fe1d6e; font-weight: 500"
-                >Yamaha Motors Philippines</strong
-              >, etc.
-            </p>
+        <p class="hero__eyebrow" data-hero>
+          <span class="dot"></span> Senior UI/UX Designer &amp; Front-End Developer
+        </p>
 
-            <p style="margin-bottom: 16px">
-              In addition to design, as a
-              <strong style="font-size: 24px">Front-End Developer</strong>, I
-              delivered critical responsive web projects, including:
-            </p>
+        <h1 class="hero__name" aria-label="Jonathan Bautista">
+          <span class="hero__name-line" data-hero>JONATHAN</span>
+          <span class="hero__name-line" data-hero>BAUTISTA</span>
+        </h1>
 
-            <strong style="color: #fe1d6e; font-weight: 500"
-              >Smart Communications</strong
-            >
-            and the
-            <strong style="color: #fe1d6e; font-weight: 500"
-              >Talk 'N Text</strong
-            >
-            Websites - Pioneered their transition into fully optimized
-            mobile-web responsive experiences. Developed the front-end
-            architecture for platforms such as
-            <strong style="color: #fe1d6e; font-weight: 500">beep™</strong>,
-            <strong style="color: #fe1d6e; font-weight: 500">Visor PH</strong>,
-            <strong style="color: #fe1d6e; font-weight: 500"
-              >East West Bank</strong
-            >,
-            <strong style="color: #fe1d6e; font-weight: 500"
-              >Camel Appliances</strong
-            >,
-            <strong style="color: #fe1d6e; font-weight: 500"
-              >It's More Fun in the Philippines</strong
-            >, <strong style="color: #fe1d6e; font-weight: 500">POEA</strong>,
-            <strong style="color: #fe1d6e; font-weight: 500">PRU Life UK</strong
-            >,
-            <strong style="color: #fe1d6e; font-weight: 500">Bonakid</strong>,
-            and more.
-
-            <p style="margin-top: 16px">
-              This dual expertise ensures seamless execution, bridging the gap
-              between design vision and technical implementation to deliver
-              superior user experiences.
-            </p>
-            <div class="social-links">
-              <h4>FOLLOW ME</h4>
-
-              <div class="social-icons" target="_blank">
-                <a href="https://www.facebook.com/jonathanndroid">
-                  <img
-                    src="assets/img/facebook-logo.svg"
-                    alt="Facebook"
-                    onerror="this.src='https://via.placeholder.com/28'"
-                  />
-                </a>
-                <a
-                  href="https://www.instagram.com/jonathanndroid/"
-                  target="_blank"
-                >
-                  <img
-                    src="assets/img/instagram-logo.svg"
-                    alt="Instagram"
-                    onerror="this.src='https://via.placeholder.com/28'"
-                  />
-                </a>
-                <a
-                  href="https://www.linkedin.com/in/jonathan-bautista-92038839/"
-                  target="_blank"
-                >
-                  <img
-                    src="assets/img/linkedin-logo.svg"
-                    alt="LinkedIn"
-                    onerror="this.src='https://via.placeholder.com/28'"
-                  />
-                </a>
-                <a href="mailto:jchoybautista@gmail.com">
-                  <img
-                    src="assets/img/gmail-logo.svg"
-                    alt="Email"
-                    onerror="this.src='https://via.placeholder.com/28'"
-                  />
-                </a>
-                <a href="tel:+639171825114" target="_blank">
-                  <img
-                    src="assets/img/phone-logo.svg"
-                    alt="Mobile Number"
-                    onerror="this.src='https://via.placeholder.com/28'"
-                  />
-                </a>
-              </div>
-              <a
-                href="assets/files/jonathan_bautista_CV.docx"
-                class="btn"
-                download
-                >Download CV</a
-              >
-            </div>
-          </div>
+        <div class="hero__portrait" data-hero-portrait>
+          <img
+            src="assets/img/hero-cutout.png"
+            alt="Jonathan Bautista"
+            onerror="this.closest('.hero__portrait').classList.add('hero__portrait--missing')"
+          />
         </div>
-      </div>
-    </section>
 
-    <section class="section" id="portfolio">
-      <div class="container">
-        <div class="section-title reveal">
-          <h2>My Portfolio</h2>
-
-          <div class="metamorphism-pushed" style="margin-top: 24px !important">
-            <strong>Note</strong>: 
-            Most of my work from 2012–2019 is under NDA. For some projects from
-            those years, I was unable to back up the XD files, so I can only
-            show them as screenshots taken from my email and imported into
-            Figma. Also, the live apps/websites may look different now since
-            these designs were created a few years ago.
-          </div>
-        </div>
-        
-        <div class="portfolio-grid" id="portfolio-grid">
-
-          <div class="portfolio-item reveal" data-id="28">
-            <div class="portfolio-image">
-              <img
-                src="assets/img/project-30.png"
-                alt="Project 16"
-                onerror="this.src='https://via.placeholder.com/350x250'"
-              />
-            </div>
-            <h3 class="portfolio-title">
-              Velocità E-Commerce Website - Designed and built using Claude
-            </h3>
-            <div class="portfolio-meta">
-              <div>
-                <span class="location">Designer & Developer (Claude)</span>
-              </div>
-              <i class="fas fa-arrow-right arrow-icon"></i>
-            </div>
-          </div>
-
-          <div class="portfolio-item reveal" data-id="29">
-            <div class="portfolio-image">
-              <img
-                src="assets/img/project-31.png"
-                alt="Project 16"
-                onerror="this.src='https://via.placeholder.com/350x250'"
-              />
-            </div>
-            <h3 class="portfolio-title">
-              Velocità Admin Page - Designed and built using Claude
-            </h3>
-            <div class="portfolio-meta">
-              <div>
-                <span class="location">Designer & Developer (Claude)</span>
-              </div>
-              <i class="fas fa-arrow-right arrow-icon"></i>
-            </div>
-          </div>
-
-          <div class="portfolio-item reveal" data-id="27">
-            <div class="portfolio-image">
-              <img
-                src="assets/img/project-29.png"
-                alt="Project 16"
-                onerror="this.src='https://via.placeholder.com/350x250'"
-              />
-            </div>
-            <h3 class="portfolio-title">
-              Final Fantasy VII Marketing Landing Page - Designed and built using Claude
-            </h3>
-            <div class="portfolio-meta">
-              <div>
-                <span class="location">Designer & Developer (Claude)</span>
-              </div>
-              <i class="fas fa-arrow-right arrow-icon"></i>
-            </div>
-          </div>
-
-
-          <div class="portfolio-item reveal" data-id="26">
-            <div class="portfolio-image">
-              <img
-                src="assets/img/project-28.png"
-                alt="Project 16"
-                onerror="this.src='https://via.placeholder.com/350x250'"
-              />
-            </div>
-            <h3 class="portfolio-title">
-              Dragon Ball Flappy Goku Game (Retro Style) - Designed and built using Figma Make(AI)
-            </h3>
-            <div class="portfolio-meta">
-              <div>
-                <span class="location">Designer & Developer (Figma Make)</span>
-              </div>
-              <i class="fas fa-arrow-right arrow-icon"></i>
-            </div>
-          </div>
-
-          <div class="portfolio-item reveal" data-id="25">
-            <div class="portfolio-image">
-              <img
-                src="assets/img/project-27.png"
-                alt="Project 15"
-                onerror="this.src='https://via.placeholder.com/350x250'"
-              />
-            </div>
-            <h3 class="portfolio-title">
-              Gacha Social App - Designed and built using Figma Make(AI)
-            </h3>
-            <div class="portfolio-meta">
-              <div>
-                <span class="location">Designer & Developer (Figma Make)</span>
-              </div>
-              <i class="fas fa-arrow-right arrow-icon"></i>
-            </div>
-          </div>
-
-          <div class="portfolio-item reveal" data-id="24">
-            <div class="portfolio-image">
-              <img
-                src="assets/img/project-26.png"
-                alt="Project 14"
-                onerror="this.src='https://via.placeholder.com/350x250'"
-              />
-            </div>
-            <h3 class="portfolio-title">
-              Vanguard Landing Page - Designed and built using Figma Make(AI)
-            </h3>
-            <div class="portfolio-meta">
-              <div>
-                <span class="location">Designer & Developer (Figma Make)</span>
-              </div>
-              <i class="fas fa-arrow-right arrow-icon"></i>
-            </div>
-          </div>
-
-          <div class="portfolio-item reveal" data-id="23">
-            <div class="portfolio-image">
-              <img
-                src="assets/img/project-25.png"
-                alt="Project 14"
-                onerror="this.src='https://via.placeholder.com/350x250'"
-              />
-            </div>
-            <h3 class="portfolio-title">
-              Vanguard Admin Dashboard - Designed and built using Figma Make(AI)
-            </h3>
-            <div class="portfolio-meta">
-              <div>
-                <span class="location">Designer & Developer (Figma Make)</span>
-              </div>
-              <i class="fas fa-arrow-right arrow-icon"></i>
-            </div>
-          </div>
-
-
-           <div class="portfolio-item reveal" data-id="22">
-            <div class="portfolio-image">
-              <img
-                src="assets/img/project-24.png"
-                alt="Project 14"
-                onerror="this.src='https://via.placeholder.com/350x250'"
-              />
-            </div>
-            <h3 class="portfolio-title">
-              KicksMart Mobile App - Designed and built Using Figma Make(AI)
-            </h3>
-            <div class="portfolio-meta">
-              <div>
-                <span class="location">Designer & Developer (Figma Make)</span>
-              </div>
-              <i class="fas fa-arrow-right arrow-icon"></i>
-            </div>
-          </div>
-          
-          <div class="portfolio-item reveal" data-id="1">
-            <div class="portfolio-image">
-              <img
-                src="assets/img/project-1.png"
-                alt="Project 1"
-                onerror="this.src='https://via.placeholder.com/350x250'"
-              />
-            </div>
-            <h3 class="portfolio-title">
-              NBL Basketball Website Redesign Concept
-            </h3>
-            <div class="portfolio-meta">
-              <div>
-                <span class="location">Designer</span>
-                <span class="location">Developer</span>
-              </div>
-              <i class="fas fa-arrow-right arrow-icon"></i>
-            </div>
-          </div>
-
-         
-
-          <div class="portfolio-item reveal" data-id="2">
-            <div class="portfolio-image">
-              <img
-                src="assets/img/project-3.png"
-                alt="Project 3"
-                onerror="this.src='https://via.placeholder.com/350x250'"
-              />
-            </div>
-            <h3 class="portfolio-title">
-              Playtech E-Commerce Website and Mobile App Concept
-            </h3>
-            <div class="portfolio-meta">
-              <div>
-                <span class="location">Designer</span>
-              </div>
-              <i class="fas fa-arrow-right arrow-icon"></i>
-            </div>
-          </div>
-
-          <div class="portfolio-item reveal" data-id="3">
-            <div class="portfolio-image">
-              <img
-                src="assets/img/project-4.png"
-                alt="Project 4"
-                onerror="this.src='https://via.placeholder.com/350x250'"
-              />
-            </div>
-            <h3 class="portfolio-title">Codecrafted CV Website Concept</h3>
-            <div class="portfolio-meta">
-              <div>
-                <span class="location">Designer</span>
-              </div>
-              <i class="fas fa-arrow-right arrow-icon"></i>
-            </div>
-          </div>
-
-          <div class="portfolio-item reveal" data-id="4">
-            <div class="portfolio-image">
-              <img
-                src="assets/img/project-5.png"
-                alt="Project 5"
-                onerror="this.src='https://via.placeholder.com/350x250'"
-              />
-            </div>
-            <h3 class="portfolio-title">Gamestop E-Commerce Website Concept</h3>
-            <div class="portfolio-meta">
-              <div>
-                <span class="location">Designer</span>
-              </div>
-              <i class="fas fa-arrow-right arrow-icon"></i>
-            </div>
-          </div>
-
-          <div class="portfolio-item reveal" data-id="5">
-            <div class="portfolio-image">
-              <img
-                src="assets/img/project-23.png"
-                alt="Project 23"
-                onerror="this.src='https://via.placeholder.com/350x250'"
-              />
-            </div>
-            <h3 class="portfolio-title">Content House Web App</h3>
-            <div class="portfolio-meta">
-              <div>
-                <span class="location">Designer</span>
-              </div>
-              <i class="fas fa-arrow-right arrow-icon"></i>
-            </div>
-          </div>
-
-          <div class="portfolio-item reveal" data-id="6">
-            <div class="portfolio-image">
-              <img
-                src="assets/img/project-22.png"
-                alt="Project 22"
-                onerror="this.src='https://via.placeholder.com/350x250'"
-              />
-            </div>
-            <h3 class="portfolio-title">Content House Mobile App</h3>
-            <div class="portfolio-meta">
-              <div>
-                <span class="location">Designer</span>
-              </div>
-              <i class="fas fa-arrow-right arrow-icon"></i>
-            </div>
-          </div>
-
-          <div class="portfolio-item reveal" data-id="7">
-            <div class="portfolio-image">
-              <img
-                src="assets/img/project-6.png"
-                alt="Project 6"
-                onerror="this.src='https://via.placeholder.com/350x250'"
-              />
-            </div>
-            <h3 class="portfolio-title">
-              Content House Inc. Marketing Website
-            </h3>
-            <div class="portfolio-meta">
-              <div>
-                <span class="location">Designer</span>
-                <span class="location">Developer</span>
-              </div>
-              <i class="fas fa-arrow-right arrow-icon"></i>
-            </div>
-          </div>
-
-          <div class="portfolio-item reveal" data-id="8">
-            <div class="portfolio-image">
-              <img
-                src="assets/img/project-7.png"
-                alt="Project 7"
-                onerror="this.src='https://via.placeholder.com/350x250'"
-              />
-            </div>
-            <h3 class="portfolio-title">Agents Space Artowork Editor</h3>
-            <div class="portfolio-meta">
-              <div>
-                <span class="location">Designer</span>
-                <span class="location">Developer</span>
-              </div>
-              <i class="fas fa-arrow-right arrow-icon"></i>
-            </div>
-          </div>
-
-          <div class="portfolio-item reveal" data-id="9">
-            <div class="portfolio-image">
-              <img
-                src="assets/img/project-8.png"
-                alt="Project 8"
-                onerror="this.src='https://via.placeholder.com/350x250'"
-              />
-            </div>
-            <h3 class="portfolio-title">Agents Space Web App</h3>
-            <div class="portfolio-meta">
-              <div>
-                <span class="location">Designer</span>
-              </div>
-              <i class="fas fa-arrow-right arrow-icon"></i>
-            </div>
-          </div>
-
-          <div class="portfolio-item reveal" data-id="10">
-            <div class="portfolio-image">
-              <img
-                src="assets/img/project-9.png"
-                alt="Project 9"
-                onerror="this.src='https://via.placeholder.com/350x250'"
-              />
-            </div>
-            <h3 class="portfolio-title">Agents Space Mobile App</h3>
-            <div class="portfolio-meta">
-              <div>
-                <span class="location">Designer</span>
-              </div>
-              <i class="fas fa-arrow-right arrow-icon"></i>
-            </div>
-          </div>
-
-          <div class="portfolio-item reveal" data-id="11">
-            <div class="portfolio-image">
-              <img
-                src="assets/img/project-10.png"
-                alt="Project 10"
-                onerror="this.src='https://via.placeholder.com/350x250'"
-              />
-            </div>
-            <h3 class="portfolio-title">Agents Space Marketing Website</h3>
-            <div class="portfolio-meta">
-              <div>
-                <span class="location">Designer</span>
-                <span class="location">Developer</span>
-              </div>
-              <i class="fas fa-arrow-right arrow-icon"></i>
-            </div>
-          </div>
-
-          <div class="portfolio-item reveal" data-id="21">
-            <div class="portfolio-image">
-              <img
-                src="assets/img/project-21.png"
-                alt="Project 21"
-                onerror="this.src='https://via.placeholder.com/350x250'"
-              />
-            </div>
-            <h3 class="portfolio-title">Aeon Cambodia Mobile App Redesign</h3>
-            <div class="portfolio-meta">
-              <div>
-                <span class="location">Designer</span>
-              </div>
-              <i class="fas fa-arrow-right arrow-icon"></i>
-            </div>
-          </div>
-
-          <div class="portfolio-item reveal" data-id="18">
-            <div class="portfolio-image">
-              <img
-                src="assets/img/project-18.png"
-                alt="Project 18"
-                onerror="this.src='https://via.placeholder.com/350x250'"
-              />
-            </div>
-            <h3 class="portfolio-title">
-              Yamaha Motors Philippines Mobile App
-            </h3>
-            <div class="portfolio-meta">
-              <div>
-                <span class="location">Designer</span>
-              </div>
-              <i class="fas fa-arrow-right arrow-icon"></i>
-            </div>
-          </div>
-
-          <div class="portfolio-item reveal" data-id="14">
-            <div class="portfolio-image">
-              <img
-                src="assets/img/project-14.png"
-                alt="Project 14"
-                onerror="this.src='https://via.placeholder.com/350x250'"
-              />
-            </div>
-            <h3 class="portfolio-title">
-              MyPocketDoctor Website and Mobile App
-            </h3>
-            <div class="portfolio-meta">
-              <div>
-                <span class="location">Designer</span>
-                <span class="location">Developer</span>
-              </div>
-              <i class="fas fa-arrow-right arrow-icon"></i>
-            </div>
-          </div>
-
-          <div class="portfolio-item reveal" data-id="15">
-            <div class="portfolio-image">
-              <img
-                src="assets/img/project-15.png"
-                alt="Project 15"
-                onerror="this.src='https://via.placeholder.com/350x250'"
-              />
-            </div>
-            <h3 class="portfolio-title">
-              It's More Fun in the Philippines Website
-            </h3>
-            <div class="portfolio-meta">
-              <div>
-                <span class="location">Designer</span>
-                <span class="location">Developer</span>
-              </div>
-              <i class="fas fa-arrow-right arrow-icon"></i>
-            </div>
-          </div>
-
-          <div class="portfolio-item reveal" data-id="16">
-            <div class="portfolio-image">
-              <img
-                src="assets/img/project-16.png"
-                alt="Project 16"
-                onerror="this.src='https://via.placeholder.com/350x250'"
-              />
-            </div>
-            <h3 class="portfolio-title">Coreproc Inc. Website</h3>
-            <div class="portfolio-meta">
-              <div>
-                <span class="location">Designer</span>
-                <span class="location">Developer</span>
-              </div>
-              <i class="fas fa-arrow-right arrow-icon"></i>
-            </div>
-          </div>
-
-          <div class="portfolio-item reveal" data-id="17">
-            <div class="portfolio-image">
-              <img
-                src="assets/img/project-17.png"
-                alt="Project 17"
-                onerror="this.src='https://via.placeholder.com/350x250'"
-              />
-            </div>
-            <h3 class="portfolio-title">Mansmith Conference 2020 mobile app</h3>
-            <div class="portfolio-meta">
-              <div>
-                <span class="location">Designer</span>
-              </div>
-              <i class="fas fa-arrow-right arrow-icon"></i>
-            </div>
-          </div>
-
-          <div class="portfolio-item reveal" data-id="19">
-            <div class="portfolio-image">
-              <img
-                src="assets/img/project-19.png"
-                alt="Project 19"
-                onerror="this.src='https://via.placeholder.com/350x250'"
-              />
-            </div>
-            <h3 class="portfolio-title">Figaro Coffee Mobile App</h3>
-            <div class="portfolio-meta">
-              <div>
-                <span class="location">Designer</span>
-              </div>
-              <i class="fas fa-arrow-right arrow-icon"></i>
-            </div>
-          </div>
-
-          <div class="portfolio-item reveal" data-id="20">
-            <div class="portfolio-image">
-              <img
-                src="assets/img/project-20.png"
-                alt="Project 20"
-                onerror="this.src='https://via.placeholder.com/350x250'"
-              />
-            </div>
-            <h3 class="portfolio-title">Angels Pizza Mobile App</h3>
-            <div class="portfolio-meta">
-              <div>
-                <span class="location">Designer</span>
-              </div>
-              <i class="fas fa-arrow-right arrow-icon"></i>
-            </div>
-          </div>
-
-          <div class="portfolio-item reveal" data-id="12">
-            <div class="portfolio-image">
-              <img
-                src="assets/img/project-12.jpg"
-                alt="Project 12"
-                onerror="this.src='https://via.placeholder.com/350x250'"
-              />
-            </div>
-            <h3 class="portfolio-title">
-              Travelbook PH Website Revamp and Mobile App
-            </h3>
-            <div class="portfolio-meta">
-              <div>
-                <span class="location">Designer</span>
-                <span class="location">Developer</span>
-              </div>
-              <i class="fas fa-arrow-right arrow-icon"></i>
-            </div>
-          </div>
-
-          <div class="portfolio-item reveal" data-id="13">
-            <div class="portfolio-image">
-              <img
-                src="assets/img/project-13.png"
-                alt="Project 13"
-                onerror="this.src='https://via.placeholder.com/350x250'"
-              />
-            </div>
-            <h3 class="portfolio-title">Nexgo Website</h3>
-            <div class="portfolio-meta">
-              <div>
-                <span class="location">Designer</span>
-                <span class="location">Developer</span>
-              </div>
-              <i class="fas fa-arrow-right arrow-icon"></i>
-            </div>
+        <div class="hero__footer">
+          <p class="hero__tagline" data-hero>
+            <em class="accent">Design-led.</em> Code-fluent. AI-accelerated.
+          </p>
+          <div class="hero__socials" data-hero>
+            <a href="https://www.linkedin.com/in/jonathan-bautista-92038839/" target="_blank" rel="noopener" aria-label="LinkedIn">
+              <img src="assets/img/linkedin-logo.svg" alt="" />
+            </a>
+            <a href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener" aria-label="Instagram">
+              <img src="assets/img/instagram-logo.svg" alt="" />
+            </a>
+            <a href="https://www.facebook.com/jonathanndroid" target="_blank" rel="noopener" aria-label="Facebook">
+              <img src="assets/img/facebook-logo.svg" alt="" />
+            </a>
+            <a href="mailto:jchoybautista@gmail.com" aria-label="Email">
+              <img src="assets/img/gmail-logo.svg" alt="" />
+            </a>
           </div>
         </div>
 
-        <div class="load-more-container">
-          <a href="#portfolio" class="btn" id="load-more-btn">Load More</a>
-        </div>
-      </div>
-    </section>
+        <a class="hero__scroll" href="#about" aria-label="Scroll to content">
+          <span>Scroll</span>
+          <span class="hero__scroll-line"></span>
+        </a>
+      </section>
 
-    <section class="section" id="resume">
-      <div class="container">
-        <div class="section-title reveal">
-          <h4>13+ YEARS OF EXPERIENCE</h4>
-          <h2>My Resume</h2>
+      <!-- ===================== MANIFESTO ===================== -->
+      <section class="manifesto" id="about">
+        <p class="eyebrow"><span class="eyebrow__idx">01</span> — About</p>
+        <h2 class="manifesto__text reveal">
+          I turn the <span class="accent">messiest ideas</span> into digital products people
+          <span class="accent">genuinely enjoy</span> using — from research and wireframes to
+          high-fidelity <span class="accent">prototypes</span>, then into clean,
+          production-ready <span class="accent">code</span>.
+        </h2>
+
+        <div class="stats">
+          <div class="stat reveal">
+            <span class="stat__num" data-count="13">0</span><span class="stat__suffix">+</span>
+            <span class="stat__label">Years of experience</span>
+          </div>
+          <div class="stat reveal">
+            <span class="stat__num" data-count="30">0</span><span class="stat__suffix">+</span>
+            <span class="stat__label">Projects shipped</span>
+          </div>
+          <div class="stat reveal">
+            <span class="stat__num" data-count="20">0</span><span class="stat__suffix">+</span>
+            <span class="stat__label">Brands &amp; clients</span>
+          </div>
+          <div class="stat reveal">
+            <span class="stat__num" data-count="2">0</span>
+            <span class="stat__label">Disciplines — design &amp; code</span>
+          </div>
         </div>
 
-        <div class="resume-tabs reveal">
-          <button class="resume-tab-btn active" data-tab="skills">
-            Professional Skills
-          </button>
-          <button class="resume-tab-btn" data-tab="education">Education</button>
-          <button class="resume-tab-btn" data-tab="experience">
-            Experience
-          </button>
+        <!-- Brand marquee -->
+        <div class="marquee" aria-hidden="true">
+          <div class="marquee__track">
+            <span>AEON&nbsp;Cambodia</span><span class="marquee__dot">✦</span>
+            <span>Yamaha&nbsp;Motors</span><span class="marquee__dot">✦</span>
+            <span>Figaro&nbsp;Coffee</span><span class="marquee__dot">✦</span>
+            <span>Travelbook&nbsp;PH</span><span class="marquee__dot">✦</span>
+            <span>Smart&nbsp;Communications</span><span class="marquee__dot">✦</span>
+            <span>PRU&nbsp;Life&nbsp;UK</span><span class="marquee__dot">✦</span>
+            <span>Angel's&nbsp;Pizza</span><span class="marquee__dot">✦</span>
+            <span>Content&nbsp;House</span><span class="marquee__dot">✦</span>
+            <!-- duplicate for seamless loop -->
+            <span>AEON&nbsp;Cambodia</span><span class="marquee__dot">✦</span>
+            <span>Yamaha&nbsp;Motors</span><span class="marquee__dot">✦</span>
+            <span>Figaro&nbsp;Coffee</span><span class="marquee__dot">✦</span>
+            <span>Travelbook&nbsp;PH</span><span class="marquee__dot">✦</span>
+            <span>Smart&nbsp;Communications</span><span class="marquee__dot">✦</span>
+            <span>PRU&nbsp;Life&nbsp;UK</span><span class="marquee__dot">✦</span>
+            <span>Angel's&nbsp;Pizza</span><span class="marquee__dot">✦</span>
+            <span>Content&nbsp;House</span><span class="marquee__dot">✦</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== FEATURED WORK ===================== -->
+      <section class="featured" id="work">
+        <div class="section-head">
+          <p class="eyebrow"><span class="eyebrow__idx">02</span> — Featured</p>
+          <h2 class="section-title reveal">Selected<br /><span class="outline">Work</span></h2>
         </div>
 
-        <div id="resume-content-container">
-          <div
-            id="skills"
-            class="resume-tab-content reveal active"
-            style="display: block"
-          >
-            <div class="skill-list">
-              <div class="skill-column">
-                <div class="resume-heading">
-                  <h3>Skills</h3>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">UI/UX DESIGN</span>
-                    <span>100%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 100%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">RESEARCH</span>
-                    <span>100%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 100%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">WIREFRAMING</span>
-                    <span>100%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 100%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">HIGH FIDELITY DESIGN</span>
-                    <span>100%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 100%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">PROTOTYPING</span>
-                    <span>100%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 100%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">Vibe Coding</span>
-                    <span>87%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 87%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">GNERATIVE AI</span>
-                    <span>85%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 85%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">LEADERSHIP</span>
-                    <span>100%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 100%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name"
-                      >COMMNICATION(CLIENTS AND TEAM)</span
-                    >
-                    <span>100%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 100%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">HTML5</span>
-                    <span>97%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 97%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">CSS3</span>
-                    <span>95%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 95%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">SASS/LESS</span>
-                    <span>95%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 95%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">JAVASCRIPT ES6</span>
-                    <span>45%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 45%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">JQUERY</span>
-                    <span>55%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 55%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">REACTJS</span>
-                    <span>25%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 25%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">VUEJS</span>
-                    <span>18%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 18%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">MOBILE WEB RESPONSIVE</span>
-                    <span>100%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 100%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name"
-                      >CSS FRAMEWORKS (BOOTSTRAP, FOUNDATION, TAILWIND,
-                      MUI)</span
-                    >
-                    <span>100%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 100%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">COMMAND LINE</span>
-                    <span>35%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 35%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">Wordpress</span>
-                    <span>60%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 60%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">Squarespace</span>
-                    <span>85%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 85%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">Shopify</span>
-                    <span>50%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 50%"></div>
-                  </div>
-                </div>
+        <div class="features">
+          <article class="feature reveal" data-id="28">
+            <div class="feature__media">
+              <img src="assets/img/project-30.png" alt="Velocità E-Commerce Website" loading="lazy" />
+              <span class="feature__view">View project →</span>
+            </div>
+            <div class="feature__info">
+              <span class="feature__index">01</span>
+              <h3 class="feature__title">Velocità E-Commerce</h3>
+              <p class="feature__meta">Designer &amp; Developer · Claude Code · 2026</p>
+              <p class="feature__desc">
+                A full e-commerce storefront built with React, Tailwind &amp; Supabase —
+                designed and shipped end-to-end with Claude Code.
+              </p>
+            </div>
+          </article>
+
+          <article class="feature reveal" data-id="27">
+            <div class="feature__media">
+              <img src="assets/img/project-29.png" alt="Final Fantasy VII Marketing Landing Page" loading="lazy" />
+              <span class="feature__view">View project →</span>
+            </div>
+            <div class="feature__info">
+              <span class="feature__index">02</span>
+              <h3 class="feature__title">Final Fantasy VII Landing</h3>
+              <p class="feature__meta">Designer &amp; Developer · Claude Code · 2026</p>
+              <p class="feature__desc">
+                A cinematic marketing landing page — fully responsive, built end-to-end
+                from the terminal with Claude Code.
+              </p>
+            </div>
+          </article>
+
+          <article class="feature reveal" data-id="29">
+            <div class="feature__media">
+              <img src="assets/img/project-31.png" alt="Velocità Admin Page" loading="lazy" />
+              <span class="feature__view">View project →</span>
+            </div>
+            <div class="feature__info">
+              <span class="feature__index">03</span>
+              <h3 class="feature__title">Velocità Admin</h3>
+              <p class="feature__meta">Designer &amp; Developer · Claude Code · 2026</p>
+              <p class="feature__desc">
+                The command center for the Velocità store — product &amp; order
+                management, fully responsive across every device.
+              </p>
+            </div>
+          </article>
+
+          <article class="feature reveal" data-id="25">
+            <div class="feature__media">
+              <img src="assets/img/project-27.png" alt="Gacha Social App" loading="lazy" />
+              <span class="feature__view">View project →</span>
+            </div>
+            <div class="feature__info">
+              <span class="feature__index">04</span>
+              <h3 class="feature__title">Gacha Social App</h3>
+              <p class="feature__meta">Designer &amp; Developer · Figma Make · 2025</p>
+              <p class="feature__desc">
+                A character-collection platform with battling, feeds and DMs —
+                AI-architected, then hand-refined to ship.
+              </p>
+            </div>
+          </article>
+
+          <article class="feature reveal" data-id="24">
+            <div class="feature__media">
+              <img src="assets/img/project-26.png" alt="Vanguard Landing Page" loading="lazy" />
+              <span class="feature__view">View project →</span>
+            </div>
+            <div class="feature__info">
+              <span class="feature__index">05</span>
+              <h3 class="feature__title">Vanguard Landing</h3>
+              <p class="feature__meta">Designer &amp; Developer · Figma Make · 2025</p>
+              <p class="feature__desc">
+                A bold, brand-aligned SaaS landing page exploring the frontier of
+                AI-assisted UI design.
+              </p>
+            </div>
+          </article>
+
+          <article class="feature reveal" data-id="22">
+            <div class="feature__media">
+              <img src="assets/img/project-24.png" alt="KicksMart Mobile App" loading="lazy" />
+              <span class="feature__view">View project →</span>
+            </div>
+            <div class="feature__info">
+              <span class="feature__index">06</span>
+              <h3 class="feature__title">KicksMart Mobile</h3>
+              <p class="feature__meta">Designer &amp; Developer · Figma Make · 2025</p>
+              <p class="feature__desc">
+                A sneaker e-commerce mobile concept — rapid ideation from hand-designed
+                screens to interactive prototype.
+              </p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ===================== ALL WORK (ARCHIVE) ===================== -->
+      <section class="archive" id="all-work">
+        <div class="section-head">
+          <p class="eyebrow"><span class="eyebrow__idx">03</span> — Archive</p>
+          <h2 class="section-title reveal">All Projects</h2>
+          <p class="note reveal">
+            <strong>Note:</strong> Most of my work from 2012–2019 is under NDA. For some
+            projects I couldn't back up the original files, so a few appear as screenshots
+            imported into Figma. Live apps/sites may also look different now, as these were
+            designed years ago.
+          </p>
+        </div>
+
+        <div class="grid" id="portfolio-grid">
+          <article class="card reveal" data-id="28">
+            <div class="card__media"><img src="assets/img/project-30.png" alt="Velocità E-Commerce Website" loading="lazy" /></div>
+            <div class="card__body">
+              <h3 class="card__title">Velocità E-Commerce Website</h3>
+              <div class="card__tags"><span>Designer &amp; Developer</span><span class="tag--accent">Claude</span></div>
+            </div>
+          </article>
+
+          <article class="card reveal" data-id="29">
+            <div class="card__media"><img src="assets/img/project-31.png" alt="Velocità Admin Page" loading="lazy" /></div>
+            <div class="card__body">
+              <h3 class="card__title">Velocità Admin Page</h3>
+              <div class="card__tags"><span>Designer &amp; Developer</span><span class="tag--accent">Claude</span></div>
+            </div>
+          </article>
+
+          <article class="card reveal" data-id="27">
+            <div class="card__media"><img src="assets/img/project-29.png" alt="Final Fantasy VII Marketing Landing Page" loading="lazy" /></div>
+            <div class="card__body">
+              <h3 class="card__title">Final Fantasy VII Marketing Landing Page</h3>
+              <div class="card__tags"><span>Designer &amp; Developer</span><span class="tag--accent">Claude</span></div>
+            </div>
+          </article>
+
+          <article class="card reveal" data-id="26">
+            <div class="card__media"><img src="assets/img/project-28.png" alt="Dragon Ball Flappy Goku Game" loading="lazy" /></div>
+            <div class="card__body">
+              <h3 class="card__title">Dragon Ball Flappy Goku Game (Retro Style)</h3>
+              <div class="card__tags"><span>Designer &amp; Developer</span><span class="tag--accent">Figma Make</span></div>
+            </div>
+          </article>
+
+          <article class="card reveal" data-id="25">
+            <div class="card__media"><img src="assets/img/project-27.png" alt="Gacha Social App" loading="lazy" /></div>
+            <div class="card__body">
+              <h3 class="card__title">Gacha Social App</h3>
+              <div class="card__tags"><span>Designer &amp; Developer</span><span class="tag--accent">Figma Make</span></div>
+            </div>
+          </article>
+
+          <article class="card reveal" data-id="24">
+            <div class="card__media"><img src="assets/img/project-26.png" alt="Vanguard Landing Page" loading="lazy" /></div>
+            <div class="card__body">
+              <h3 class="card__title">Vanguard Landing Page</h3>
+              <div class="card__tags"><span>Designer &amp; Developer</span><span class="tag--accent">Figma Make</span></div>
+            </div>
+          </article>
+
+          <article class="card reveal" data-id="23">
+            <div class="card__media"><img src="assets/img/project-25.png" alt="Vanguard Admin Dashboard" loading="lazy" /></div>
+            <div class="card__body">
+              <h3 class="card__title">Vanguard Admin Dashboard</h3>
+              <div class="card__tags"><span>Designer &amp; Developer</span><span class="tag--accent">Figma Make</span></div>
+            </div>
+          </article>
+
+          <article class="card reveal" data-id="22">
+            <div class="card__media"><img src="assets/img/project-24.png" alt="KicksMart Mobile App" loading="lazy" /></div>
+            <div class="card__body">
+              <h3 class="card__title">KicksMart Mobile App</h3>
+              <div class="card__tags"><span>Designer &amp; Developer</span><span class="tag--accent">Figma Make</span></div>
+            </div>
+          </article>
+
+          <article class="card reveal" data-id="1">
+            <div class="card__media"><img src="assets/img/project-1.png" alt="NBL Basketball Website Redesign Concept" loading="lazy" /></div>
+            <div class="card__body">
+              <h3 class="card__title">NBL Basketball Website Redesign Concept</h3>
+              <div class="card__tags"><span>Designer</span><span>Developer</span></div>
+            </div>
+          </article>
+
+          <article class="card reveal" data-id="2">
+            <div class="card__media"><img src="assets/img/project-3.png" alt="Playtech E-Commerce Concept" loading="lazy" /></div>
+            <div class="card__body">
+              <h3 class="card__title">Playtech E-Commerce Website &amp; Mobile App Concept</h3>
+              <div class="card__tags"><span>Designer</span></div>
+            </div>
+          </article>
+
+          <article class="card reveal" data-id="3">
+            <div class="card__media"><img src="assets/img/project-4.png" alt="Codecrafted CV Website Concept" loading="lazy" /></div>
+            <div class="card__body">
+              <h3 class="card__title">Codecrafted CV Website Concept</h3>
+              <div class="card__tags"><span>Designer</span></div>
+            </div>
+          </article>
+
+          <article class="card reveal" data-id="4">
+            <div class="card__media"><img src="assets/img/project-5.png" alt="Gamestop E-Commerce Website Concept" loading="lazy" /></div>
+            <div class="card__body">
+              <h3 class="card__title">Gamestop E-Commerce Website Concept</h3>
+              <div class="card__tags"><span>Designer</span></div>
+            </div>
+          </article>
+
+          <article class="card reveal" data-id="5">
+            <div class="card__media"><img src="assets/img/project-23.png" alt="Content House Web App" loading="lazy" /></div>
+            <div class="card__body">
+              <h3 class="card__title">Content House Web App</h3>
+              <div class="card__tags"><span>Designer</span></div>
+            </div>
+          </article>
+
+          <article class="card reveal" data-id="6">
+            <div class="card__media"><img src="assets/img/project-22.png" alt="Content House Mobile App" loading="lazy" /></div>
+            <div class="card__body">
+              <h3 class="card__title">Content House Mobile App</h3>
+              <div class="card__tags"><span>Designer</span></div>
+            </div>
+          </article>
+
+          <article class="card reveal" data-id="7">
+            <div class="card__media"><img src="assets/img/project-6.png" alt="Content House Inc. Marketing Website" loading="lazy" /></div>
+            <div class="card__body">
+              <h3 class="card__title">Content House Inc. Marketing Website</h3>
+              <div class="card__tags"><span>Designer</span><span>Developer</span></div>
+            </div>
+          </article>
+
+          <article class="card reveal" data-id="8">
+            <div class="card__media"><img src="assets/img/project-7.png" alt="Agents Space Artwork Editor" loading="lazy" /></div>
+            <div class="card__body">
+              <h3 class="card__title">Agents Space Artwork Editor</h3>
+              <div class="card__tags"><span>Designer</span><span>Developer</span></div>
+            </div>
+          </article>
+
+          <article class="card reveal" data-id="9">
+            <div class="card__media"><img src="assets/img/project-8.png" alt="Agents Space Web App" loading="lazy" /></div>
+            <div class="card__body">
+              <h3 class="card__title">Agents Space Web App</h3>
+              <div class="card__tags"><span>Designer</span></div>
+            </div>
+          </article>
+
+          <article class="card reveal" data-id="10">
+            <div class="card__media"><img src="assets/img/project-9.png" alt="Agents Space Mobile App" loading="lazy" /></div>
+            <div class="card__body">
+              <h3 class="card__title">Agents Space Mobile App</h3>
+              <div class="card__tags"><span>Designer</span></div>
+            </div>
+          </article>
+
+          <article class="card reveal" data-id="11">
+            <div class="card__media"><img src="assets/img/project-10.png" alt="Agents Space Marketing Website" loading="lazy" /></div>
+            <div class="card__body">
+              <h3 class="card__title">Agents Space Marketing Website</h3>
+              <div class="card__tags"><span>Designer</span><span>Developer</span></div>
+            </div>
+          </article>
+
+          <article class="card reveal" data-id="21">
+            <div class="card__media"><img src="assets/img/project-21.png" alt="Aeon Cambodia Mobile App Redesign" loading="lazy" /></div>
+            <div class="card__body">
+              <h3 class="card__title">Aeon Cambodia Mobile App Redesign</h3>
+              <div class="card__tags"><span>Designer</span></div>
+            </div>
+          </article>
+
+          <article class="card reveal" data-id="18">
+            <div class="card__media"><img src="assets/img/project-18.png" alt="Yamaha Motors Philippines Mobile App" loading="lazy" /></div>
+            <div class="card__body">
+              <h3 class="card__title">Yamaha Motors Philippines Mobile App</h3>
+              <div class="card__tags"><span>Designer</span></div>
+            </div>
+          </article>
+
+          <article class="card reveal" data-id="14">
+            <div class="card__media"><img src="assets/img/project-14.png" alt="MyPocketDoctor Website and Mobile App" loading="lazy" /></div>
+            <div class="card__body">
+              <h3 class="card__title">MyPocketDoctor Website &amp; Mobile App</h3>
+              <div class="card__tags"><span>Designer</span><span>Developer</span></div>
+            </div>
+          </article>
+
+          <article class="card reveal" data-id="15">
+            <div class="card__media"><img src="assets/img/project-15.png" alt="It's More Fun in the Philippines Website" loading="lazy" /></div>
+            <div class="card__body">
+              <h3 class="card__title">It's More Fun in the Philippines Website</h3>
+              <div class="card__tags"><span>Designer</span><span>Developer</span></div>
+            </div>
+          </article>
+
+          <article class="card reveal" data-id="16">
+            <div class="card__media"><img src="assets/img/project-16.png" alt="Coreproc Inc. Website" loading="lazy" /></div>
+            <div class="card__body">
+              <h3 class="card__title">Coreproc Inc. Website</h3>
+              <div class="card__tags"><span>Designer</span><span>Developer</span></div>
+            </div>
+          </article>
+
+          <article class="card reveal" data-id="17">
+            <div class="card__media"><img src="assets/img/project-17.png" alt="Mansmith Conference 2020 Mobile App" loading="lazy" /></div>
+            <div class="card__body">
+              <h3 class="card__title">Mansmith Conference 2020 Mobile App</h3>
+              <div class="card__tags"><span>Designer</span></div>
+            </div>
+          </article>
+
+          <article class="card reveal" data-id="19">
+            <div class="card__media"><img src="assets/img/project-19.png" alt="Figaro Coffee Mobile App" loading="lazy" /></div>
+            <div class="card__body">
+              <h3 class="card__title">Figaro Coffee Mobile App</h3>
+              <div class="card__tags"><span>Designer</span></div>
+            </div>
+          </article>
+
+          <article class="card reveal" data-id="20">
+            <div class="card__media"><img src="assets/img/project-20.png" alt="Angels Pizza Mobile App" loading="lazy" /></div>
+            <div class="card__body">
+              <h3 class="card__title">Angels Pizza Mobile App</h3>
+              <div class="card__tags"><span>Designer</span></div>
+            </div>
+          </article>
+
+          <article class="card reveal" data-id="12">
+            <div class="card__media"><img src="assets/img/project-12.jpg" alt="Travelbook PH Website Revamp and Mobile App" loading="lazy" /></div>
+            <div class="card__body">
+              <h3 class="card__title">Travelbook PH Website Revamp &amp; Mobile App</h3>
+              <div class="card__tags"><span>Designer</span><span>Developer</span></div>
+            </div>
+          </article>
+
+          <article class="card reveal" data-id="13">
+            <div class="card__media"><img src="assets/img/project-13.png" alt="Nexgo Website" loading="lazy" /></div>
+            <div class="card__body">
+              <h3 class="card__title">Nexgo Express Website</h3>
+              <div class="card__tags"><span>Designer</span><span>Developer</span></div>
+            </div>
+          </article>
+        </div>
+
+        <div class="archive__more">
+          <button class="btn" id="load-more-btn">Load more projects</button>
+        </div>
+      </section>
+
+      <!-- ===================== RESUME ===================== -->
+      <section class="resume" id="resume">
+        <div class="section-head">
+          <p class="eyebrow"><span class="eyebrow__idx">04</span> — Resume</p>
+          <h2 class="section-title reveal">13+ Years<br /><span class="outline">In the craft</span></h2>
+        </div>
+
+        <div class="tabs reveal" role="tablist">
+          <button class="tab active" data-tab="skills" role="tab">Skills</button>
+          <button class="tab" data-tab="experience" role="tab">Experience</button>
+          <button class="tab" data-tab="education" role="tab">Education</button>
+        </div>
+
+        <div class="tab-panels">
+          <!-- SKILLS -->
+          <div class="panel active" id="skills" role="tabpanel">
+            <div class="skills">
+              <div class="skills__col">
+                <h3 class="skills__heading">Skills</h3>
+                <div class="bar"><div class="bar__head"><span>UI/UX Design</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>Research</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>Wireframing</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>High-Fidelity Design</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>Prototyping</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>Vibe Coding</span><span>87%</span></div><div class="bar__track"><div class="bar__fill" data-width="87"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>Generative AI</span><span>85%</span></div><div class="bar__track"><div class="bar__fill" data-width="85"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>Leadership</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>Communication (clients &amp; team)</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>HTML5</span><span>97%</span></div><div class="bar__track"><div class="bar__fill" data-width="97"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>CSS3</span><span>95%</span></div><div class="bar__track"><div class="bar__fill" data-width="95"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>SASS / LESS</span><span>95%</span></div><div class="bar__track"><div class="bar__fill" data-width="95"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>JavaScript ES6</span><span>45%</span></div><div class="bar__track"><div class="bar__fill" data-width="45"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>jQuery</span><span>55%</span></div><div class="bar__track"><div class="bar__fill" data-width="55"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>React.js</span><span>25%</span></div><div class="bar__track"><div class="bar__fill" data-width="25"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>Vue.js</span><span>18%</span></div><div class="bar__track"><div class="bar__fill" data-width="18"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>Mobile-Web Responsive</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>CSS Frameworks (Bootstrap, Tailwind, MUI)</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>Command Line</span><span>35%</span></div><div class="bar__track"><div class="bar__fill" data-width="35"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>WordPress</span><span>60%</span></div><div class="bar__track"><div class="bar__fill" data-width="60"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>Squarespace</span><span>85%</span></div><div class="bar__track"><div class="bar__fill" data-width="85"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>Shopify</span><span>50%</span></div><div class="bar__track"><div class="bar__fill" data-width="50"></div></div></div>
               </div>
 
-              <div class="skill-column">
-                <div class="resume-heading">
-                  <h3>Tools</h3>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">FIGMA</span>
-                    <span>100%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 100%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">ADOBE XD</span>
-                    <span>100%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 100%"></div>
-                  </div>
-                </div>
-                 <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name"
-                      >AI TOOLS (Claude Code, CHATGPT, GEMINI, VEO3, FIGMA MAKE)</span
-                    >
-                    <span>87%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 87%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">BALSAMIQ MOCKUPS</span>
-                    <span>90%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 90%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">INVISION</span>
-                    <span>90%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 90%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">ADOBE PHOTOSHOP</span>
-                    <span>90%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 90%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">ADOBE ILLUSTRATOR</span>
-                    <span>30%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 30%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">ADOBE PREMIERE PRO</span>
-                    <span>55%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 55%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">WINDOWS OS</span>
-                    <span>97%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 97%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">MAC OS</span>
-                    <span>97%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 97%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">VISUAL CODE</span>
-                    <span>85%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 80%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">Intellij IDEA</span>
-                    <span>75%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 75%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">SUBLIME TEXT</span>
-                    <span>100%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 75%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">GOOGLE DOCS</span>
-                    <span>80%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 80%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">MS OFFICE</span>
-                    <span>75%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 75%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">JIRA</span>
-                    <span>80%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 80%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">WEBFLOW</span>
-                    <span>50%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 50%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">FRAMER</span>
-                    <span>50%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 50%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">Chrome DevTools</span>
-                    <span>50%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 50%"></div>
-                  </div>
-                </div>
-                <div class="skill-item">
-                  <div class="skill-header">
-                    <span class="skill-name">Git</span>
-                    <span>30%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 30%"></div>
-                  </div>
-                </div>
+              <div class="skills__col">
+                <h3 class="skills__heading">Tools</h3>
+                <div class="bar"><div class="bar__head"><span>Figma</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>Adobe XD</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>AI Tools (Claude Code, ChatGPT, Gemini, Veo3, Figma Make)</span><span>87%</span></div><div class="bar__track"><div class="bar__fill" data-width="87"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>Balsamiq Mockups</span><span>90%</span></div><div class="bar__track"><div class="bar__fill" data-width="90"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>InVision</span><span>90%</span></div><div class="bar__track"><div class="bar__fill" data-width="90"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>Adobe Photoshop</span><span>90%</span></div><div class="bar__track"><div class="bar__fill" data-width="90"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>Adobe Illustrator</span><span>30%</span></div><div class="bar__track"><div class="bar__fill" data-width="30"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>Adobe Premiere Pro</span><span>55%</span></div><div class="bar__track"><div class="bar__fill" data-width="55"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>Windows OS</span><span>97%</span></div><div class="bar__track"><div class="bar__fill" data-width="97"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>Mac OS</span><span>97%</span></div><div class="bar__track"><div class="bar__fill" data-width="97"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>VS Code</span><span>80%</span></div><div class="bar__track"><div class="bar__fill" data-width="80"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>IntelliJ IDEA</span><span>75%</span></div><div class="bar__track"><div class="bar__fill" data-width="75"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>Sublime Text</span><span>75%</span></div><div class="bar__track"><div class="bar__fill" data-width="75"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>Google Docs</span><span>80%</span></div><div class="bar__track"><div class="bar__fill" data-width="80"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>MS Office</span><span>75%</span></div><div class="bar__track"><div class="bar__fill" data-width="75"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>Jira</span><span>80%</span></div><div class="bar__track"><div class="bar__fill" data-width="80"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>Webflow</span><span>50%</span></div><div class="bar__track"><div class="bar__fill" data-width="50"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>Framer</span><span>50%</span></div><div class="bar__track"><div class="bar__fill" data-width="50"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>Chrome DevTools</span><span>50%</span></div><div class="bar__track"><div class="bar__fill" data-width="50"></div></div></div>
+                <div class="bar"><div class="bar__head"><span>Git</span><span>30%</span></div><div class="bar__track"><div class="bar__fill" data-width="30"></div></div></div>
               </div>
             </div>
           </div>
 
-          <div
-            id="education"
-            class="resume-tab-content reveal"
-            style="display: none"
-          >
-            <div>
-              <div class="timeline-column">
-                <!-- <div class="resume-heading">
-                  <h3>University</h3>
-                </div> -->
-                <div class="timeline-card college-wrapper">
-                  <img
-                    src="assets/img/college-logo.svg"
-                    alt="FEU"
-                    onerror="this.src='https://via.placeholder.com/100'"
-                  />
-                  <div class="meta">
-                    <h3>Bachelor of Science Major in Marketing</h3>
-                    <p>Far Eastern University - Manila (2003 - 2007)</p>
-                  </div>
+          <!-- EXPERIENCE -->
+          <div class="panel" id="experience" role="tabpanel">
+            <div class="timeline">
+              <article class="tcard">
+                <div class="tcard__head">
+                  <h3>Sr. UI/UX Designer</h3>
+                  <span class="tcard__loc">Quezon City, PH</span>
                 </div>
-              </div>
+                <p class="tcard__org">Content House Inc. · 2017 – Present</p>
+                <ul>
+                  <li>Lead a small UI/UX design team.</li>
+                  <li>Design websites and mobile apps using Adobe XD &amp; Figma.</li>
+                  <li>Build responsive Squarespace sites with custom HTML, CSS, JS &amp; jQuery.</li>
+                  <li>Create all marketing materials for the company.</li>
+                  <li>Support developers building Vue/React components with HTML &amp; CSS.</li>
+                  <li>Collaborate with developers, the PM and the CEO.</li>
+                </ul>
+              </article>
+
+              <article class="tcard">
+                <div class="tcard__head">
+                  <h3>Lead UI/UX Designer &amp; Front-End Developer</h3>
+                  <span class="tcard__loc">Pasig City, PH</span>
+                </div>
+                <p class="tcard__org">Coreproc Inc. · 2015 – 2020</p>
+                <ul>
+                  <li>Created UI/UX for websites &amp; mobile apps in Photoshop and Adobe XD.</li>
+                  <li>Converted designs into responsive front-end builds; PSD slicing.</li>
+                  <li>Guided the team toward excellent UI/UX.</li>
+                  <li>Solved cross-team web/mobile UI issues with deep HTML/CSS knowledge.</li>
+                  <li>Communicated with clients via meetings, calls and email.</li>
+                </ul>
+              </article>
+
+              <article class="tcard">
+                <div class="tcard__head">
+                  <h3>UI/UX Designer</h3>
+                  <span class="tcard__loc">Taguig City, PH</span>
+                </div>
+                <p class="tcard__org">DXC Technology</p>
+                <ul>
+                  <li>Created UI/UX designs for web applications.</li>
+                  <li>Built RPA automations with WinAutomation.</li>
+                  <li>Added pages and features to a SharePoint website.</li>
+                </ul>
+              </article>
+
+              <article class="tcard">
+                <div class="tcard__head">
+                  <h3>UI/UX Designer &amp; Web Developer</h3>
+                  <span class="tcard__loc">Remote</span>
+                </div>
+                <p class="tcard__org">Freelance · 2010 – 2014</p>
+                <ul>
+                  <li>Photo editing, coupons and posters in Adobe Photoshop.</li>
+                  <li>Designed websites and converted them into WordPress sites.</li>
+                </ul>
+              </article>
             </div>
           </div>
 
-          <div
-            id="experience"
-            class="resume-tab-content reveal"
-            style="display: none"
-          >
-            <div class="resume-content-grid">
-              <div class="timeline-column">
-                <div class="timeline-card">
-                  <div class="meta">
-                    <h3>Sr. UI/UX Designer</h3>
-                    <span class="location">Quezon City, Philippines</span>
-                  </div>
-                  <p>Content House Inc. - (2017 - Present)</p>
-                  <ul
-                    style="
-                      list-style: circle;
-                      padding-left: inherit;
-                      margin-top: 16px;
-                    "
-                  >
-                    <li>Lead a small UI/UX designer team.</li>
-                    <li>
-                      Design websites and mobile apps for the company using
-                      Adobe XD or Figma.
-                    </li>
-                    <li>
-                      Build a responsive website with Squarespace using custom
-                      HTML, CSS and basic Javascript and jQuery.
-                    </li>
-                    <li>
-                      Responsible for creating all marketing materials for the
-                      company.
-                    </li>
-                    <li>
-                      Help developers in designing vue.js and react.js
-                      components using HTML and CSS.
-                    </li>
-                    <li>
-                      Collaborating with our developers, project manager and
-                      CEO.
-                    </li>
-                  </ul>
-                </div>
-
-                <div class="timeline-card">
-                  <div class="meta">
-                    <h3>UI/UX Designer</h3>
-                    <span class="location">Taguig City</span>
-                  </div>
-                  <p>DXC Technology</p>
-                  <ul
-                    style="
-                      list-style: circle;
-                      padding-left: inherit;
-                      margin-top: 16px;
-                    "
-                  >
-                    <li>Creates UI/UX designs for Web Applications.</li>
-                    <li>
-                      Creates applications that will automate repetitive tasks
-                      with RPA using Winautomation.
-                    </li>
-                    <li>
-                      Adds new pages and new features to a Sharepoint website.
-                    </li>
-                  </ul>
-                </div>
+          <!-- EDUCATION -->
+          <div class="panel" id="education" role="tabpanel">
+            <article class="edu">
+              <img src="assets/img/college-logo.svg" alt="Far Eastern University" onerror="this.style.display='none'" />
+              <div>
+                <h3>Bachelor of Science, Major in Marketing</h3>
+                <p>Far Eastern University — Manila · 2003 – 2007</p>
               </div>
-              <div class="timeline-column">
-                <div class="timeline-card">
-                  <div class="meta">
-                    <h3>Lead UI/UX Designer & Front-End Developer</h3>
-                    <span class="location">Pasig City</span>
-                  </div>
-                  <p>Coreproc Inc. (2015 - 2020)</p>
-                  <ul
-                    style="
-                      list-style: circle;
-                      padding-left: inherit;
-                      margin-top: 16px;
-                    "
-                  >
-                    <li>
-                      Responsible for creating UI/UX designs for websites and
-                      mobile apps using Adobe Photoshop, Adobe XD and other
-                      wireframe applications.
-                    </li>
-                    <li>Converting the designs into a responsive website.</li>
-                    <li>PSD Slicing</li>
-                    <li>
-                      Guides the team into creating an excellent UI/UX designs.
-                    </li>
-                    <li>
-                      Assisting other teams with solving UI/UX problems,
-                      specifically on the web and mobile view of the website
-                      using my excellent knowledge and experience with HTML and
-                      CSS.
-                    </li>
-                    <li>
-                      Communication with clients by attending meetings, phone
-                      calls or through email to address their concerns or help
-                      them come up with better ideas with regards to UI/UX.
-                    </li>
-                  </ul>
-                </div>
-                <div class="timeline-card">
-                  <div class="meta">
-                    <h3>UI/UX Designer & Web Developer</h3>
-                    <span class="location">Remote</span>
-                  </div>
-                  <p>Freelance (2010 - 2014)</p>
-                  <ul
-                    style="
-                      list-style: circle;
-                      padding-left: inherit;
-                      margin-top: 16px;
-                    "
-                  >
-                    <li>
-                      Photo Editing and creating coupons and posters using Adobe
-                      Photoshop.Creates coupon using Adobe Photoshop.
-                    </li>
-                    <li>
-                      Designing websites and converting it into a Wordpress
-                      site.
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
+            </article>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </main>
 
+    <!-- ===================== CONTACT / FOOTER ===================== -->
     <footer class="footer" id="contact">
-      <div class="container">
-        <div class="logo">
-          <a href="#"
-            >Jonathan Bautista<span style="color: var(--color-primary)"
-              ></a
-          >
+      <p class="eyebrow"><span class="eyebrow__idx">05</span> — Contact</p>
+      <h2 class="footer__cta reveal">Let's build<br />something <span class="accent">great.</span></h2>
+      <a class="footer__email reveal" href="mailto:jchoybautista@gmail.com">jchoybautista@gmail.com</a>
+
+      <div class="footer__row">
+        <a href="tel:+639171825114" class="footer__phone">+63 917 182 5114</a>
+        <div class="footer__socials">
+          <a href="https://www.linkedin.com/in/jonathan-bautista-92038839/" target="_blank" rel="noopener" aria-label="LinkedIn"><img src="assets/img/linkedin-logo.svg" alt="" /></a>
+          <a href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener" aria-label="Instagram"><img src="assets/img/instagram-logo.svg" alt="" /></a>
+          <a href="https://www.facebook.com/jonathanndroid" target="_blank" rel="noopener" aria-label="Facebook"><img src="assets/img/facebook-logo.svg" alt="" /></a>
+          <a href="mailto:jchoybautista@gmail.com" aria-label="Email"><img src="assets/img/gmail-logo.svg" alt="" /></a>
         </div>
-        <p>+639171825114 - jchoybautista@gmail.com</p>
+        <a href="assets/files/jonathan_bautista_CV.docx" class="btn" download>Download CV</a>
+      </div>
+
+      <div class="footer__base">
+        <span>© 2026 Jonathan Bautista</span>
+        <span>Designed &amp; built with Claude Code</span>
       </div>
     </footer>
 
-    <div id="portfolio-modal" class="modal-overlay">
-      <div class="modal-content">
-        <button class="modal-close-btn" id="modal-close">&times;</button>
-
-        <div class="modal-body">
-          <div class="modal-image-col">
-            <img id="modal-img" src="" alt="Project Image" />
+    <!-- ===================== MODAL ===================== -->
+    <div id="portfolio-modal" class="modal" aria-hidden="true">
+      <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <button class="modal__close" id="modal-close" aria-label="Close">&times;</button>
+        <div class="modal__body">
+          <div class="modal__media">
+            <img id="modal-img" src="" alt="" />
           </div>
-
-          <div class="modal-info-col">
+          <div class="modal__info">
             <h2 id="modal-title"></h2>
             <p id="modal-desc"></p>
-
-            <div class="modal-details-grid">
-              <div class="detail-item">
-                <span class="detail-label">Created:</span>
-                <span class="detail-value" id="modal-created"></span>
-              </div>
-              <div class="detail-item">
-                <span class="detail-label">Role:</span>
-                <span class="detail-value" id="modal-role"></span>
-              </div>
+            <div class="modal__details">
+              <div><span class="modal__label">Created</span><span class="modal__value" id="modal-created"></span></div>
+              <div><span class="modal__label">Role</span><span class="modal__value" id="modal-role"></span></div>
             </div>
-
-            <div class="modal-buttons">
-              <div class="social-icons">
-                <a href="" class="figma-link" target="_blank">
-                  <img
-                    src="assets/img/Figma-logo.svg"
-                    alt="Figma"
-                    alt="Figma Link"
-                    onerror="this.src='https://via.placeholder.com/28'"
-                  />
-                </a>
-                <a href="" class="xd-link" download>
-                  <img
-                    src="assets/img/xd-logo.svg"
-                    alt="Download XD File"
-                    onerror="this.src='https://via.placeholder.com/28'"
-                  />
-                </a>
-                <a href="" class="website-link" target="_blank">
-                  <img
-                    src="assets/img/web-icon.svg"
-                    alt="Go to Website"
-                    onerror="this.src='https://via.placeholder.com/28?text=Web'"
-                  />
-                </a>
-                <a href="" class="claude-link" target="_blank">
-                  <img
-                    src="assets/img/claudecode.svg"
-                    alt="Go to Website"
-                    onerror="this.src='https://via.placeholder.com/28?text=Web'"
-                  />
-                </a>
-              </div>
+            <div class="modal__links">
+              <a href="" class="figma-link" target="_blank" rel="noopener" aria-label="Open in Figma"><img src="assets/img/Figma-logo.svg" alt="Figma" /></a>
+              <a href="" class="xd-link" download aria-label="Download XD file"><img src="assets/img/xd-logo.svg" alt="Adobe XD" /></a>
+              <a href="" class="website-link" target="_blank" rel="noopener" aria-label="Visit website"><img src="assets/img/web-icon.svg" alt="Website" /></a>
+              <a href="" class="claude-link" target="_blank" rel="noopener" aria-label="Visit live build"><img src="assets/img/claudecode.svg" alt="Live build" /></a>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <script src="assets/script.js"></script>
+    <!-- Libraries (CDN) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+    <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js" defer></script>
+    <script src="assets/script.js" defer></script>
   </body>
 </html>

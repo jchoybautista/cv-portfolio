@@ -1,159 +1,268 @@
-// --- 1. Rotating Text Effect (Hero Section) ---
-document.addEventListener("DOMContentLoaded", function () {
-  const roles = ["UI/UX Designer", "Front-End Developer"];
-  const textElement = document.getElementById("rotating-text");
-  let roleIndex = 0;
-  let charIndex = 0;
-  let isDeleting = false;
+/* =========================================================
+   Jonathan Bautista — Portfolio (redesign)
+   Lenis smooth-scroll + GSAP parallax + UI logic
+   All animation is progressive enhancement; the page is
+   fully usable if the CDN libraries fail to load.
+   ========================================================= */
 
-  function type() {
-    const currentRole = roles[roleIndex];
-    const display = isDeleting
-      ? currentRole.substring(0, charIndex - 1)
-      : currentRole.substring(0, charIndex + 1);
+(function () {
+  "use strict";
 
-    textElement.textContent = display;
+  const prefersReduced = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
 
-    if (!isDeleting && charIndex === currentRole.length) {
-      isDeleting = true;
-      setTimeout(type, 1200); // Pause before deleting
-      return;
-    } else if (isDeleting && charIndex === 0) {
-      isDeleting = false;
-      roleIndex = (roleIndex + 1) % roles.length;
-      setTimeout(type, 100); // Pause before typing next role
-      return;
-    }
-
-    charIndex += isDeleting ? -1 : 1;
-    const typingSpeed = isDeleting ? 15 : 25;
-    setTimeout(type, typingSpeed);
-  }
-
-  type();
-});
-
-// --- 2. Scroll Reveal Animation (Intersection Observer) ---
-document.addEventListener("DOMContentLoaded", function () {
-  const revealElements = document.querySelectorAll(".reveal");
-
-  const observerOptions = {
-    root: null,
-    rootMargin: "0px",
-    threshold: 0.1,
-  };
-
-  const observer = new IntersectionObserver((entries, observer) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("active");
-        observer.unobserve(entry.target);
-      }
-    });
-  }, observerOptions);
-
-  revealElements.forEach((element) => {
-    if (!element.classList.contains("active")) {
-      observer.observe(element);
-    }
+  /* ---------- Hero intro trigger ---------- */
+  window.addEventListener("load", () => {
+    requestAnimationFrame(() =>
+      document.documentElement.classList.add("loaded")
+    );
   });
-});
 
-// --- 3. Resume Tab Functionality ---
-document.addEventListener("DOMContentLoaded", function () {
-  const tabButtons = document.querySelectorAll(".resume-tab-btn");
-  const contentContainer = document.getElementById("resume-content-container");
-
-  // Find the initially active content and set its display to block
-  const initialActiveContent = contentContainer.querySelector(
-    ".resume-tab-content.active",
-  );
-  if (initialActiveContent) {
-    initialActiveContent.style.display = "block";
-  }
-
-  tabButtons.forEach((button) => {
-    button.addEventListener("click", function () {
-      const targetTabId = this.getAttribute("data-tab");
-
-      // 1. Remove 'active' from all buttons
-      tabButtons.forEach((btn) => btn.classList.remove("active"));
-
-      // 2. Add 'active' to the clicked button
-      this.classList.add("active");
-
-      // 3. Hide all content with a fade effect
-      const allContents = contentContainer.querySelectorAll(
-        ".resume-tab-content",
-      );
-      allContents.forEach((content) => {
-        content.classList.remove("active"); // Remove active for opacity transition
-        setTimeout(() => (content.style.display = "none"), 400); // Wait for fade out (400ms defined in CSS transition)
+  /* ---------- Lenis smooth scroll ---------- */
+  let lenis = null;
+  if (typeof window.Lenis === "function" && !prefersReduced) {
+    lenis = new window.Lenis({ lerp: 0.1, wheelMultiplier: 1 });
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    // If GSAP is present we sync via its ticker (smoother); otherwise rAF.
+    if (window.gsap && window.gsap.ticker) {
+      window.gsap.ticker.add((t) => lenis.raf(t * 1000));
+      window.gsap.ticker.lagSmoothing(0);
+      lenis.on("scroll", () => {
+        if (window.ScrollTrigger) window.ScrollTrigger.update();
       });
-
-      // 4. Show the target content with a fade in effect
-      const targetContent = document.getElementById(targetTabId);
-      if (targetContent) {
-        setTimeout(() => {
-          targetContent.style.display = "block";
-          // Trigger reflow/repaint to ensure transition works
-          targetContent.offsetWidth;
-          targetContent.classList.add("active");
-        }, 400);
-      }
-    });
-  });
-});
-
-// --- 4. Load More Projects Logic ---
-document.addEventListener("DOMContentLoaded", function () {
-  const projects = document.querySelectorAll(".portfolio-item");
-  const loadMoreBtn = document.getElementById("load-more-btn");
-  const itemsPerLoad = 6;
-  let visibleCount = 6;
-
-  // Initially hide projects beyond the first 6
-  projects.forEach((project, index) => {
-    if (index >= visibleCount) {
-      project.classList.add("hidden");
+    } else {
+      requestAnimationFrame(raf);
     }
-  });
-
-  // Hide button if total projects <= itemsPerLoad
-  if (projects.length <= itemsPerLoad) {
-    loadMoreBtn.style.display = "none";
   }
 
-  loadMoreBtn.addEventListener("click", function (e) {
-    e.preventDefault();
+  /* ---------- Anchor links via Lenis ---------- */
+  document.querySelectorAll('a[href^="#"]').forEach((a) => {
+    a.addEventListener("click", (e) => {
+      const id = a.getAttribute("href");
+      if (id === "#" || id.length < 2) return;
+      const target = document.querySelector(id);
+      if (!target) return;
+      e.preventDefault();
+      if (lenis) lenis.scrollTo(target, { offset: -70 });
+      else target.scrollIntoView({ behavior: "smooth" });
+      closeMenu();
+    });
+  });
 
-    const hiddenProjects = document.querySelectorAll(".portfolio-item.hidden");
+  /* ---------- Nav: condense + mobile menu ---------- */
+  const nav = document.getElementById("nav");
+  const navToggle = document.getElementById("nav-toggle");
+  const progressBar = document.querySelector(".scroll-progress span");
 
-    for (let i = 0; i < itemsPerLoad; i++) {
-      if (hiddenProjects[i]) {
-        hiddenProjects[i].classList.remove("hidden");
-      }
+  function onScroll() {
+    const y = window.scrollY || document.documentElement.scrollTop;
+    if (nav) nav.classList.toggle("is-scrolled", y > 40);
+    if (progressBar) {
+      const h = document.documentElement.scrollHeight - window.innerHeight;
+      progressBar.style.width = (h > 0 ? (y / h) * 100 : 0) + "%";
     }
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
 
-    const remainingHidden = document.querySelectorAll(".portfolio-item.hidden");
-    if (remainingHidden.length === 0) {
-      loadMoreBtn.style.display = "none";
+  function closeMenu() {
+    if (nav && nav.classList.contains("is-open")) {
+      nav.classList.remove("is-open");
+      navToggle.setAttribute("aria-expanded", "false");
+    }
+  }
+  if (navToggle) {
+    navToggle.addEventListener("click", () => {
+      const open = nav.classList.toggle("is-open");
+      navToggle.setAttribute("aria-expanded", String(open));
+    });
+  }
+
+  /* ---------- Reveal on scroll (IntersectionObserver) ---------- */
+  const revealEls = document.querySelectorAll(".reveal");
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("in");
+            obs.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
+    );
+    revealEls.forEach((el) => io.observe(el));
+  } else {
+    revealEls.forEach((el) => el.classList.add("in"));
+  }
+
+  /* ---------- Animated stat counters ---------- */
+  function animateCount(el) {
+    const target = parseInt(el.getAttribute("data-count"), 10) || 0;
+    const dur = 1500;
+    const start = performance.now();
+    function step(now) {
+      const p = Math.min((now - start) / dur, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(target * eased);
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  document.querySelectorAll(".stat__num").forEach((el) => {
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver(
+        (entries, obs) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              animateCount(el);
+              obs.unobserve(el);
+            }
+          });
+        },
+        { threshold: 0.6 }
+      );
+      io.observe(el);
+    } else {
+      el.textContent = el.getAttribute("data-count");
     }
   });
-});
 
-// --- 5. Portfolio Modal Logic (New Feature) ---
-document.addEventListener("DOMContentLoaded", function () {
-  // DATA: Details for the first 2 items
+  /* ---------- Skill bars fill ---------- */
+  function fillBar(bar) {
+    bar.style.width = (bar.getAttribute("data-width") || 0) + "%";
+  }
+  const bars = document.querySelectorAll(".bar__fill");
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            fillBar(e.target);
+            obs.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+    bars.forEach((b) => io.observe(b));
+  } else {
+    bars.forEach(fillBar);
+  }
+
+  /* ---------- GSAP parallax ---------- */
+  if (window.gsap && window.ScrollTrigger && !prefersReduced) {
+    const gsap = window.gsap;
+    gsap.registerPlugin(window.ScrollTrigger);
+
+    gsap.to(".hero__portrait", {
+      yPercent: 14,
+      ease: "none",
+      scrollTrigger: {
+        trigger: ".hero",
+        start: "top top",
+        end: "bottom top",
+        scrub: true,
+      },
+    });
+    gsap.to(".hero__name", {
+      yPercent: -24,
+      opacity: 0.25,
+      ease: "none",
+      scrollTrigger: {
+        trigger: ".hero",
+        start: "top top",
+        end: "bottom top",
+        scrub: true,
+      },
+    });
+    gsap.to(".hero__glow", {
+      scale: 1.3,
+      ease: "none",
+      scrollTrigger: {
+        trigger: ".hero",
+        start: "top top",
+        end: "bottom top",
+        scrub: true,
+      },
+    });
+
+    // Featured media subtle parallax
+    gsap.utils.toArray(".feature__media img").forEach((img) => {
+      gsap.fromTo(
+        img,
+        { yPercent: -8 },
+        {
+          yPercent: 8,
+          ease: "none",
+          scrollTrigger: {
+            trigger: img,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          },
+        }
+      );
+    });
+  }
+
+  /* ---------- Resume tabs ---------- */
+  const tabs = document.querySelectorAll(".tab");
+  const panels = document.querySelectorAll(".panel");
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const id = tab.getAttribute("data-tab");
+      tabs.forEach((t) => t.classList.remove("active"));
+      panels.forEach((p) => p.classList.remove("active"));
+      tab.classList.add("active");
+      const panel = document.getElementById(id);
+      if (panel) {
+        panel.classList.add("active");
+        // re-fill any bars now visible
+        panel.querySelectorAll(".bar__fill").forEach(fillBar);
+      }
+      if (window.ScrollTrigger) window.ScrollTrigger.refresh();
+    });
+  });
+
+  /* ---------- Load more ---------- */
+  const cards = Array.from(document.querySelectorAll(".card"));
+  const loadMoreBtn = document.getElementById("load-more-btn");
+  const PER_LOAD = 9;
+  let visible = 9;
+  cards.forEach((c, i) => {
+    if (i >= visible) c.classList.add("hidden");
+  });
+  if (loadMoreBtn) {
+    if (cards.length <= visible) loadMoreBtn.style.display = "none";
+    loadMoreBtn.addEventListener("click", () => {
+      const hidden = cards.filter((c) => c.classList.contains("hidden"));
+      hidden.slice(0, PER_LOAD).forEach((c) => {
+        c.classList.remove("hidden");
+        c.classList.add("in"); // already in view region; ensure visible
+      });
+      if (!document.querySelector(".card.hidden")) {
+        loadMoreBtn.style.display = "none";
+      }
+      if (window.ScrollTrigger) window.ScrollTrigger.refresh();
+    });
+  }
+
+  /* ===================================================== */
+  /* ---------- Portfolio modal ---------- */
+  /* ===================================================== */
   const portfolioData = {
     1: {
       title: "NBL Basketball Website Redesign Concept",
       desc: "A conceptual design project created entirely in Figma. I focused on improving the visual appeal and content organization of the National Basketball League website for a more engaging fan experience.",
-
       created: "2025",
       role: "Designer",
       image: "assets/img/project-1.png",
-      // LINKS: Empty string means hide button
       figmaLink:
         "https://www.figma.com/design/btDoc5mZwwjTWvfmvABhEa/Personal-Projects?node-id=14-2&t=q81CPdX7Ki9ehocw-1",
       xdLink: "",
@@ -165,11 +274,10 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2025",
       role: "Designer",
       image: "assets/img/project-3.png",
-      // LINKS: Testing conditional hiding (Only Figma visible)
       figmaLink:
         "https://www.figma.com/design/btDoc5mZwwjTWvfmvABhEa/Personal-Projects?node-id=1-893&t=q81CPdX7Ki9ehocw-1",
-      xdLink: "", // Hidden
-      websiteLink: "", // Hidden
+      xdLink: "",
+      websiteLink: "",
     },
     3: {
       title: "Codecrafted CV Website Concept",
@@ -177,7 +285,6 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2025",
       role: "App Designer",
       image: "assets/img/project-4.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/btDoc5mZwwjTWvfmvABhEa/Personal-Projects?node-id=1-142&t=q81CPdX7Ki9ehocw-1",
       xdLink: "",
@@ -189,7 +296,6 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2025",
       role: "App Designer",
       image: "assets/img/project-5.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/btDoc5mZwwjTWvfmvABhEa/Personal-Projects?node-id=0-1&t=q81CPdX7Ki9ehocw-1",
       xdLink: "",
@@ -201,7 +307,6 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2020-2025",
       role: "Designer",
       image: "assets/img/project-23.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/d8mVV2q97RtrVJSPWg66j8/Content-House-Web?node-id=10-40239&t=pYixpo1NXFlICUOt-1",
       xdLink: "",
@@ -213,7 +318,6 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2020-2025",
       role: "Designer",
       image: "assets/img/project-22.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/p2IiGez2N7lAKeNA7bdbr8/Content-House-Mobile-App?node-id=1-69106&t=TkHSp5qjfGxgS5HC-1",
       xdLink: "",
@@ -225,7 +329,6 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2024-2025",
       role: "Designer and Developer",
       image: "assets/img/project-6.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/7dfXILsjej7ZVP2LkhUP9h/Marketing-Website?node-id=0-1&t=GGwW7AbNOWGooq9b-1",
       xdLink: "",
@@ -237,7 +340,6 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2025",
       role: "Designer",
       image: "assets/img/project-7.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/6674NGZUI86pZ5h0nALOSK/Agents-Space-Web?node-id=15-186&t=BfNky61zPcENvgJA-1",
       xdLink: "",
@@ -249,7 +351,6 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2023-2025",
       role: "Designer",
       image: "assets/img/project-8.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/6674NGZUI86pZ5h0nALOSK/Agents-Space-Web?node-id=1-34205&t=BfNky61zPcENvgJA-1",
       xdLink: "",
@@ -261,19 +362,17 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2023-2025",
       role: "Designer",
       image: "assets/img/project-9.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/2dw24WW2YdNzGkje7rNbQh/Agents-Space-Mobile?node-id=1-13749&t=OQp39AaaDTkfl31s-1",
       xdLink: "",
       websiteLink: "",
     },
     11: {
-      title: "Agents Space Mobile App",
+      title: "Agents Space Marketing Website",
       desc: "The Agent's Space Mobile Application was designed simultaneously with the web application to provide Content House clients with critical, on-the-go access to their operational hub. The platform supports a wide array of interconnected, complex features, including property detail creation, quote generation, artwork review, product management, property sharing, and data reconciliation. Executed entirely in Figma, the core design challenge was adapting this high-complexity toolset to the constraints of a mobile interface while maintaining user security. I designed a sophisticated role-based access management system where features dynamically adjust based on the user's role (user, admin, or group member). My design process was rigorous and user-centric, starting with user research to map out complex agent workflows. I defined the mobile information architecture through wireframing, then produced detailed high-fidelity mockups, and finalized the experience by creating prototypes for comprehensive usability testing to ensure a highly efficient, seamless, and secure experience for agents in the field.",
       created: "2024",
       role: "Designer and Developer",
       image: "assets/img/project-10.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink: "",
       xdLink: "",
       websiteLink: "",
@@ -284,7 +383,6 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2014-2016",
       role: "Designer and Developer",
       image: "assets/img/project-12.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/Eb0A2QxEg77paPdzwv6Wyx/Travelbook-PH?node-id=2-86&t=lEg93tpqWyTGkHwj-1",
       xdLink: "",
@@ -295,7 +393,6 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2016",
       role: "Designer and Developer",
       image: "assets/img/project-13.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/Eb0A2QxEg77paPdzwv6Wyx/Coreproc-Inc.-Projects?node-id=2-128&t=lEg93tpqWyTGkHwj-1",
       xdLink: "assets/files/nexgo.xd",
@@ -307,7 +404,6 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2016",
       role: "Designer and Developer",
       image: "assets/img/project-14.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/Eb0A2QxEg77paPdzwv6Wyx/Coreproc-Inc.-Projects?node-id=14-132&t=lEg93tpqWyTGkHwj-1",
       xdLink: "assets/files/mypocketdoctor.xd",
@@ -319,7 +415,6 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2014",
       role: "Designer and Developer",
       image: "assets/img/project-15.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/Eb0A2QxEg77paPdzwv6Wyx/Coreproc-Inc.-Projects?node-id=20-10&t=BovGgegej1hnWJNf-1",
       xdLink: "",
@@ -331,7 +426,6 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2018",
       role: "Designer and Developer",
       image: "assets/img/project-16.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/Eb0A2QxEg77paPdzwv6Wyx/Coreproc-Inc.-Projects?node-id=22-14&t=BovGgegej1hnWJNf-1",
       xdLink: "assets/files/coreproc_website.xd",
@@ -343,7 +437,6 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2019",
       role: "Designer",
       image: "assets/img/project-17.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/Eb0A2QxEg77paPdzwv6Wyx/Coreproc-Inc.-Projects?node-id=22-22&t=BovGgegej1hnWJNf-1",
       xdLink: "",
@@ -355,7 +448,6 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2018",
       role: "Designer",
       image: "assets/img/project-18.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/Eb0A2QxEg77paPdzwv6Wyx/Coreproc-Inc.-Projects?node-id=26-39&t=BovGgegej1hnWJNf-1",
       xdLink: "assets/files/yamaha_motors.xd",
@@ -367,7 +459,6 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2018",
       role: "Designer",
       image: "assets/img/project-19.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/Eb0A2QxEg77paPdzwv6Wyx/Coreproc-Inc.-Projects?node-id=33-43&t=BovGgegej1hnWJNf-1",
       xdLink: "assets/files/figaro_coffee.xd",
@@ -379,7 +470,6 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2018",
       role: "Designer",
       image: "assets/img/project-20.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/Eb0A2QxEg77paPdzwv6Wyx/Coreproc-Inc.-Projects?node-id=36-80&t=BovGgegej1hnWJNf-1",
       xdLink: "assets/files/angels_pizza.xd",
@@ -391,199 +481,155 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2018-2019",
       role: "Designer",
       image: "assets/img/project-21.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/Eb0A2QxEg77paPdzwv6Wyx/Coreproc-Inc.-Projects?node-id=45-24&t=D51t5yxzyOLmX6hR-1",
       xdLink: "assets/files/aeon_consumer.xd",
       websiteLink: "",
     },
     22: {
-      title: "KicksMart E-Commerce App - Figma Make(AI)",
+      title: "KicksMart E-Commerce App — Figma Make (AI)",
       desc: "This is just a personal project that demonstrates a high-speed approach to mobile e-commerce design and prototyping. I designed and built the foundational Splash Screen and Home Page mockups. For efficiency, the remaining app pages were generated using Figma AI and quickly assembled into an interactive prototype. This exercise prioritizes showcasing rapid ideation and leveraging AI tools in the design workflow, resulting in a functional, albeit unpolished, proof-of-concept. This design is for mobile only.",
       created: "2025",
       role: "Designer and Developer",
       image: "assets/img/project-24.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/SVqMjYICFN33aFoWVmD5ej/Kicksmart?node-id=0-1&p=f",
       xdLink: "",
       websiteLink: "https://export-glad-87190303.figma.site/",
     },
     23: {
-      title: "Vanguard Admin Dashboard - Figma Make(AI)",
+      title: "Vanguard Admin Dashboard — Figma Make (AI)",
       desc: "This UI/UX design project for the Vanguard Admin Dashboard utilized a modern, efficient workflow. I designed the main dashboard pages, including the complete visual system for both the Light Mode and the high-contrast Dark Mode. After these core interfaces were completed, the remaining pages, secondary screens, and interactive components of the website were automatically built using AI technology through Figma Make. Crucially, I directed the AI to ensure the entire output was fully mobile web responsive. Furthermore, thanks to my solid understanding of frontend development, I was able to review and comprehend the underlying code created by the AI. This dual workflow serves as proof of concept, demonstrating my ability to effectively integrate and utilize AI tools to enhance and efficiently scale my design output while maintaining technical control.",
       created: "2025",
-      role: "Designer and Developerr",
+      role: "Designer and Developer",
       image: "assets/img/project-25.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/gs2Nkkk9qEV8Ya0mRc6vvn/Vanguar---Admin-Dashboard?node-id=0-1&t=7tKlPFrrco00moGz-1",
       xdLink: "",
       websiteLink: "https://found-grasp-74066159.figma.site",
     },
     24: {
-      title: "Vanguard Landing Page - Figma Make(AI)",
+      title: "Vanguard Landing Page — Figma Make (AI)",
       desc: "This personal project was created to explore the frontier of AI-assisted UI design, specifically showcasing my proficiency with Figma Make. By leveraging Figma’s AI capabilities, I built a cohesive and modern landing page for Vanguard, focusing on how AI can be directed to produce high-quality, brand-aligned layouts. This project demonstrates my ability to integrate emerging technologies into the design process to accelerate production without losing sight of the core user experience.",
       created: "2025",
       role: "Designer and Developer",
       image: "assets/img/project-26.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/hjJ1SeflUvchY1X6Wq3C7Y/Vanguard-Landing-Page?node-id=0-1&t=uqzJgVTmhkbcRpC6-1",
       xdLink: "",
       websiteLink: "https://pear-jeep-99379078.figma.site",
     },
     25: {
-      title: "Gacha Social App - Designed and built using Figma Make(AI)",
+      title: "Gacha Social App — Figma Make (AI)",
       desc: "I developed and designed this gacha platform as a primary showcase of my AI skills, utilizing Figma AI to architect a system where users can pull and collect unique characters while engaging in a highly interactive community. The application facilitates deep social engagement through features like player battling, liking, commenting, and direct messaging. My extensive front-end development experience provided a significant advantage during the build; because I deeply understand the code the AI generates, I was able to refine every component to ensure the entire system functions perfectly. This technical oversight was key to achieving a fully mobile-web responsive design, allowing the platform to work seamlessly on both desktop and mobile browsers. Users can enjoy a high-fidelity, app-like experience on any device without the need for a separate download, maintaining a consistent and polished feel across all screens.",
       created: "2025",
       role: "Designer and Developer",
       image: "assets/img/project-27.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink: "",
       xdLink: "",
       websiteLink: "https://try-undo-36289219.figma.site",
     },
-
     26: {
       title:
-        "Dragon Ball Flappy Goku Game (Retro Style) - Designed and built using Figma Make(AI)",
+        "Dragon Ball Flappy Goku Game (Retro Style) — Figma Make (AI)",
       desc: "I developed and designed this Retro Style Dragon Ball Flappy Goku game as a dedicated showcase of my AI skills, utilizing Figma AI to bring this Flappy Bird-inspired experience to life. My background in front-end development provided the necessary technical foundation to ensure the game functions perfectly; because I have a deep understanding of the code the AI generates, I was able to bridge the gap between AI-driven design and a fully playable, high-performance product. This project highlights a completely mobile-web responsive design, ensuring that the fast-paced gameplay remains smooth and intuitive whether you are playing on a desktop or a smartphone. By focusing on a seamless browser-based experience, I’ve ensured that the game delivers a polished, app-like feel on any device without the need for an external download.",
       created: "2025",
-      role: "Designer",
+      role: "Designer and Developer",
       image: "assets/img/project-28.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink: "",
       xdLink: "",
       websiteLink: "https://sniff-ahead-92042786.figma.site",
     },
-
     27: {
       title:
-        "Final Fantasy VII Marketing Landing Page - Designed and built using Claude",
+        "Final Fantasy VII Marketing Landing Page — Claude Code",
       desc: "I developed this Final Fantasy VII marketing landing page to showcase my ability to leverage Claude Code for end-to-end web development. By using this agentic tool, I managed the entire design and implementation process directly from my terminal, while my front-end expertise allowed me to refine and optimize the AI-generated code for production-level performance. The result is a fully mobile-web responsive experience that maintains its cinematic impact and fluid navigation across both desktop and mobile. This project demonstrates how combining technical oversight with AI-driven workflows produces polished, high-performance results without the need for a separate app.",
       created: "2026",
       role: "Designer and Developer",
       image: "assets/img/project-29.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink: "",
       xdLink: "",
       claudeLink: "https://final-fantasy-7.vercel.app/",
     },
-
     28: {
-      title: "Velocità E-Commerce Website - Designed and built using Claude",
+      title: "Velocità E-Commerce Website — Claude Code",
       desc: "I built the Velocità E-Commerce platform and its companion admin dashboard as a personal project to showcase my design and development workflow using Claude. By leveraging Claude Code to build the system with React, Tailwind, and Supabase, I managed everything from initial design to final deployment. My front-end expertise was essential for refining the code to ensure a robust, high-performance experience. Both applications are fully mobile-web responsive, providing a seamless experience across all devices. This project highlights my ability to use AI as a force multiplier while maintaining the technical oversight required to deliver professional, scalable solutions.",
       created: "2026",
       role: "Designer and Developer",
       image: "assets/img/project-30.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink: "",
       xdLink: "",
       claudeLink: "https://scooter-store.vercel.app/",
     },
-
     29: {
-      title: "Velocità Admin Page - Designed and built using Claude",
+      title: "Velocità Admin Page — Claude Code",
       desc: "As the companion admin page for the Velocità E-Commerce platform, I built this dashboard as a personal project to showcase my end-to-end design and development workflow using Claude. By leveraging Claude Code to build this system with React, Tailwind, and Supabase, I handled everything from the initial interface design to final deployment. My front-end expertise was essential for refining the code to ensure a robust, high-performance experience. This dashboard serves as the command center for the store, allowing for seamless management of product content and orders. Fully mobile-web responsive, it provides a fluid, professional experience across any device, highlighting my ability to use AI as a force multiplier while maintaining the technical oversight required to deliver complete, scalable solutions.",
       created: "2026",
       role: "Designer and Developer",
       image: "assets/img/project-31.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink: "",
       xdLink: "",
       claudeLink: "https://scooter-store-admin.vercel.app/dashboard/",
     },
   };
+
   const modal = document.getElementById("portfolio-modal");
-  const closeBtn = document.getElementById("modal-close");
-  const items = document.querySelectorAll(".portfolio-item[data-id]");
+  if (modal) {
+    const closeBtn = document.getElementById("modal-close");
+    const figmaBtn = modal.querySelector(".figma-link");
+    const xdBtn = modal.querySelector(".xd-link");
+    const webBtn = modal.querySelector(".website-link");
+    const claudeBtn = modal.querySelector(".claude-link");
 
-  // Select the Link Buttons inside the Modal
-  const figmaBtn = modal.querySelector(".figma-link");
-  const xdBtn = modal.querySelector(".xd-link");
-  const webBtn = modal.querySelector(".website-link");
-  const claudebBtn = modal.querySelector(".claude-link");
-
-  // Function to Open Modal
-  items.forEach((item) => {
-    item.addEventListener("click", function () {
-      const id = this.getAttribute("data-id");
-      const data = portfolioData[id];
-
-      if (data) {
-        // Populate Standard Data
-        document.getElementById("modal-img").src = data.image;
-        document.getElementById("modal-img").onerror = function () {
-          this.src = "https://via.placeholder.com/600x400";
-        };
-
-        document.getElementById("modal-title").textContent = data.title;
-        document.getElementById("modal-desc").textContent = data.desc;
-        document.getElementById("modal-created").textContent = data.created;
-        document.getElementById("modal-role").textContent = data.role;
-
-        // --- HANDLE LINKS (Hide/Show Logic) ---
-
-        // 1. Figma Link
-        if (data.figmaLink) {
-          figmaBtn.href = data.figmaLink;
-          figmaBtn.style.display = "inline-flex"; // Show
-        } else {
-          figmaBtn.style.display = "none"; // Hide
-        }
-
-        // 2. XD Link
-        if (data.xdLink) {
-          xdBtn.href = data.xdLink;
-          xdBtn.style.display = "inline-flex"; // Show
-        } else {
-          xdBtn.style.display = "none"; // Hide
-        }
-
-        // 3. Website Link
-        if (data.websiteLink) {
-          webBtn.href = data.websiteLink;
-          webBtn.style.display = "inline-flex"; // Show
-        } else {
-          webBtn.style.display = "none"; // Hide
-        }
-
-        // 4. Claude Link
-        if (data.claudeLink) {
-          claudebBtn.href = data.claudeLink;
-          claudebBtn.style.display = "inline-flex"; // Show
-        } else {
-          claudebBtn.style.display = "none"; // Hide
-        }
-
-        // Show Modal
-        modal.classList.add("open");
-        document.body.style.overflow = "hidden"; // Prevent background scrolling
+    function setLink(btn, url) {
+      if (!btn) return;
+      if (url) {
+        btn.href = url;
+        btn.style.display = "grid";
+      } else {
+        btn.style.display = "none";
       }
+    }
+
+    function openModal(id) {
+      const data = portfolioData[id];
+      if (!data) return;
+      const img = document.getElementById("modal-img");
+      img.src = data.image;
+      img.alt = data.title;
+      img.onerror = function () {
+        this.src = "https://via.placeholder.com/600x400?text=Project";
+      };
+      document.getElementById("modal-title").textContent = data.title;
+      document.getElementById("modal-desc").textContent = data.desc;
+      document.getElementById("modal-created").textContent = data.created;
+      document.getElementById("modal-role").textContent = data.role;
+      setLink(figmaBtn, data.figmaLink);
+      setLink(xdBtn, data.xdLink);
+      setLink(webBtn, data.websiteLink);
+      setLink(claudeBtn, data.claudeLink);
+      modal.classList.add("open");
+      modal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+      if (lenis) lenis.stop();
+    }
+
+    function closeModal() {
+      modal.classList.remove("open");
+      modal.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+      if (lenis) lenis.start();
+    }
+
+    document.querySelectorAll("[data-id]").forEach((el) => {
+      el.addEventListener("click", () => openModal(el.getAttribute("data-id")));
     });
-  });
-
-  // Function to Close Modal
-  function closeModal() {
-    modal.classList.remove("open");
-    document.body.style.overflow = ""; // Restore scrolling
+    closeBtn.addEventListener("click", closeModal);
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) closeModal();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && modal.classList.contains("open")) closeModal();
+    });
   }
-
-  // Event Listeners for Closing
-  closeBtn.addEventListener("click", closeModal);
-
-  // Close if clicking outside the content (on the dark overlay)
-  modal.addEventListener("click", function (e) {
-    if (e.target === modal) {
-      closeModal();
-    }
-  });
-
-  // Close on Escape key
-  document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape" && modal.classList.contains("open")) {
-      closeModal();
-    }
-  });
-});
+})();
