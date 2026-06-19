@@ -20,7 +20,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Caveat:wght@600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Caveat:wght@600;700&family=Allison&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="assets/style.css" />
@@ -32,65 +32,75 @@
 
     <!-- ===================== NAV ===================== -->
     <header class="nav" id="nav">
-      <a class="nav__brand" href="#home" aria-label="Jonathan Bautista — home">
-        <span class="nav__avatar"><img src="assets/img/profile-thumb.jpg" alt="" onerror="this.style.display='none'" /></span>
-        <span class="nav__name">Jonathan Bautista</span>
+      <a class="nav__logo-link" href="#home" aria-label="Jonathan Bautista">
+        <span class="nav__logo"></span>
       </a>
-      <nav class="nav__links" id="nav-links">
-        <a href="#home">Home</a>
-        <a href="#disciplines">Design</a>
-        <a href="#work">Work</a>
-        <a href="#clients">Clients</a>
-        <a href="#resume">Journey</a>
-        <a href="mailto:jchoybautista@gmail.com" class="nav__enquiry">Work enquiries</a>
-      </nav>
-      <div class="nav__social">
-        <a href="https://www.linkedin.com/in/jonathan-bautista-92038839/" target="_blank" rel="noopener" aria-label="LinkedIn"><img src="assets/img/linkedin-logo.svg" alt="" /></a>
-        <a href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener" aria-label="Instagram"><img src="assets/img/instagram-logo.svg" alt="" /></a>
-        <a href="https://www.facebook.com/jonathanndroid" target="_blank" rel="noopener" aria-label="Facebook"><img src="assets/img/facebook-logo.svg" alt="" /></a>
-      </div>
-      <button class="nav__toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
     </header>
 
     <main>
       <!-- ===================== HERO ===================== -->
       <section class="hero" id="home">
-        <div class="hero__bg" aria-hidden="true">
-          <div class="hero__slides">
-            <img src="assets/img/project-30.png" alt="" />
-            <img src="assets/img/project-29.png" alt="" />
-            <img src="assets/img/project-27.png" alt="" />
-            <img src="assets/img/project-16.png" alt="" />
+        <div class="hero__stage">
+
+          <!-- Dark background layer — always full size, behind the shrinking panel.
+               The topographic contour field is drawn + animated on this canvas. -->
+          <div class="hero__dark" aria-hidden="true">
+            <canvas class="hero__contours" id="hero-contours"></canvas>
           </div>
-          <div class="hero__bg-veil"></div>
+
+          <!-- Marquee text rows — sit behind video, revealed as panel shrinks on scroll -->
+          <div class="hero__marquee" aria-hidden="true">
+            <div class="hero__marquee-row hero__marquee-row--ltr">
+              <div class="hero__marquee-track">
+                <img src="assets/img/uiuxdesigner.svg" alt="" draggable="false">
+                <img src="assets/img/uiuxdesigner.svg" alt="" draggable="false">
+              </div>
+            </div>
+            <div class="hero__marquee-row hero__marquee-row--rtl">
+              <div class="hero__marquee-track">
+                <img src="assets/img/webdeveloper.svg" alt="" draggable="false">
+                <img src="assets/img/webdeveloper.svg" alt="" draggable="false">
+              </div>
+            </div>
+          </div>
+
+          <!-- Shrinking video panel (scale animated via ScrollTrigger) -->
+          <div class="hero__panel" id="hero-panel">
+            <!-- Cinematic video fill -->
+            <video class="hero__video" autoplay muted loop playsinline preload="auto">
+              <source src="C0495a.mp4" type="video/mp4">
+            </video>
+            <!-- Mood tint -->
+            <div class="hero__tint" aria-hidden="true"></div>
+            <!-- Heavy animated film grain -->
+            <div class="hero__grain" aria-hidden="true"></div>
+            <!-- VHS scanlines -->
+            <div class="hero__scanlines" aria-hidden="true"></div>
+            <!-- Cinematic vignette frame -->
+            <div class="hero__vignette" aria-hidden="true"></div>
+          </div>
+
+          <!-- Centered signature — its own hero layer (does NOT shrink). The real
+               signature is a single hand-drawn stroke path (.hero__sig-mp) that
+               writes itself on via stroke-dashoffset, scrubbed to scroll, from its
+               start point (top of the first loop) to the end, with a glowing pen
+               nib riding the leading edge. -->
+          <div class="hero__sig" id="hero-sig" role="img" aria-label="Jonathan Bautista signature">
+            <svg class="hero__sig-svg" id="hero-sig-svg" viewBox="0 0 2968 2194" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+              <path class="hero__sig-mp" d="M574.848 665.003C563.445 766.893 552.042 868.783 534.035 995.864C516.029 1122.95 491.763 1272.13 463.098 1383.42C434.433 1494.72 402.104 1563.59 365.942 1622.24C329.781 1680.88 290.768 1727.2 254.883 1758.07C218.998 1788.95 187.423 1802.97 160.983 1800.95C134.543 1798.93 114.196 1780.44 93.201 1750.15C72.2057 1719.87 51.1788 1678.34 34.3211 1633.3C17.4635 1588.26 5.41232 1540.96 8.47744 1486.56C11.5426 1432.16 30.0892 1372.07 66.9289 1309.64C103.769 1247.22 158.339 1184.26 320.139 1046.72C481.939 909.176 749.314 698.957 900.954 564.68C1052.59 430.404 1080.4 378.44 1087.07 336.182C1093.74 293.925 1078.44 262.948 1048.19 239.961C1017.93 216.973 973.19 202.914 925.806 197.737C878.421 192.56 829.751 196.693 785.061 207.629C740.371 218.566 701.137 236.182 666.076 265.065C631.015 293.948 601.317 333.565 576.784 382.438C552.251 431.312 533.784 488.242 518.31 566.3C502.836 644.358 490.914 741.82 480.392 915.54C469.871 1089.26 461.111 1336.28 448.872 1513.49C436.633 1690.69 421.181 1790.58 401.863 1873.45C382.545 1956.32 359.83 2019.14 336.211 2067.59C312.592 2116.05 288.757 2148.25 268.441 2170.94C248.124 2193.63 232.048 2205.83 273.774 2086.29C315.501 1966.76 415.518 1715.1 488.243 1545.15C560.968 1375.21 603.37 1294.6 647.771 1221.47C692.172 1148.35 737.288 1085.16 775.2 1039.88C813.111 994.611 842.452 969.176 858.644 963.354C874.836 957.532 876.992 972.094 875.83 1007.13C874.668 1042.17 870.124 1097.24 863.934 1140.66C857.744 1184.07 850.047 1214.15 838.443 1244.9C826.839 1275.66 811.561 1306.18 796.491 1332.28C768.81 1380.23 747.975 1404.86 743.723 1408.45C743.169 1408.91 747.927 1401.84 771.766 1359.46C795.604 1317.08 838.903 1238.39 862.944 1191.59C886.985 1144.78 890.455 1132.26 891.564 1127.68C895.647 1110.83 886.025 1197.59 888.787 1230.5C889.673 1241.07 908.402 1232.94 934.225 1205.26C960.048 1177.58 997.226 1129.01 1015.19 1107.27C1033.16 1085.53 1030.78 1092.09 1028.57 1103.33C1017.72 1158.55 1031.44 1189.36 1037.49 1194.77C1043.89 1200.49 1069.22 1188.21 1106.17 1165.83C1186.3 1117.28 1192.38 1061.3 1193.2 1060.48C1210.62 1043.02 1198.4 1099.26 1205.02 1107.56C1210.72 1114.71 1233.11 1083.25 1259.66 1026.14C1274.14 994.999 1283.39 956.342 1291.17 854.098C1298.95 751.854 1303.12 586.393 1298.11 516.585C1293.09 446.778 1278.75 477.637 1271.67 500.006C1264.59 522.376 1265.21 535.322 1257.39 620.941C1249.57 706.561 1233.28 864.462 1225.32 972.464C1217.36 1080.47 1218.22 1133.78 1222.01 1172.53C1228.06 1234.43 1240.86 1260.27 1243.51 1262.59C1244.59 1263.55 1245.41 1256.7 1263.49 1215.45C1281.57 1174.2 1316.96 1096.89 1338.79 1051.47C1360.63 1006.06 1367.85 994.885 1372.3 991.514C1377.13 987.849 1381.5 1001.65 1388.05 1005.66C1399.03 1012.38 1415.87 988.012 1429.15 966.11C1442.18 944.616 1441.18 922.683 1438.15 916.968C1417.02 877.162 1435.15 1008.65 1441.51 1026.5C1443.89 1033.18 1452.96 1030.29 1459.25 1022.69C1494.38 980.257 1475.64 920.753 1473.28 900.606C1473 898.257 1480.48 940.734 1487.61 1004.56C1490.51 1030.5 1493.81 1043.13 1522.29 941.235C1550.77 839.337 1604.81 622.47 1634.38 479.573C1663.96 336.676 1667.42 274.322 1666.97 218.333C1666.52 162.345 1662.05 114.612 1655.79 78.2542C1649.52 41.8961 1641.6 18.3592 1639 10.2134C1636.4 2.06763 1639.35 10.0263 1639.89 146.554C1640.43 283.082 1638.48 547.938 1639.75 700.047C1641.03 852.157 1645.6 883.493 1651.66 909.19C1657.71 934.888 1665.11 953.996 1671.01 962.474C1676.91 970.951 1681.08 968.218 1688.58 960.796C1707.52 942.055 1732.61 905.672 1761.89 853.545C1777.7 825.394 1790.17 790.986 1800.67 757.622C1820.97 693.13 1826.02 643.24 1824.59 624.985C1823.58 611.976 1804.66 670.969 1796.63 711.649C1791.32 738.513 1797.27 771.144 1806.87 799.311C1809.76 807.803 1822.62 795.781 1829.35 784.76C1842.47 763.249 1844.48 744.575 1845.04 741.517C1849.93 714.782 1846.31 785.313 1850.64 789.569C1852.8 791.692 1857.61 789.478 1862.81 785.49C1892.45 762.806 1889.48 716.469 1887.3 702.523C1886.84 699.565 1883.4 706.51 1881.03 711.596C1878.66 716.682 1876.37 720.094 2056.25 626.452C2236.13 532.811 2598.25 342.014 2782.51 247.135C2966.76 152.257 2962.18 159.079 2959.14 164.469C2956.09 169.858 2954.74 173.608 2949.35 184.061"/>
+            </svg>
+            <span class="hero__sig-pen" id="hero-sig-pen" aria-hidden="true"></span>
+          </div>
+
+          <!-- Scroll indicator -->
+          <a class="hero__scroll" href="#message" aria-label="Scroll down">
+            <span class="hero__scroll-label">Scroll</span>
+            <svg class="hero__scroll-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 5v14M5 12l7 7 7-7"/>
+            </svg>
+          </a>
+
         </div>
-        <div class="hero__glow" aria-hidden="true"></div>
-
-        <p class="hero__kicker" data-hero><span class="dot"></span> Designing &amp; building since 2010</p>
-
-        <h1 class="hero__name" aria-label="Jonathan Bautista">
-          <span data-hero>JONATHAN</span>
-          <span data-hero>BAUTISTA</span>
-        </h1>
-
-        <p class="hero__sub" data-hero>Senior UI/UX Designer &amp; Front-End Developer</p>
-
-        <div class="hero__portrait" data-hero-portrait>
-          <img src="assets/img/hero-cutout.png" alt="Jonathan Bautista"
-               onerror="this.closest('.hero__portrait').classList.add('is-missing')" />
-        </div>
-
-        <!-- "Next Race" analog → Latest Build -->
-        <button class="next-card" data-id="28" data-hero aria-label="View latest build: Velocità E-Commerce">
-          <span class="next-card__label">Latest build</span>
-          <span class="next-card__title">Velocità E-Commerce</span>
-          <span class="next-card__meta">React · Tailwind · Supabase — 2026 <span class="next-card__arrow">→</span></span>
-        </button>
-
-        <a class="hero__scroll" href="#message" aria-label="Scroll">
-          <span>This is a vertical drive</span>
-          <span class="hero__scroll-line"></span>
-        </a>
       </section>
 
       <!-- ===================== MESSAGE FROM JONATHAN ===================== -->

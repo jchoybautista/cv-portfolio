@@ -9,13 +9,248 @@
   "use strict";
 
   const prefersReduced = window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
+    "(prefers-reduced-motion: reduce)",
   ).matches;
+
+  /* ---------- Hero topographic contour field ----------
+     A handful of slowly drifting Gaussian "energy" sources define a scalar
+     field; each frame we trace iso-contours through it with marching squares
+     and stroke them as faint lime lines. Because the field moves, the contours
+     continuously grow, shrink, split and merge — like an animated topo map.
+     Pauses when the hero scrolls out of view; static single frame for
+     reduced-motion. No libraries. */
+  function initContours() {
+    const canvas = document.getElementById("hero-contours");
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const LINE = "rgba(168, 214, 84, 0.14)"; // faint lime on olive
+    const THRESHOLDS = [0.18, 0.34, 0.54, 0.78, 1.05, 1.4];
+    const GRID = 38; // px spacing of the sampling grid (CSS px)
+
+    // Drifting field sources, in normalised [0,1] space.
+    const N = 6;
+    const blobs = [];
+    for (let i = 0; i < N; i++) {
+      blobs.push({
+        x: Math.random(),
+        y: Math.random(),
+        vx: (Math.random() * 2 - 1) * 0.012,
+        vy: (Math.random() * 2 - 1) * 0.012,
+        sig: 0.13 + Math.random() * 0.12, // base spread
+        amp: 0.75 + Math.random() * 0.6, // base strength
+        ph: Math.random() * Math.PI * 2, // pulse phase
+        pf: 0.15 + Math.random() * 0.35, // pulse frequency
+      });
+    }
+
+    let W = 0,
+      H = 0,
+      cols = 0,
+      rows = 0,
+      sx = 0,
+      sy = 0;
+    let field = null;
+    const dpr = 1; // faint decorative lines — full res isn't worth the fill cost
+
+    function resize() {
+      W = canvas.clientWidth;
+      H = canvas.clientHeight;
+      canvas.width = Math.round(W * dpr);
+      canvas.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      cols = Math.ceil(W / GRID) + 1;
+      rows = Math.ceil(H / GRID) + 1;
+      sx = W / (cols - 1);
+      sy = H / (rows - 1);
+      field = new Float32Array(cols * rows);
+    }
+
+    function computeField(t) {
+      // advance + bounce the sources, pulse their spread/strength
+      for (let i = 0; i < N; i++) {
+        const b = blobs[i];
+        b.x += b.vx;
+        b.y += b.vy;
+        if (b.x < -0.1 || b.x > 1.1) b.vx *= -1;
+        if (b.y < -0.1 || b.y > 1.1) b.vy *= -1;
+      }
+      for (let r = 0; r < rows; r++) {
+        const ny = (r * sy) / H;
+        for (let c = 0; c < cols; c++) {
+          const nx = (c * sx) / W;
+          let v = 0;
+          for (let i = 0; i < N; i++) {
+            const b = blobs[i];
+            const sig = b.sig * (1 + 0.45 * Math.sin(t * b.pf + b.ph));
+            const amp = b.amp * (1 + 0.25 * Math.sin(t * b.pf * 0.7 + b.ph));
+            const dx = nx - b.x,
+              dy = ny - b.y;
+            v += amp * Math.exp(-(dx * dx + dy * dy) / (2 * sig * sig));
+          }
+          field[r * cols + c] = v;
+        }
+      }
+    }
+
+    // Allocation-free marching squares (no per-cell closures/arrays — that was
+    // generating tens of thousands of throwaway objects per frame).
+    function drawContours() {
+      ctx.clearRect(0, 0, W, H);
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = LINE;
+      for (let li = 0; li < THRESHOLDS.length; li++) {
+        const thr = THRESHOLDS[li];
+        ctx.beginPath();
+        for (let r = 0; r < rows - 1; r++) {
+          const y = r * sy;
+          const off = r * cols;
+          for (let c = 0; c < cols - 1; c++) {
+            const tl = field[off + c];
+            const tr = field[off + c + 1];
+            const br = field[off + cols + c + 1];
+            const bl = field[off + cols + c];
+            let id = 0;
+            if (tl > thr) id |= 8;
+            if (tr > thr) id |= 4;
+            if (br > thr) id |= 2;
+            if (bl > thr) id |= 1;
+            if (id === 0 || id === 15) continue;
+            const x = c * sx;
+            // edge crossings (only computed for the edges a case needs)
+            let ax, ay, bx, by;
+            switch (id) {
+              case 1:
+              case 14: // left → bottom
+                ax = x;
+                ay = y + (sy * (thr - tl)) / (bl - tl);
+                bx = x + (sx * (thr - bl)) / (br - bl);
+                by = y + sy;
+                break;
+              case 2:
+              case 13: // bottom → right
+                ax = x + (sx * (thr - bl)) / (br - bl);
+                ay = y + sy;
+                bx = x + sx;
+                by = y + (sy * (thr - tr)) / (br - tr);
+                break;
+              case 3:
+              case 12: // left → right
+                ax = x;
+                ay = y + (sy * (thr - tl)) / (bl - tl);
+                bx = x + sx;
+                by = y + (sy * (thr - tr)) / (br - tr);
+                break;
+              case 4:
+              case 11: // top → right
+                ax = x + (sx * (thr - tl)) / (tr - tl);
+                ay = y;
+                bx = x + sx;
+                by = y + (sy * (thr - tr)) / (br - tr);
+                break;
+              case 6:
+              case 9: // top → bottom
+                ax = x + (sx * (thr - tl)) / (tr - tl);
+                ay = y;
+                bx = x + (sx * (thr - bl)) / (br - bl);
+                by = y + sy;
+                break;
+              case 7:
+              case 8: // top → left
+                ax = x + (sx * (thr - tl)) / (tr - tl);
+                ay = y;
+                bx = x;
+                by = y + (sy * (thr - tl)) / (bl - tl);
+                break;
+              case 5: {
+                // saddle: top-left + bottom-right
+                const ry = y + (sy * (thr - tr)) / (br - tr);
+                ctx.moveTo(x + (sx * (thr - tl)) / (tr - tl), y);
+                ctx.lineTo(x, y + (sy * (thr - tl)) / (bl - tl));
+                ctx.moveTo(x + (sx * (thr - bl)) / (br - bl), y + sy);
+                ctx.lineTo(x + sx, ry);
+                continue;
+              }
+              case 10: {
+                // saddle: top-right + bottom-left
+                const ry = y + (sy * (thr - tr)) / (br - tr);
+                ctx.moveTo(x + (sx * (thr - tl)) / (tr - tl), y);
+                ctx.lineTo(x + sx, ry);
+                ctx.moveTo(x + (sx * (thr - bl)) / (br - bl), y + sy);
+                ctx.lineTo(x, y + (sy * (thr - tl)) / (bl - tl));
+                continue;
+              }
+              default:
+                continue;
+            }
+            ctx.moveTo(ax, ay);
+            ctx.lineTo(bx, by);
+          }
+        }
+        ctx.stroke();
+      }
+    }
+
+    let rafId = null,
+      running = false,
+      last = 0;
+    const FRAME_MS = 1000 / 30; // 30fps is plenty for slow-drifting contours
+    function frame(now) {
+      if (!running) return;
+      rafId = requestAnimationFrame(frame);
+      if (now - last < FRAME_MS) return;
+      last = now;
+      computeField(now * 0.001);
+      drawContours();
+    }
+    function start() {
+      if (running || prefersReduced) return;
+      running = true;
+      rafId = requestAnimationFrame(frame);
+    }
+    function stop() {
+      running = false;
+      if (rafId) cancelAnimationFrame(rafId);
+    }
+
+    resize();
+    window.addEventListener("resize", () => {
+      resize();
+      if (prefersReduced || !running) {
+        computeField(0);
+        drawContours();
+      }
+    });
+
+    if (prefersReduced) {
+      computeField(0);
+      drawContours();
+      return;
+    }
+
+    // Only animate while the hero is on screen.
+    const hero = document.querySelector(".hero");
+    if ("IntersectionObserver" in window && hero) {
+      new IntersectionObserver(
+        (entries) =>
+          entries.forEach((e) => (e.isIntersecting ? start() : stop())),
+        { threshold: 0 },
+      ).observe(hero);
+    } else {
+      start();
+    }
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) stop();
+      else start();
+    });
+  }
+  initContours();
 
   /* ---------- Hero intro trigger ---------- */
   window.addEventListener("load", () => {
     requestAnimationFrame(() =>
-      document.documentElement.classList.add("loaded")
+      document.documentElement.classList.add("loaded"),
     );
   });
 
@@ -49,18 +284,31 @@
       e.preventDefault();
       if (lenis) lenis.scrollTo(target, { offset: -70 });
       else target.scrollIntoView({ behavior: "smooth" });
-      closeMenu();
     });
   });
 
-  /* ---------- Nav: condense + mobile menu ---------- */
+  /* ---------- Nav: logo-only with scroll-aware colour ---------- */
   const nav = document.getElementById("nav");
-  const navToggle = document.getElementById("nav-toggle");
   const progressBar = document.querySelector(".scroll-progress span");
+
+  // Switches the logo between white (over the video panel) and #E8FFAE (off it).
+  // stProgress is the raw ScrollTrigger progress 0–1.
+  function setLogoColor(stProgress) {
+    if (!nav) return;
+    const vw = window.innerWidth;
+    const finalSX = Math.min(1, 943 / vw);
+    const curSX = 1 - Math.min(1, Math.max(0, stProgress)) * (1 - finalSX);
+    // Panel left edge retreats toward centre as it scales.
+    const panelLeft = (vw * (1 - curSX)) / 2;
+    // Logo occupies [16 … 16 + nav.offsetWidth]px from the left.
+    nav.classList.toggle(
+      "logo-dimmed",
+      panelLeft >= 16 + nav.offsetWidth || stProgress >= 1,
+    );
+  }
 
   function onScroll() {
     const y = window.scrollY || document.documentElement.scrollTop;
-    if (nav) nav.classList.toggle("is-scrolled", y > 40);
     if (progressBar) {
       const h = document.documentElement.scrollHeight - window.innerHeight;
       progressBar.style.width = (h > 0 ? (y / h) * 100 : 0) + "%";
@@ -68,33 +316,6 @@
   }
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
-
-  function closeMenu() {
-    if (nav && nav.classList.contains("is-open")) {
-      nav.classList.remove("is-open");
-      navToggle.setAttribute("aria-expanded", "false");
-    }
-  }
-  if (navToggle) {
-    navToggle.addEventListener("click", () => {
-      const open = nav.classList.toggle("is-open");
-      navToggle.setAttribute("aria-expanded", String(open));
-    });
-  }
-
-  /* ---------- Hero background slideshow ---------- */
-  (function heroSlides() {
-    const slides = document.querySelectorAll(".hero__slides img");
-    if (!slides.length) return;
-    let i = 0;
-    slides[0].classList.add("is-active");
-    if (slides.length < 2 || prefersReduced) return;
-    setInterval(() => {
-      slides[i].classList.remove("is-active");
-      i = (i + 1) % slides.length;
-      slides[i].classList.add("is-active");
-    }, 4200);
-  })();
 
   /* ---------- Reveal on scroll (IntersectionObserver) ---------- */
   const revealEls = document.querySelectorAll(".reveal");
@@ -108,7 +329,7 @@
           }
         });
       },
-      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
+      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
     );
     revealEls.forEach((el) => io.observe(el));
   } else {
@@ -139,7 +360,7 @@
             }
           });
         },
-        { threshold: 0.6 }
+        { threshold: 0.6 },
       );
       io.observe(el);
     } else {
@@ -149,7 +370,7 @@
 
   /* ---------- Skill bars fill ---------- */
   function fillBar(bar) {
-    bar.style.width = (bar.getAttribute("data-width") || 0) + "%";
+    bar.style.transform = `scaleX(${(bar.getAttribute("data-width") || 0) / 100})`;
   }
   const bars = document.querySelectorAll(".bar__fill");
   if ("IntersectionObserver" in window) {
@@ -162,67 +383,163 @@
           }
         });
       },
-      { threshold: 0.2 }
+      { threshold: 0.2 },
     );
     bars.forEach((b) => io.observe(b));
   } else {
     bars.forEach(fillBar);
   }
 
-  /* ---------- GSAP parallax ---------- */
+  /* ---------- GSAP hero scroll animation ---------- */
   if (window.gsap && window.ScrollTrigger && !prefersReduced) {
     const gsap = window.gsap;
     gsap.registerPlugin(window.ScrollTrigger);
 
-    gsap.to(".hero__portrait", {
-      yPercent: 14,
-      ease: "none",
-      scrollTrigger: {
-        trigger: ".hero",
-        start: "top top",
-        end: "bottom top",
-        scrub: true,
-      },
-    });
-    gsap.to(".hero__name", {
-      yPercent: -24,
-      opacity: 0.25,
-      ease: "none",
-      scrollTrigger: {
-        trigger: ".hero",
-        start: "top top",
-        end: "bottom top",
-        scrub: true,
-      },
-    });
-    gsap.to(".hero__glow", {
-      scale: 1.3,
-      ease: "none",
-      scrollTrigger: {
-        trigger: ".hero",
-        start: "top top",
-        end: "bottom top",
-        scrub: true,
-      },
-    });
+    const heroSection = document.querySelector(".hero");
+    const heroPanel = document.getElementById("hero-panel");
 
-    // Featured media subtle parallax
-    gsap.utils.toArray(".feature__media img").forEach((img) => {
-      gsap.fromTo(
-        img,
-        { yPercent: -8 },
-        {
-          yPercent: 8,
-          ease: "none",
-          scrollTrigger: {
-            trigger: img,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true,
-          },
-        }
+    if (heroSection && heroPanel) {
+      // Logo starts white (over the full-screen panel); colour is updated each frame.
+      setLogoColor(0);
+
+      // Signature: a single hand-drawn stroke path that writes itself on via
+      // stroke-dashoffset, scrubbed to scroll — drawing from its start point
+      // (top of the first loop) through to the end, with a glowing pen nib
+      // riding the leading edge. The drawSig/measureSig logic is generic over
+      // any list of `.hero__sig-mp` paths, so one path just works.
+      const sigEl = document.getElementById("hero-sig");
+      const sigSvg = document.getElementById("hero-sig-svg");
+      const sigPen = document.getElementById("hero-sig-pen");
+      const SIG_VB_X = 0,
+        SIG_VB_Y = 0,
+        SIG_VB_W = 2968; // matches viewBox
+      const sigStrokes = Array.prototype.slice.call(
+        document.querySelectorAll("#hero-sig-svg .hero__sig-mp"),
       );
-    });
+      let sigLens = [],
+        sigTotal = 0;
+
+      function measureSig() {
+        sigLens = sigStrokes.map((p) => p.getTotalLength());
+        sigTotal = sigLens.reduce((a, b) => a + b, 0);
+        sigStrokes.forEach((p, i) => {
+          const L = sigLens[i];
+          // dash = stroke length, gap = oversized so NO wrapped dash (and its
+          // round cap) can poke back into view at the hidden offset.
+          p.style.strokeDasharray = L + " " + (L * 2 + 20);
+          p.style.strokeDashoffset = L; // fully hidden until written
+        });
+      }
+      function drawSig(prog) {
+        const p = Math.max(0, Math.min(1, prog));
+        const target = p * sigTotal; // total ink length to reveal so far
+        let cum = 0,
+          penIdx = -1,
+          penLocal = 0;
+        for (let i = 0; i < sigStrokes.length; i++) {
+          const len = sigLens[i];
+          const drawn = Math.max(0, Math.min(len, target - cum));
+          sigStrokes[i].style.strokeDashoffset = String(len - drawn);
+          if (drawn > 0) {
+            penIdx = i;
+            penLocal = drawn;
+          } // last stroke with ink = the frontier
+          cum += len;
+        }
+        if (sigPen && penIdx >= 0 && p > 0.002 && p < 0.998) {
+          try {
+            const pt = sigStrokes[penIdx].getPointAtLength(
+              Math.min(penLocal, sigLens[penIdx]),
+            );
+            const scale = sigSvg.clientWidth / SIG_VB_W;
+            sigPen.style.left = (pt.x - SIG_VB_X) * scale + "px";
+            sigPen.style.top = (pt.y - SIG_VB_Y) * scale + "px";
+            sigPen.style.opacity = "1";
+          } catch (e) {}
+        } else if (sigPen) {
+          sigPen.style.opacity = "0";
+        }
+      }
+      if (sigStrokes.length) {
+        measureSig();
+        drawSig(0);
+        window.addEventListener("resize", () => {
+          if (window.ScrollTrigger) window.ScrollTrigger.refresh();
+        });
+      }
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: heroSection,
+          start: "top top",
+          end: "+=65%",
+          scrub: 1.1,
+          pin: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => setLogoColor(self.progress),
+          onRefresh: (self) => setLogoColor(self ? self.progress : 0),
+          onLeave: () => nav && nav.classList.add("logo-dimmed"),
+          onLeaveBack: () => nav && nav.classList.remove("logo-dimmed"),
+        },
+      });
+
+      // Panel scales to exactly 943×608px regardless of viewport size.
+      tl.to(
+        heroPanel,
+        {
+          scaleX: () =>
+            Math.min(
+              1,
+              Math.min(943 / window.innerWidth, 608 / window.innerHeight),
+            ),
+          scaleY: () =>
+            Math.min(
+              1,
+              Math.min(943 / window.innerWidth, 608 / window.innerHeight),
+            ),
+          borderRadius: 64,
+          ease: "none",
+          duration: 1,
+          force3D: true,
+        },
+        0,
+      );
+
+      // The centered signature writes itself off the same scrubbed timeline, so
+      // it stays in lockstep with the shrink and un-writes when scrolling up.
+      if (sigStrokes.length) {
+        const sigState = { p: 0 };
+        tl.to(
+          sigState,
+          {
+            p: 1,
+            ease: "none",
+            duration: 1,
+            onUpdate: () => {
+              const y = window.scrollY || document.documentElement.scrollTop;
+              drawSig(y < 3 ? 0 : sigState.p);
+            },
+          },
+          0,
+        );
+
+        // After signature completes, hold the pin for an extra scroll beat
+        // before the hero unpins and the next section scrolls in.
+        tl.to({}, { duration: 0.15 });
+
+        // Instantly snap sig to hidden the moment native scroll hits zero —
+        // bypasses GSAP scrub lag and Lenis lerp settle time.
+        window.addEventListener(
+          "scroll",
+          function () {
+            if ((window.scrollY || document.documentElement.scrollTop) === 0)
+              drawSig(0);
+          },
+          { passive: true },
+        );
+      }
+    }
   }
 
   /* ---------- Resume tabs ---------- */
@@ -544,8 +861,7 @@
       websiteLink: "https://try-undo-36289219.figma.site",
     },
     26: {
-      title:
-        "Dragon Ball Flappy Goku Game (Retro Style) — Figma Make (AI)",
+      title: "Dragon Ball Flappy Goku Game (Retro Style) — Figma Make (AI)",
       desc: "I developed and designed this Retro Style Dragon Ball Flappy Goku game as a dedicated showcase of my AI skills, utilizing Figma AI to bring this Flappy Bird-inspired experience to life. My background in front-end development provided the necessary technical foundation to ensure the game functions perfectly; because I have a deep understanding of the code the AI generates, I was able to bridge the gap between AI-driven design and a fully playable, high-performance product. This project highlights a completely mobile-web responsive design, ensuring that the fast-paced gameplay remains smooth and intuitive whether you are playing on a desktop or a smartphone. By focusing on a seamless browser-based experience, I’ve ensured that the game delivers a polished, app-like feel on any device without the need for an external download.",
       created: "2025",
       role: "Designer and Developer",
@@ -555,8 +871,7 @@
       websiteLink: "https://sniff-ahead-92042786.figma.site",
     },
     27: {
-      title:
-        "Final Fantasy VII Marketing Landing Page — Claude Code",
+      title: "Final Fantasy VII Marketing Landing Page — Claude Code",
       desc: "I developed this Final Fantasy VII marketing landing page to showcase my ability to leverage Claude Code for end-to-end web development. By using this agentic tool, I managed the entire design and implementation process directly from my terminal, while my front-end expertise allowed me to refine and optimize the AI-generated code for production-level performance. The result is a fully mobile-web responsive experience that maintains its cinematic impact and fluid navigation across both desktop and mobile. This project demonstrates how combining technical oversight with AI-driven workflows produces polished, high-performance results without the need for a separate app.",
       created: "2026",
       role: "Designer and Developer",
