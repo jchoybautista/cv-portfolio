@@ -1,8 +1,44 @@
 /* =========================================================
    Jonathan Bautista — Portfolio
    Faithful remake of the landonorris.com structure/experience
-   Dark / neon-lime · Anton + Manrope + JetBrains Mono + Caveat
+   Dark / neon-lime · Prata + Mona Sans + Manrope + JetBrains Mono + Caveat
    ========================================================= */
+
+@font-face {
+  font-family: "Mona Sans";
+  src: url("files/MonaSans-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Mona Sans";
+  src: url("files/MonaSans-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Mona Sans";
+  src: url("files/MonaSans-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Mona Sans";
+  src: url("files/MonaSans-ExtraBold.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Mona Sans";
+  src: url("files/MonaSans-Black.woff2") format("woff2");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
 
 :root {
   --bg: #0a0b0a;
@@ -18,7 +54,8 @@
   --accent-dim: #9ec92a;
   --accent-glow: rgba(198, 255, 58, 0.35);
 
-  --display: "Anton", "Arial Narrow", sans-serif;
+  --display: "Prata", Georgia, serif;
+  --heading: "Mona Sans", system-ui, sans-serif;
   --body: "Manrope", system-ui, sans-serif;
   --mono: "JetBrains Mono", ui-monospace, monospace;
   --sign: "Caveat", cursive;
@@ -159,7 +196,8 @@ h3 {
 .resume__title,
 .builds__title,
 .socials__title {
-  font-family: var(--display);
+  font-family: var(--heading);
+  font-weight: 900;
   text-transform: uppercase;
   font-size: clamp(54px, 11vw, 168px);
   line-height: 0.84;
@@ -268,8 +306,12 @@ h3 {
   display: block;
   width: 245px;
   height: 78px;
+  /* Fill colour is driven by JS (updateLogoColor) to follow the background it
+     sits over: dark bg → white, light bg → black, olive bg → #e7fcb0. The
+     short transition smooths the few discrete hand-offs (panel edge, card
+     flip, entering the dark page) while scrubbed zones update per frame. */
   background-color: #ffffff;
-  transition: background-color 0.45s ease;
+  transition: background-color 0.3s ease;
   -webkit-mask-image: url('img/logo.svg');
   mask-image: url('img/logo.svg');
   -webkit-mask-repeat: no-repeat;
@@ -279,9 +321,7 @@ h3 {
   -webkit-mask-position: left center;
   mask-position: left center;
 }
-.nav.logo-dimmed .nav__logo {
-  background-color: #E8FFAE;
-}
+
 
 @media (max-width: 768px) {
   .nav {
@@ -297,6 +337,7 @@ h3 {
 /* ---------- HERO (Lando-faithful) ---------- */
 .hero {
   position: relative;
+  z-index: 1;
   height: 100vh;
   overflow: hidden;
 }
@@ -307,10 +348,19 @@ h3 {
   overflow: hidden;
 }
 
-/* Dark bg layer — always full size, behind the panel.
-   Dark olive ground matching the reference; the contour canvas draws on top. */
+/* Shared dark zone — wraps hero + statement. No z-index here so it does NOT
+   create a stacking context; hero__dark's z-index is then evaluated in the
+   root context, below hero (z-index:1) and statement (z-index:1). */
+.dark-zone {
+  position: relative;
+}
+
+/* Fixed gradient + canvas — z-index: 0 in root stacking context.
+   hero and statement are transparent at z-index: 1, so the canvas shows
+   through them (Lando effect). Sections after dark-zone have z-index: 2
+   + opaque backgrounds, covering the canvas once scrolled into view. */
 .hero__dark {
-  position: absolute;
+  position: fixed;
   inset: 0;
   z-index: 0;
   overflow: hidden;
@@ -430,11 +480,11 @@ h3 {
 .hero__sig {
   position: absolute;
   left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%) rotate(17deg);
+  top: 54%;
+  transform: translate(-50%, -54%) rotate(17deg);
   z-index: 20;
   pointer-events: none;
-  width: min(107vw, 1377px);
+  width: min(90vw, 92vh, 1300px);
 }
 .hero__sig-svg {
   display: block;
@@ -477,15 +527,159 @@ section {
 }
 .message,
 .moments,
-.bio,
+.about,
 .split,
 .hof,
 .builds,
 .clients,
 .resume,
 .socials {
-  padding-top: clamp(90px, 14vh, 190px);
   padding-bottom: clamp(40px, 8vh, 90px);
+  position: relative;
+  z-index: 2;
+  background: var(--bg);
+}
+
+/* Pinned stage — title stays put while the deck fans out on scroll */
+.socials__stage {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(20px, 5vh, 60px);
+  padding: clamp(70px, 10vh, 120px) var(--pad) clamp(40px, 6vh, 80px);
+  overflow: hidden;
+}
+.socials__head {
+  text-align: center;
+  margin-bottom: 0;
+}
+
+/* The deck — every card stacks in one grid cell, centred. GSAP fans them out. */
+.socials__deck {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  /* How far neighbours slide aside to make room for the enlarged hovered card */
+  --push: clamp(55px, 5.5vw, 88px);
+  /* How far the hovered card rises as it grows */
+  --lift: clamp(14px, 1.6vw, 24px);
+}
+.social-card {
+  grid-area: 1 / 1;
+  /* 9:16 cards are tall, so cap width by viewport HEIGHT too (min(...)) —
+     short viewports shrink the cards to fit instead of clipping the fan. */
+  width: clamp(140px, min(15vw, 24vh), 232px);
+  aspect-ratio: 9 / 16;
+  display: block;
+  will-change: transform;
+  z-index: 1;
+}
+.social-card__inner {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.5);
+  filter: grayscale(0.35) brightness(0.92);
+  transition:
+    transform 0.55s var(--ease),
+    filter 0.5s var(--ease),
+    box-shadow 0.5s var(--ease);
+}
+.social-card__inner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.social-card__tag {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--bg);
+  background: var(--accent);
+  padding: 5px 9px;
+  border-radius: 999px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 0.4s var(--ease),
+    transform 0.4s var(--ease);
+}
+/* Colour + glow reveal (also fires the tag) — harmless on touch, so global. */
+.social-card:hover .social-card__inner {
+  filter: grayscale(0) brightness(1);
+  box-shadow:
+    0 30px 70px rgba(0, 0, 0, 0.6),
+    0 0 0 1px var(--accent-glow);
+}
+.social-card:hover .social-card__tag {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Lando-style focus — only on real pointers, only when the fan is live.
+   The hovered card keeps its fan angle, grows to a true 1.18× (un-scaling its
+   parent's GSAP scale via --inv-scale), and rises a touch while its neighbours
+   part to make room. It keeps its natural z-index (centre highest, outer cards
+   lower), so any card layered over it stays in front — it never jumps to the
+   top of the stack. All movement lives on .social-card__inner so GSAP's
+   transform on .social-card is never touched. */
+@media (hover: hover) and (min-width: 1024px) {
+  .social-card:hover .social-card__inner {
+    transform: translateY(calc(-1 * var(--lift)))
+      scale(calc(1.18 * var(--inv-scale, 1)));
+  }
+  /* :has() reaches cards BEFORE the hovered one (no prev-sibling combinator);
+     ~ reaches the ones AFTER it. */
+  .social-card:has(~ .social-card:hover) .social-card__inner {
+    transform: translateX(calc(-1 * var(--push)));
+  }
+  .social-card:hover ~ .social-card .social-card__inner {
+    transform: translateX(var(--push));
+  }
+}
+.social-card--feature .social-card__inner {
+  filter: grayscale(0) brightness(1);
+}
+
+/* ---------- STATEMENT (Lando-style — new version for comparison) ---------- */
+.statement {
+  position: relative;
+  z-index: 1;
+  padding: clamp(70px, 9vw, 120px) clamp(40px, 10vw, 180px);
+  overflow: hidden;
+}
+
+.statement__text {
+  max-width: clamp(480px, 68vw, 920px);
+  margin: 0 auto;
+  font-size: clamp(30px, 4.4vw, 70px);
+  line-height: 0.93;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.st-sans {
+  font-family: var(--heading);
+  font-weight: 900;
+  color: #d2d7cd;
+}
+
+.st-serif {
+  font-family: var(--display);
+  color: var(--accent);
+  letter-spacing: -0.01em;
 }
 
 /* ---------- MESSAGE ---------- */
@@ -503,7 +697,8 @@ section {
   margin-top: 36px;
 }
 .message__copy {
-  font-family: var(--display);
+  font-family: var(--heading);
+  font-weight: 800;
   text-transform: uppercase;
   font-size: clamp(28px, 4.6vw, 68px);
   line-height: 1.02;
@@ -542,8 +737,7 @@ section {
   margin-top: 26px;
 }
 .moments__rail,
-.builds__rail,
-.socials__rail {
+.builds__rail {
   display: flex;
   gap: 22px;
   overflow-x: auto;
@@ -552,8 +746,7 @@ section {
   scrollbar-width: none;
 }
 .moments__rail::-webkit-scrollbar,
-.builds__rail::-webkit-scrollbar,
-.socials__rail::-webkit-scrollbar {
+.builds__rail::-webkit-scrollbar {
   display: none;
 }
 .moment {
@@ -586,25 +779,178 @@ section {
 }
 
 /* ---------- BIO ---------- */
-.bio {
-  max-width: 1100px;
+/* ---------- ABOUT (replaces the old single-line Origin bio) ---------- */
+.about {
+  max-width: var(--maxw);
   margin: 0 auto;
   padding-left: var(--pad);
   padding-right: var(--pad);
-  text-align: center;
 }
-.bio__copy {
-  font-family: var(--display);
+.about__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  gap: clamp(36px, 6vw, 96px);
+  align-items: start;
+}
+
+/* Left rail — kicker, big editorial lead, contact actions.
+   Sticky so the headline + contact CTA follow the reader through the story. */
+.about__aside {
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: clamp(90px, 12vh, 130px);
+  align-self: start;
+}
+.about__kicker {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  font-size: clamp(26px, 4.4vw, 64px);
-  line-height: 1.05;
-  color: #d2d7cd;
+  color: var(--accent);
+  margin-bottom: clamp(18px, 2.4vw, 26px);
 }
-.bio .signature {
-  display: block;
-  margin: 40px auto 0;
-  transform: rotate(-4deg);
-  width: max-content;
+.about__lead {
+  font-family: var(--display);
+  font-size: clamp(27px, 3.3vw, 50px);
+  line-height: 1.14;
+  letter-spacing: -0.005em;
+  color: #e7ebe2;
+}
+.about__lead .accent {
+  color: var(--accent);
+}
+
+/* Contact block */
+.about__contact {
+  margin-top: clamp(30px, 4.5vh, 54px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+}
+.about__contact-label {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.about__icons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.about__icons a {
+  width: 46px;
+  height: 46px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--surface);
+  transition:
+    transform 0.3s var(--ease),
+    border-color 0.3s,
+    background 0.3s;
+}
+.about__icons a:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+  background: var(--surface-2);
+}
+.about__icons img {
+  width: 19px;
+  height: 19px;
+}
+.about__cv {
+  margin-top: 8px;
+}
+
+/* Right column — the full story */
+.about__body {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(18px, 2.2vh, 26px);
+  max-width: 60ch;
+  padding-top: clamp(6px, 1vw, 14px);
+}
+.about__p {
+  font-size: clamp(16px, 1.1vw, 18px);
+  line-height: 1.75;
+  color: #a9afa3;
+}
+.about__p strong {
+  color: var(--text);
+  font-weight: 700;
+}
+.about__strong {
+  font-family: var(--heading);
+  font-weight: 800;
+  color: var(--text);
+}
+.about__brands {
+  color: var(--accent);
+  font-weight: 500;
+}
+.about__p--close {
+  margin-top: clamp(4px, 1vh, 10px);
+  padding-left: clamp(16px, 1.6vw, 24px);
+  border-left: 2px solid var(--accent);
+  color: #c8cdc0;
+  font-size: clamp(17px, 1.25vw, 20px);
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+/* Responsive — single column on tablet / mobile */
+@media (max-width: 880px) {
+  .about__inner {
+    grid-template-columns: 1fr;
+    gap: clamp(26px, 6vh, 44px);
+  }
+  .about__aside {
+    position: static;
+  }
+  .about__lead {
+    font-size: clamp(26px, 6.4vw, 40px);
+  }
+  .about__body {
+    max-width: 64ch;
+  }
+}
+
+/* ---------- ABOUT on the contour stage (sits in the dark-zone, over the
+   olive→black canvas; the two columns slide in from opposite edges) ---------- */
+.stage-about {
+  position: relative;
+  z-index: 1; /* above the fixed contour canvas (z-index 0) */
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: clamp(90px, 15vh, 170px) var(--pad);
+  overflow: hidden; /* clips the horizontal slide-in so it never scrolls the page */
+}
+.stage-about__inner {
+  width: 100%;
+}
+/* No sticky on the stage — the columns translate, they don't pin */
+.stage-about .about__aside {
+  position: static;
+  top: auto;
+}
+.stage-about__col {
+  will-change: transform, opacity;
+}
+
+@media (max-width: 880px) {
+  .stage-about {
+    overflow: hidden;
+    padding: clamp(64px, 12vh, 120px) var(--pad);
+  }
+  /* slide-in is disabled on mobile (JS), so make sure columns sit in place */
+  .stage-about__col {
+    transform: none;
+  }
 }
 
 /* ---------- SPLIT (Design / Code) ---------- */
@@ -635,7 +981,8 @@ section {
   margin-bottom: 8px;
 }
 .split__big {
-  font-family: var(--display);
+  font-family: var(--heading);
+  font-weight: 900;
   text-transform: uppercase;
   font-size: clamp(60px, 13vw, 200px);
   line-height: 0.82;
@@ -807,7 +1154,8 @@ section {
 }
 .build__name {
   display: block;
-  font-family: var(--display);
+  font-family: var(--heading);
+  font-weight: 700;
   text-transform: uppercase;
   font-size: clamp(22px, 2.6vw, 34px);
   margin-top: 18px;
@@ -853,7 +1201,8 @@ section {
   min-height: 120px;
   padding: 20px;
   background: var(--bg);
-  font-family: var(--display);
+  font-family: var(--heading);
+  font-weight: 600;
   text-transform: uppercase;
   font-size: clamp(14px, 1.5vw, 21px);
   color: var(--muted);
@@ -1019,7 +1368,8 @@ section {
   gap: 52px;
 }
 .skills__heading {
-  font-family: var(--display);
+  font-family: var(--heading);
+  font-weight: 700;
   text-transform: uppercase;
   font-size: 24px;
   letter-spacing: 0.04em;
@@ -1092,26 +1442,6 @@ section {
 }
 
 /* ---------- SOCIALS ---------- */
-.socials .section-head {
-  margin-bottom: clamp(34px, 5vh, 56px);
-}
-.socials__rail img {
-  flex: 0 0 auto;
-  width: clamp(220px, 26vw, 340px);
-  aspect-ratio: 1/1;
-  object-fit: cover;
-  border-radius: 14px;
-  border: 1px solid var(--line);
-  scroll-snap-align: start;
-  filter: grayscale(0.4);
-  transition:
-    filter 0.5s,
-    transform 0.6s var(--ease);
-}
-.socials__rail img:hover {
-  filter: grayscale(0);
-  transform: scale(1.03);
-}
 .socials__links {
   max-width: var(--maxw);
   margin: 30px auto 0;
@@ -1119,6 +1449,19 @@ section {
   display: flex;
   gap: 30px;
   flex-wrap: wrap;
+}
+
+/* Phone & tablet — keep the grid-stacked deck (base) so JS can fan the cards
+   out exactly like desktop, just tighter. No swipe rail. */
+@media (max-width: 1023px) {
+  .socials__stage {
+    min-height: auto;
+  }
+}
+@media (max-width: 767px) {
+  .social-card {
+    width: clamp(92px, 29vw, 124px);
+  }
 }
 .socials__links a {
   font-family: var(--mono);
@@ -1138,6 +1481,9 @@ section {
   max-width: var(--maxw);
   margin: 0 auto;
   border-top: 1px solid var(--line);
+  position: relative;
+  z-index: 2;
+  background: var(--bg);
 }
 .footer__tag {
   font-family: var(--display);
@@ -1298,7 +1644,8 @@ section {
   border: 1px solid var(--line);
 }
 .modal__info h2 {
-  font-family: var(--display);
+  font-family: var(--heading);
+  font-weight: 700;
   text-transform: uppercase;
   font-size: clamp(26px, 3.4vw, 40px);
   line-height: 1;
@@ -1357,6 +1704,312 @@ section {
   height: 24px;
 }
 
+/* ========== WORKS — Lando-style horizontal scroll gallery ========== */
+/* Light overlay inside hero__dark — fades in as works Phase 2 scrolls */
+/* Olive → black overlay, fades in across the About section (driven by _aboutP) */
+.hero__black-layer {
+  position: absolute;
+  inset: 0;
+  background: #060707;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero__light-layer {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    135% 120% at 50% 42%,
+    #e8ece0 0%,
+    #dde1d5 46%,
+    #d2d8ca 100%
+  );
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.works {
+  position: relative;
+  z-index: 2;
+  height: 100vh;
+  /* Small upward overlap so the corner entry begins just as the About section's
+     last lines leave — enough to avoid an empty beat without eating the About's
+     reading room (it used to be -70vh, tuned for the much shorter statement). */
+  margin-top: -18vh;
+  background: transparent; /* hero__dark canvas shows through */
+  /* Perspective parent for the flip card. Kept off .works__flip itself so its
+     preserve-3d is honoured. No overflow:hidden here — that would flatten the
+     3D scene; each face clips its own content instead. */
+  perspective: 2200px;
+}
+
+/* ---------- WORKS flip card ---------- */
+.works__flip {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transform: rotateY(0deg);
+  will-change: transform;
+}
+.works__face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.works__face--front {
+  overflow: hidden; /* clips the 300vw horizontal strip */
+}
+.works__face--back {
+  transform: rotateY(180deg);
+  background: var(--bg);
+  display: grid;
+  place-items: center;
+  padding: clamp(40px, 8vw, 120px);
+}
+
+/* Hall of Fame opener shown on the back of the flip */
+.hof-cover {
+  max-width: 920px;
+  text-align: center;
+}
+.hof-cover__kicker {
+  display: block;
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: clamp(16px, 2vw, 24px);
+}
+.hof-cover__title {
+  font-family: var(--heading);
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  font-size: clamp(46px, 9vw, 132px);
+  color: var(--text);
+}
+.hof-cover__title em {
+  display: block;
+  font-style: normal;
+  font-family: var(--display);
+  text-transform: none;
+  letter-spacing: -0.01em;
+  color: var(--accent);
+}
+.hof-cover__lead {
+  max-width: 56ch;
+  margin: clamp(22px, 3vw, 34px) auto 0;
+  font-size: clamp(15px, 1.1vw, 18px);
+  line-height: 1.7;
+  color: var(--muted);
+}
+.hof-cover__cue {
+  display: inline-block;
+  margin-top: clamp(26px, 3.4vw, 40px);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text);
+  opacity: 0.65;
+}
+
+/* Section intro — centred over the (still off-screen) strip. GSAP fades it in
+   alone at the start of the pin, then fades it out as the corner entry begins. */
+.works__intro {
+  position: absolute;
+  inset: 0;
+  z-index: 3; /* above the strip */
+  display: grid;
+  place-items: center;
+  align-content: center;
+  text-align: center;
+  padding: var(--pad);
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+.works__intro-kicker {
+  display: block;
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: clamp(16px, 2vw, 24px);
+}
+.works__intro-title {
+  font-family: var(--heading);
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  font-size: clamp(46px, 9vw, 132px);
+  color: var(--text);
+}
+.works__intro-title em {
+  display: block;
+  font-style: normal;
+  font-family: var(--display);
+  text-transform: none;
+  letter-spacing: -0.01em;
+  color: var(--accent);
+}
+.works__intro-sub {
+  max-width: 48ch;
+  margin: clamp(22px, 3vw, 34px) auto 0;
+  font-size: clamp(15px, 1.1vw, 18px);
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+/* Full-width horizontal strip */
+.works__strip {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  width: 300vw; /* 3 panels */
+  height: 100%;
+  will-change: transform;
+  z-index: 1;
+  /* Pre-positioned at the very bottom-right corner — GSAP inherits this as its
+     starting state and eases it in (power3.out) so the first panel whooshes up
+     diagonally and settles before the works area fills the screen. */
+  transform: translate(100vw, 100vh);
+}
+
+/* Each panel fills exactly one viewport — transparent so hero__dark shows through */
+.works__panel {
+  position: relative;
+  flex-shrink: 0;
+  width: 100vw;
+  height: 100vh;
+  background: transparent;
+}
+
+/* Work item — absolutely positioned within its panel */
+.work-item {
+  position: absolute;
+  top: var(--wi-top, 10vh);
+  left: var(--wi-left, 10vw);
+}
+
+.work-item__cat {
+  display: block;
+  font-size: clamp(8px, 0.65vw, 10px);
+  font-family: var(--heading);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: clamp(6px, 0.8vh, 10px);
+}
+
+.work-item__link {
+  display: block;
+  overflow: hidden;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Thumbnail */
+.work-item__thumb {
+  display: block;
+  background: var(--wi-clr, var(--surface));
+  overflow: hidden;
+  position: relative;
+  margin: 0;
+}
+
+.work-item--sm .work-item__thumb {
+  width: clamp(160px, 20vw, 280px);
+  height: clamp(200px, 28vh, 360px);
+}
+
+.work-item--lg .work-item__thumb {
+  width: clamp(280px, 38vw, 540px);
+  height: clamp(340px, 50vh, 580px);
+}
+
+/* Placeholder number — shown while no real image is loaded */
+.work-item__num {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(40px, 5vw, 80px);
+  font-family: var(--heading);
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.05);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Hide placeholder once a real image is present */
+.work-item__thumb:has(img) .work-item__num {
+  display: none;
+}
+
+.work-item__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.7s var(--ease);
+}
+
+.work-item__link:hover .work-item__thumb img {
+  transform: scale(1.04);
+}
+
+.work-item__link:hover .work-item__thumb {
+  outline: 1px solid var(--line-strong);
+}
+
+.work-item__name {
+  display: block;
+  font-size: clamp(10px, 0.85vw, 13px);
+  font-family: var(--heading);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text);
+  margin-top: clamp(8px, 1vh, 14px);
+}
+
+/* Mobile: KEEP the pinned 3D choreography (heading → corner entry → horizontal
+   scroll → flip). Only re-tune sizes/positions so the panels fit a portrait
+   viewport instead of clipping. */
+@media (max-width: 768px) {
+  .works__intro-title {
+    font-size: clamp(40px, 13vw, 72px);
+  }
+  .hof-cover__title {
+    font-size: clamp(40px, 12vw, 72px);
+  }
+
+  /* Smaller thumbnails so three items read inside one 100vw panel */
+  .work-item--sm .work-item__thumb {
+    width: clamp(104px, 32vw, 150px);
+    height: clamp(140px, 44vw, 200px);
+  }
+  .work-item--lg .work-item__thumb {
+    width: clamp(168px, 54vw, 240px);
+    height: clamp(224px, 72vw, 320px);
+  }
+
+  /* Re-place the three items per panel into a legible portrait cluster.
+     Overrides the inline --wi-top/--wi-left via higher-specificity rules. */
+  .works__panel .work-item:nth-of-type(1) { top: 8vh;  left: 5vw;  }
+  .works__panel .work-item:nth-of-type(2) { top: 27vh; left: 24vw; }
+  .works__panel .work-item:nth-of-type(3) { top: 63vh; left: 50vw; }
+}
+
 /* ---------- Reveal ---------- */
 .js .reveal {
   opacity: 0;
@@ -1404,7 +2057,7 @@ section {
     grid-template-columns: repeat(3, 1fr);
   }
   .hero__sig {
-    width: min(100vw, 1100px);
+    width: min(88vw, 88vh, 1100px);
   }
 }
 @media (max-width: 900px) {
@@ -1451,7 +2104,7 @@ section {
     grid-template-columns: repeat(2, 1fr);
   }
   .hero__sig {
-    width: min(95vw, 680px);
+    width: min(88vw, 78vh, 640px);
   }
   .hero__marquee {
     top: auto;
@@ -1563,4 +2216,165 @@ section {
   .js .hero [data-hero-portrait] {
     opacity: 1;
   }
+}
+
+/* ===================== WORK OF FAME (editorial index) ===================== */
+.archive {
+  position: relative;
+  z-index: 2;
+  background: var(--bg);
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: clamp(70px, 12vh, 140px) var(--pad) clamp(60px, 10vh, 120px);
+}
+.archive__head { margin-bottom: clamp(30px, 5vh, 56px); }
+.archive__kicker {
+  display: block; font-family: var(--mono); font-size: 13px;
+  letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent);
+  margin-bottom: clamp(12px, 2vw, 20px);
+}
+.archive__title {
+  font-family: var(--heading); font-weight: 900; text-transform: uppercase;
+  line-height: 0.92; letter-spacing: -0.02em; color: var(--text);
+  font-size: clamp(40px, 8vw, 110px);
+}
+.archive__title em {
+  font-style: normal; font-family: var(--display); text-transform: none;
+  letter-spacing: -0.01em; color: var(--accent);
+}
+.archive__filters {
+  display: flex; gap: 10px; flex-wrap: wrap;
+  margin-bottom: clamp(22px, 4vh, 38px);
+}
+.archive__chip {
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.05em;
+  text-transform: uppercase; color: var(--muted);
+  border: 1px solid var(--line); border-radius: 100px; padding: 9px 18px;
+  transition: color .3s, border-color .3s, background .3s;
+}
+.archive__chip:hover { color: var(--text); border-color: var(--line-strong); }
+.archive__chip.is-active { color: #0a0b0a; background: var(--accent); border-color: var(--accent); }
+
+.archive__layout { display: grid; grid-template-columns: 1fr; gap: clamp(28px, 4vw, 56px); }
+.archive__list { list-style: none; }
+.archive__row { border-top: 1px solid var(--line); }
+.archive__list .archive__row:last-child { border-bottom: 1px solid var(--line); }
+.archive__row.is-hidden { display: none; }
+.archive__row-main {
+  width: 100%; display: grid;
+  grid-template-columns: auto 1fr auto auto auto;
+  align-items: center; gap: clamp(12px, 2vw, 24px);
+  padding: clamp(15px, 2.2vh, 24px) 0; text-align: left; color: var(--text);
+}
+.archive__num { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.archive__name {
+  font-family: var(--heading); font-weight: 700; letter-spacing: -0.01em;
+  font-size: clamp(18px, 2.4vw, 30px); transition: color .3s;
+}
+.archive__cat {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--muted);
+}
+.archive__year { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.archive__arrow { color: var(--accent); opacity: 0; transform: translateX(-6px); transition: opacity .3s, transform .3s; }
+.archive__row-main:hover .archive__name { color: var(--accent); }
+.archive__row-main:hover .archive__arrow { opacity: 1; transform: none; }
+
+.archive__row-preview { display: none; }
+
+.archive__preview {
+  position: sticky; top: 90px;
+  border: 1px solid var(--line); border-radius: 18px; overflow: hidden;
+  background: var(--surface);
+}
+.archive__preview-frame { aspect-ratio: 4 / 3; overflow: hidden; background: var(--surface-2); }
+.archive__preview-frame img { width: 100%; height: 100%; object-fit: cover; transition: opacity .4s var(--ease); }
+.archive__preview-meta { display: flex; justify-content: space-between; gap: 12px; padding: 16px 18px; }
+.archive__preview-meta span:first-child { font-family: var(--heading); font-weight: 700; }
+.archive__preview-meta span:last-child { font-family: var(--mono); font-size: 12px; color: var(--muted); text-align: right; }
+
+/* Desktop: two columns + sticky live preview */
+@media (min-width: 920px) {
+  .archive__layout { grid-template-columns: 1.05fr 0.95fr; align-items: start; }
+}
+
+/* Tablet / mobile: single column, no sticky preview, rows expand inline */
+@media (max-width: 919px) {
+  .archive__preview { display: none; }
+  .archive__row-main { grid-template-columns: auto 1fr auto; }
+  .archive__cat { display: none; }
+  .archive__row.is-open .archive__row-preview {
+    display: block; padding: 2px 0 20px;
+  }
+  .archive__row-preview img { border-radius: 12px; aspect-ratio: 4 / 3; object-fit: cover; width: 100%; }
+  .archive__details {
+    margin-top: 14px; font-family: var(--mono); font-size: 12px; text-transform: uppercase;
+    letter-spacing: 0.05em; color: var(--accent);
+    border: 1px solid var(--line-strong); border-radius: 100px; padding: 9px 18px;
+  }
+}
+
+/* ===================== JOURNEY (scrollytelling timeline) ===================== */
+.journey {
+  position: relative; z-index: 2; background: var(--bg);
+  max-width: var(--maxw); margin: 0 auto;
+  padding: clamp(70px, 12vh, 140px) var(--pad) clamp(80px, 14vh, 160px);
+}
+.journey__head { text-align: center; margin-bottom: clamp(40px, 8vh, 80px); }
+.journey__kicker {
+  display: block; font-family: var(--mono); font-size: 13px;
+  letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px;
+}
+.journey__title {
+  font-family: var(--heading); font-weight: 900; text-transform: uppercase;
+  line-height: 0.92; letter-spacing: -0.02em; font-size: clamp(40px, 8vw, 110px); color: var(--text);
+}
+.journey__title em { font-style: normal; font-family: var(--display); text-transform: none; color: var(--accent); }
+
+.journey__timeline { position: relative; }
+.journey__spine { position: absolute; top: 6px; bottom: 6px; left: 18px; width: 2px; background: var(--line); }
+.journey__progress {
+  position: absolute; inset: 0; width: 100%;
+  background: linear-gradient(var(--accent), var(--accent-dim));
+  box-shadow: 0 0 12px var(--accent-glow);
+  transform: scaleY(0); transform-origin: top;
+}
+
+.journey__node, .journey__toolkit { position: relative; padding-left: 52px; margin-bottom: clamp(32px, 6vh, 60px); }
+.journey__node::before {
+  content: ""; position: absolute; left: 11px; top: 5px; width: 16px; height: 16px;
+  border-radius: 50%; background: var(--bg); border: 2px solid var(--muted-2);
+  transition: background .4s, border-color .4s, box-shadow .4s;
+}
+.journey__node.in::before { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 16px var(--accent-glow); }
+.journey__year { font-family: var(--mono); font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--accent); }
+.journey__role { font-family: var(--body); font-weight: 800; font-size: clamp(18px, 2.4vw, 24px); margin: 6px 0 4px; }
+.journey__org { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.journey__points { list-style: none; margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+.journey__points li { position: relative; padding-left: 20px; color: var(--muted); font-size: 15px; }
+.journey__points li::before { content: "→"; position: absolute; left: 0; color: var(--accent); }
+
+.journey__toolkit { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: clamp(22px, 3vw, 34px); margin-left: 52px; }
+.journey__toolkit > h3 {
+  font-family: var(--heading); font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.04em; color: var(--accent); font-size: 18px; margin-bottom: 18px;
+}
+.journey__bars { display: grid; grid-template-columns: 1fr; gap: 16px; }
+@media (min-width: 600px) { .journey__bars { grid-template-columns: 1fr 1fr; gap: 14px 40px; } }
+
+/* Desktop: centre the spine and alternate milestones left / right */
+@media (min-width: 860px) {
+  .journey__spine { left: 50%; transform: translateX(-50%); }
+  .journey__node { width: 50%; padding-left: 0; }
+  .journey__node[data-side="right"] { margin-left: 50%; padding-left: 52px; }
+  .journey__node[data-side="left"] { margin-right: 50%; padding-right: 52px; text-align: right; }
+  .journey__node[data-side="right"]::before { left: -8px; }
+  .journey__node[data-side="left"]::before { left: auto; right: -8px; }
+  .journey__node[data-side="left"] .journey__points li { padding-left: 0; padding-right: 20px; }
+  .journey__node[data-side="left"] .journey__points li::before { left: auto; right: 0; }
+  .journey__toolkit { margin-left: 52px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .journey__progress { transform: scaleY(1); }
 }

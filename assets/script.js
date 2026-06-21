@@ -12,6 +12,14 @@
     "(prefers-reduced-motion: reduce)",
   ).matches;
 
+  // 0 = dark mode (hero/statement), 1 = light mode (works Phase 2).
+  // Written by initWorks, read by initContours every draw frame.
+  let _contourLightP = 0; // 0→1 across the works section (→ warm light)
+  let _aboutP = 0; // 0→1 across the about section (olive → black, lines → white)
+  // Logo-colour signals (read by updateLogoColor):
+  let _heroP = 0; // 0→1 hero pin progress (panel shrink)
+  let _worksFlipP = 0; // 0→1 across the works card flip (front→dark back face)
+
   /* ---------- Hero topographic contour field ----------
      A handful of slowly drifting Gaussian "energy" sources define a scalar
      field; each frame we trace iso-contours through it with marching squares
@@ -25,7 +33,43 @@
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const LINE = "rgba(168, 214, 84, 0.14)"; // faint lime on olive
+    // Line colour follows the background through three states:
+    //   hero  — faint lime on dark olive            (aboutP 0, worksP 0)
+    //   about — bright white on black               (aboutP 1, worksP 0)
+    //   works — dark warm-olive on warm light        (aboutP 1, worksP 1)
+    const LINE_DARK = [168, 214, 84, 0.14]; // lime
+    const LINE_ABOUT = [31, 31, 31, 0.45]; // near-black — barely perceptible on black bg
+    const LINE_LIGHT = [120, 122, 115, 0.38]; // warm olive
+    const lerp = (a, b, t) => a + (b - a) * t;
+    function getLineColor() {
+      const ap = _aboutP,
+        wp = _contourLightP;
+      // hero → about (lime → dark gray), then about → works (→ warm olive)
+      let r = lerp(lerp(LINE_DARK[0], LINE_ABOUT[0], ap), LINE_LIGHT[0], wp);
+      let g = lerp(lerp(LINE_DARK[1], LINE_ABOUT[1], ap), LINE_LIGHT[1], wp);
+      let b = lerp(lerp(LINE_DARK[2], LINE_ABOUT[2], ap), LINE_LIGHT[2], wp);
+      let a = lerp(lerp(LINE_DARK[3], LINE_ABOUT[3], ap), LINE_LIGHT[3], wp);
+      // sine arches keep the lines readable through each mid-transition
+      a += 0.22 * Math.sin(Math.PI * ap) + 0.18 * Math.sin(Math.PI * wp);
+      return `rgba(${Math.round(r)},${Math.round(g)},${Math.round(b)},${a.toFixed(3)})`;
+    }
+
+    // Scroll-ramped distortion — the contour points wobble as the About section
+    // takes over (peaks at aboutP=1) and settle again as works turns it light.
+    let _t = 0;
+    const DIST_AMP = 24;
+    function distM(px, py) {
+      const d = _aboutP * (1 - _contourLightP) * DIST_AMP;
+      if (d > 0.01)
+        ctx.moveTo(px + d * Math.sin(py * 0.016 + _t * 1.6), py + d * Math.cos(px * 0.016 + _t * 1.3));
+      else ctx.moveTo(px, py);
+    }
+    function distL(px, py) {
+      const d = _aboutP * (1 - _contourLightP) * DIST_AMP;
+      if (d > 0.01)
+        ctx.lineTo(px + d * Math.sin(py * 0.016 + _t * 1.6), py + d * Math.cos(px * 0.016 + _t * 1.3));
+      else ctx.lineTo(px, py);
+    }
     const THRESHOLDS = [0.18, 0.34, 0.54, 0.78, 1.05, 1.4];
     const GRID = 38; // px spacing of the sampling grid (CSS px)
 
@@ -99,7 +143,7 @@
     function drawContours() {
       ctx.clearRect(0, 0, W, H);
       ctx.lineWidth = 1;
-      ctx.strokeStyle = LINE;
+      ctx.strokeStyle = getLineColor();
       for (let li = 0; li < THRESHOLDS.length; li++) {
         const thr = THRESHOLDS[li];
         ctx.beginPath();
@@ -166,26 +210,26 @@
               case 5: {
                 // saddle: top-left + bottom-right
                 const ry = y + (sy * (thr - tr)) / (br - tr);
-                ctx.moveTo(x + (sx * (thr - tl)) / (tr - tl), y);
-                ctx.lineTo(x, y + (sy * (thr - tl)) / (bl - tl));
-                ctx.moveTo(x + (sx * (thr - bl)) / (br - bl), y + sy);
-                ctx.lineTo(x + sx, ry);
+                distM(x + (sx * (thr - tl)) / (tr - tl), y);
+                distL(x, y + (sy * (thr - tl)) / (bl - tl));
+                distM(x + (sx * (thr - bl)) / (br - bl), y + sy);
+                distL(x + sx, ry);
                 continue;
               }
               case 10: {
                 // saddle: top-right + bottom-left
                 const ry = y + (sy * (thr - tr)) / (br - tr);
-                ctx.moveTo(x + (sx * (thr - tl)) / (tr - tl), y);
-                ctx.lineTo(x + sx, ry);
-                ctx.moveTo(x + (sx * (thr - bl)) / (br - bl), y + sy);
-                ctx.lineTo(x, y + (sy * (thr - tl)) / (bl - tl));
+                distM(x + (sx * (thr - tl)) / (tr - tl), y);
+                distL(x + sx, ry);
+                distM(x + (sx * (thr - bl)) / (br - bl), y + sy);
+                distL(x, y + (sy * (thr - tl)) / (bl - tl));
                 continue;
               }
               default:
                 continue;
             }
-            ctx.moveTo(ax, ay);
-            ctx.lineTo(bx, by);
+            distM(ax, ay);
+            distL(bx, by);
           }
         }
         ctx.stroke();
@@ -201,7 +245,8 @@
       rafId = requestAnimationFrame(frame);
       if (now - last < FRAME_MS) return;
       last = now;
-      computeField(now * 0.001);
+      _t = now * 0.001;
+      computeField(_t);
       drawContours();
     }
     function start() {
@@ -229,14 +274,20 @@
       return;
     }
 
-    // Only animate while the hero is on screen.
+    // Animate while the hero OR the works section is on screen (works shares
+    // the same fixed canvas background and needs it live during Phase 2).
     const hero = document.querySelector(".hero");
-    if ("IntersectionObserver" in window && hero) {
-      new IntersectionObserver(
-        (entries) =>
-          entries.forEach((e) => (e.isIntersecting ? start() : stop())),
-        { threshold: 0 },
-      ).observe(hero);
+    const aboutEl = document.querySelector(".stage-about");
+    const worksEl = document.querySelector(".works");
+    if ("IntersectionObserver" in window) {
+      const visible = new Set();
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) =>
+          e.isIntersecting ? visible.add(e.target) : visible.delete(e.target)
+        );
+        visible.size > 0 ? start() : stop();
+      }, { threshold: 0 });
+      [hero, aboutEl, worksEl].filter(Boolean).forEach((el) => io.observe(el));
     } else {
       start();
     }
@@ -254,6 +305,9 @@
     );
   });
 
+  // Set by the modal block; lets initArchive() open the shared project modal.
+  let openPortfolio = null;
+
   /* ---------- Lenis smooth scroll ---------- */
   let lenis = null;
   if (typeof window.Lenis === "function" && !prefersReduced) {
@@ -266,8 +320,10 @@
     if (window.gsap && window.gsap.ticker) {
       window.gsap.ticker.add((t) => lenis.raf(t * 1000));
       window.gsap.ticker.lagSmoothing(0);
-      lenis.on("scroll", () => {
+      lenis.on("scroll", ({ scroll }) => {
         if (window.ScrollTrigger) window.ScrollTrigger.update();
+        updateLogoSize(scroll);
+        updateLogoColor();
       });
     } else {
       requestAnimationFrame(raf);
@@ -287,24 +343,87 @@
     });
   });
 
-  /* ---------- Nav: logo-only with scroll-aware colour ---------- */
+  /* ---------- Nav: logo-only with background-aware colour ----------
+     The logo is a CSS-masked glyph whose `background-color` is its fill, so
+     adapting it to the background is just a matter of writing that colour.
+     Rule (concept "dark bg → light logo"):
+       • dark background   → WHITE
+       • light background  → BLACK
+       • olive background  → #e7fcb0 (the one exception)
+     The hero (off-panel), about and works sections all share ONE fixed canvas
+     whose colour is driven olive → black → warm-light by the same _aboutP /
+     _contourLightP signals that drive the contour field — so the logo colour
+     is a pure function of those, plus the shrinking video panel in the hero
+     and the card flip in works. Everything below works is the dark page bg. */
   const nav = document.getElementById("nav");
   const progressBar = document.querySelector(".scroll-progress span");
+  const navLogo = nav ? nav.querySelector(".nav__logo") : null;
+  const sectHero = document.querySelector(".hero");
+  const sectAbout = document.querySelector(".stage-about");
+  const sectWorks = document.querySelector(".works");
 
-  // Switches the logo between white (over the video panel) and #E8FFAE (off it).
-  // stProgress is the raw ScrollTrigger progress 0–1.
-  function setLogoColor(stProgress) {
-    if (!nav) return;
+  const LOGO_WHITE = [255, 255, 255];
+  const LOGO_BLACK = [0, 0, 0];
+  const LOGO_OLIVE = [231, 252, 176]; // #e7fcb0
+  const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
+  const lerp3 = (a, b, t) => [
+    a[0] + (b[0] - a[0]) * t,
+    a[1] + (b[1] - a[1]) * t,
+    a[2] + (b[2] - a[2]) * t,
+  ];
+
+  // Colour the logo would take over the shared fixed canvas at its current
+  // state: olive →(_aboutP)→ black →(_contourLightP)→ warm light, which maps to
+  // logo OLIVE → WHITE → BLACK.
+  function canvasLogoColor() {
+    const base = lerp3(LOGO_OLIVE, LOGO_WHITE, clamp01(_aboutP));
+    return lerp3(base, LOGO_BLACK, clamp01(_contourLightP));
+  }
+
+  // Fraction of the logo still covered by the shrinking (dark) hero video panel
+  // — 1 = fully over the panel, 0 = fully clear of it (over the olive canvas).
+  function heroPanelCoverage(rect) {
     const vw = window.innerWidth;
-    const finalSX = Math.min(1, 943 / vw);
-    const curSX = 1 - Math.min(1, Math.max(0, stProgress)) * (1 - finalSX);
-    // Panel left edge retreats toward centre as it scales.
-    const panelLeft = (vw * (1 - curSX)) / 2;
-    // Logo occupies [16 … 16 + nav.offsetWidth]px from the left.
-    nav.classList.toggle(
-      "logo-dimmed",
-      panelLeft >= 16 + nav.offsetWidth || stProgress >= 1,
-    );
+    const vh = window.innerHeight;
+    const finalS = Math.min(1, Math.min(943 / vw, 608 / vh)); // matches GSAP scale target
+    const curS = 1 - clamp01(_heroP) * (1 - finalS);
+    const panelLeft = (vw * (1 - curS)) / 2; // panel occupies [panelLeft … vw-panelLeft]
+    return clamp01((rect.right - panelLeft) / (rect.width || 1));
+  }
+
+  function updateLogoColor() {
+    if (!navLogo || !nav) return;
+    const r = nav.getBoundingClientRect();
+    const y = r.top + r.height / 2; // vertical line the logo sits on
+    const within = (el) => {
+      if (!el) return false;
+      const b = el.getBoundingClientRect();
+      return b.top <= y && b.bottom > y;
+    };
+
+    let rgb;
+    if (within(sectWorks)) {
+      // Past the flip midpoint the dark back face faces us → white logo.
+      rgb = _worksFlipP > 0.5 ? LOGO_WHITE : canvasLogoColor();
+    } else if (within(sectAbout)) {
+      rgb = canvasLogoColor();
+    } else if (within(sectHero)) {
+      // Blend between the dark panel (white logo) and the olive canvas as the
+      // panel edge sweeps across the logo.
+      rgb = lerp3(canvasLogoColor(), LOGO_WHITE, heroPanelCoverage(r));
+    } else {
+      // Hall of Fame, Journey, Socials, Footer — all the dark page background.
+      rgb = LOGO_WHITE;
+    }
+    navLogo.style.backgroundColor =
+      "rgb(" + (rgb[0] | 0) + "," + (rgb[1] | 0) + "," + (rgb[2] | 0) + ")";
+  }
+
+  function updateLogoSize(y) {
+    if (!navLogo) return;
+    const t = Math.min(1, Math.max(0, y / 120));
+    navLogo.style.width = 245 - 85 * t + "px";
+    navLogo.style.height = 78 - 27 * t + "px";
   }
 
   function onScroll() {
@@ -313,6 +432,8 @@
       const h = document.documentElement.scrollHeight - window.innerHeight;
       progressBar.style.width = (h > 0 ? (y / h) * 100 : 0) + "%";
     }
+    if (!lenis) updateLogoSize(y);
+    updateLogoColor();
   }
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
@@ -400,7 +521,7 @@
 
     if (heroSection && heroPanel) {
       // Logo starts white (over the full-screen panel); colour is updated each frame.
-      setLogoColor(0);
+      updateLogoColor();
 
       // Signature: a single hand-drawn stroke path that writes itself on via
       // stroke-dashoffset, scrubbed to scroll — drawing from its start point
@@ -477,10 +598,14 @@
           pin: true,
           anticipatePin: 1,
           invalidateOnRefresh: true,
-          onUpdate: (self) => setLogoColor(self.progress),
-          onRefresh: (self) => setLogoColor(self ? self.progress : 0),
-          onLeave: () => nav && nav.classList.add("logo-dimmed"),
-          onLeaveBack: () => nav && nav.classList.remove("logo-dimmed"),
+          onUpdate: (self) => {
+            _heroP = self.progress;
+            updateLogoColor();
+          },
+          onRefresh: (self) => {
+            _heroP = self ? self.progress : 0;
+            updateLogoColor();
+          },
         },
       });
 
@@ -541,6 +666,330 @@
       }
     }
   }
+
+  /* ---------- ABOUT — two columns slide in + olive→black background ----------
+     As the section scrolls through, the left and right columns slide in from
+     opposite edges and meet, while _aboutP drives the canvas (olive → black,
+     lime lines → white + distortion) and a black overlay fades over the bg. */
+  (function initStageAbout() {
+    if (!window.gsap || !window.ScrollTrigger) return;
+    const gsap = window.gsap;
+    const section = document.querySelector(".stage-about");
+    if (!section) return;
+    const left = section.querySelector(".stage-about__col--left");
+    const right = section.querySelector(".stage-about__col--right");
+    const blackLayer = document.getElementById("hero-black-layer");
+
+    // Background transition — always runs (even reduced-motion / mobile) so the
+    // olive→black + white-contour mood change happens for everyone.
+    gsap
+      .timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top 80%",
+          end: "top top", // fully black only once the About has covered the hero
+          scrub: true,
+          onUpdate(self) {
+            _aboutP = self.progress;
+            updateLogoColor();
+          },
+          onLeaveBack() {
+            _aboutP = 0;
+            updateLogoColor();
+          },
+        },
+      })
+      .fromTo(
+        blackLayer,
+        { opacity: 0 },
+        { opacity: 1, ease: "none" },
+        0,
+      );
+
+    // Column slide-in — desktop, motion-OK only. The two columns travel in from
+    // opposite edges and settle into the two-column grid ("meet").
+    if (prefersReduced || window.innerWidth < 880 || !left || !right) return;
+    const colTrigger = {
+      trigger: section,
+      // Start a touch later than the background darkening so the columns slide
+      // in after the olive→black shift is already under way.
+      start: "top 64%",
+      end: "top 18%", // columns have met before the section finishes framing
+      scrub: true,
+    };
+    gsap.fromTo(
+      left,
+      { xPercent: -118, opacity: 0 },
+      { xPercent: 0, opacity: 1, ease: "power2.out", scrollTrigger: colTrigger },
+    );
+    gsap.fromTo(
+      right,
+      { xPercent: 118, opacity: 0 },
+      { xPercent: 0, opacity: 1, ease: "power2.out", scrollTrigger: colTrigger },
+    );
+  })();
+
+  /* ---------- WORKS — diagonal entry + horizontal scroll ---------- */
+  (function initWorks() {
+    if (!window.gsap || !window.ScrollTrigger || prefersReduced) return;
+
+    const gsap = window.gsap;
+    const section = document.querySelector(".works");
+    const strip = document.getElementById("works-strip");
+    if (!section || !strip) return;
+
+    const PANELS  = strip.querySelectorAll(".works__panel").length; // 3
+    // The whole works choreography runs INSIDE a single pin so it always plays
+    // against a full-screen canvas:
+    //   HEAD_PX  — the "Featured Work" heading fades in ALONE and holds, before
+    //              any thumbnail is visible. It then clears as the entry begins.
+    //   ENTER_PX — the first panel flies up the diagonal from the very
+    //              bottom-right CORNER of the viewport. This has to happen while
+    //              pinned; during a normal scroll-in the section's bottom is
+    //              still below the fold, so the corner part of the path is
+    //              off-screen and the panel only ever appears mid-screen.
+    //   H_PX     — horizontal scroll right-to-left across all panels.
+    //   FLIP_PX  — the whole card flips right-to-left (rotateY 0 → -180) so the
+    //              strip turns away and the Hall of Fame opener faces the viewer.
+    // Pin ends when the flip completes; the Hall of Fame grid then scrolls up.
+    const HEAD_PX  = Math.round(window.innerHeight * 0.7);  // heading reveal + hold
+    const ENTER_PX = Math.round(window.innerHeight * 0.85); // diagonal corner entry
+    const H_PX     = window.innerHeight * 2 * (PANELS - 1); // horizontal travel
+    const FLIP_PX  = Math.round(window.innerHeight * 1.1);  // the flip
+    const PIN_PX   = HEAD_PX + ENTER_PX + H_PX + FLIP_PX;
+    const headDur  = HEAD_PX / PIN_PX;
+    const eDur     = ENTER_PX / PIN_PX;
+    const hDur     = H_PX / PIN_PX;
+    const fDur     = FLIP_PX / PIN_PX;
+
+    const lightLayer = document.querySelector(".hero__light-layer");
+    const flipper    = document.getElementById("works-flip");
+    const intro      = section.querySelector(".works__intro");
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        pin: true,
+        pinSpacing: true,
+        start: "top top",
+        end: `+=${PIN_PX}`,
+        scrub: 1,
+        onUpdate(self) {
+          // Track the line colour to the horizontal-scroll window (where the
+          // warm-light background actually fades in), not the whole pin — so it
+          // stays dark through the heading reveal and corner entry.
+          const start = headDur + eDur;
+          const span = hDur || 1;
+          _contourLightP = Math.min(1, Math.max(0, (self.progress - start) / span));
+          // Flip progress — past its midpoint the dark back face (var(--bg))
+          // faces the viewer, so the logo must return to white.
+          const flipStart = headDur + eDur + hDur;
+          _worksFlipP = Math.min(1, Math.max(0, (self.progress - flipStart) / (fDur || 1)));
+          updateLogoColor();
+        },
+        onLeaveBack() {
+          _contourLightP = 0;
+          _worksFlipP = 0;
+          updateLogoColor();
+        },
+      },
+    });
+
+    // Beat 0 — heading reveal. Reveal → hold → exit ALL happen inside the HEAD
+    // window, while the strip is still parked off the corner, so the heading is
+    // fully gone before the first thumbnail enters and never overlaps a slide.
+    if (intro) {
+      tl.fromTo(
+        intro,
+        { opacity: 0, y: 40 },
+        { opacity: 1, y: 0, ease: "power2.out", duration: headDur * 0.35 },
+        0,
+      );
+      // Clear it out over the last ~30% of the HEAD beat — done before entry.
+      tl.to(
+        intro,
+        { opacity: 0, y: -40, ease: "power2.in", duration: headDur * 0.3 },
+        headDur * 0.7,
+      );
+    }
+
+    // Beat 1 — diagonal entry. Strip starts off the bottom-right corner
+    // (matches the CSS pre-offset, so no jump) and eases up to (0, 0). Because
+    // the section is pinned full-screen, the first panel is clearly seen
+    // travelling up the diagonal out of the corner.
+    tl.fromTo(
+      strip,
+      { x: "100vw", y: "100vh" },
+      { x: 0, y: 0, ease: "power2.out", duration: eDur },
+      headDur,
+    );
+
+    // Beat 2 — horizontal scroll across the remaining panels.
+    tl.fromTo(
+      strip,
+      { x: 0, immediateRender: false },
+      { x: `-${(PANELS - 1) * 100}vw`, ease: "none", duration: hDur },
+      headDur + eDur,
+    );
+
+    // Light layer reaches full opacity as the horizontal scroll ends.
+    if (lightLayer) {
+      tl.fromTo(
+        lightLayer,
+        { opacity: 0, immediateRender: false },
+        { opacity: 1, ease: "none", duration: hDur },
+        headDur + eDur,
+      );
+    }
+
+    // Beat 3 — flip the whole card right-to-left. rotateY 0 → -180 turns the
+    // strip (front) away past 90° and brings the Hall of Fame opener (back,
+    // pre-rotated 180°) to face the viewer. Eased in/out so it reads as a
+    // deliberate card turn. Reverses cleanly on scroll-up (scrubbed).
+    if (flipper) {
+      tl.fromTo(
+        flipper,
+        { rotationY: 0 },
+        { rotationY: -180, ease: "power1.inOut", duration: fDur },
+        headDur + eDur + hDur,
+      );
+    }
+  })();
+
+  /* ---------- SOCIALS — stacked deck fans out on scroll ---------- */
+  (function initSocials() {
+    const stage = document.getElementById("socials-stage");
+    const deck = document.getElementById("socials-deck");
+    if (!stage || !deck) return;
+
+    const cards = Array.from(deck.querySelectorAll(".social-card"));
+    if (!cards.length) return;
+
+    const mid = (cards.length - 1) / 2; // 3 for 7 cards
+
+    // Final fan geometry for one card, derived from the live card width so it
+    // scales with the viewport. ax = distance from centre (0,1,2,3…).
+    const geom = (i) => {
+      const cw = cards[Math.round(mid)].offsetWidth || 200;
+      const o = i - mid;
+      const ax = Math.abs(o);
+      // Tighter spread + flatter arc on phones so the fan fits a narrow portrait
+      // viewport; desktop keeps the wider, more dramatic splay.
+      const mobile = window.innerWidth < 768;
+      const spreadX = mobile ? 0.44 : 0.6;
+      const arcK = mobile ? 0.06 : 0.08;
+      const rotK = mobile ? 5 : 6.5;
+      const arc = (ax + ax * ax * 0.12) * cw * arcK;
+      const arcMax = (mid + mid * mid * 0.12) * cw * arcK;
+      return {
+        x: o * cw * spreadX, // horizontal spread (cards overlap)
+        y: arc - arcMax * 0.35, // outer cards arc down, centre rides a touch up
+        rot: o * rotK, // splay outward
+        scale: 1 - ax * 0.05, // outer cards sit a touch smaller
+      };
+    };
+
+    // Centre card always on top; neighbours recede symmetrically.
+    // Expose each card's fan scale so the CSS hover can grow every card to the
+    // same true 1.18×, regardless of how small it sits in the fan (1/scale).
+    cards.forEach((card, i) => {
+      const g = geom(i); // scale here doesn't depend on card width
+      card.style.zIndex = String(100 - Math.abs(i - mid));
+      card.style.setProperty("--inv-scale", (1 / g.scale).toFixed(4));
+    });
+
+    // Phone / tablet: present the SAME fan (no pin). It fans out from a stack
+    // once when the deck scrolls into view; static under reduced-motion / no GSAP.
+    if (window.innerWidth < 1024) {
+      const g2 = window.gsap;
+      const applyFan = (animate) => {
+        cards.forEach((card, i) => {
+          const g = geom(i);
+          if (animate && g2) {
+            g2.to(card, {
+              x: g.x, y: g.y, rotation: g.rot, scale: g.scale,
+              duration: 0.7, ease: "power3.out",
+              delay: Math.abs(i - mid) * 0.06,
+            });
+          } else {
+            card.style.transform =
+              `translate(${g.x}px, ${g.y}px) rotate(${g.rot}deg) scale(${g.scale})`;
+          }
+        });
+      };
+      if (prefersReduced || !g2) { applyFan(false); return; }
+      g2.set(cards, { x: 0, y: 0, rotation: 0, scale: 1 });
+      if ("IntersectionObserver" in window) {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((e) => {
+            if (!e.isIntersecting) return;
+            applyFan(true);
+            io.disconnect();
+          });
+        }, { threshold: 0.35 });
+        io.observe(deck);
+      } else {
+        applyFan(true);
+      }
+      return;
+    }
+
+    const gsap = window.gsap;
+    if (!gsap) return;
+
+    // Reduced motion: skip the scroll choreography, just present the fan.
+    if (prefersReduced || !window.ScrollTrigger) {
+      cards.forEach((card, i) => {
+        const g = geom(i);
+        gsap.set(card, { x: g.x, y: g.y, rotation: g.rot, scale: g.scale });
+      });
+      return;
+    }
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: stage,
+        pin: true,
+        pinSpacing: true,
+        start: "top top",
+        end: "+=120%",
+        scrub: 1,
+        invalidateOnRefresh: true, // recompute geometry on resize
+      },
+    });
+
+    cards.forEach((card, i) => {
+      tl.fromTo(
+        card,
+        { x: 0, y: 0, rotation: 0, scale: 1, immediateRender: false },
+        {
+          x: () => geom(i).x,
+          y: () => geom(i).y,
+          rotation: () => geom(i).rot,
+          scale: () => geom(i).scale,
+          ease: "power3.out",
+          duration: 1,
+        },
+        0,
+      );
+    });
+  })();
+
+  /* ---------- JOURNEY — scroll-scrubbed progress line ---------- */
+  (function initJourney() {
+    if (!window.gsap || !window.ScrollTrigger || prefersReduced) return;
+    const tl = document.getElementById("journey-timeline");
+    const prog = document.getElementById("journey-progress");
+    if (!tl || !prog) return;
+    window.gsap.fromTo(
+      prog,
+      { scaleY: 0 },
+      {
+        scaleY: 1, ease: "none", transformOrigin: "top",
+        scrollTrigger: { trigger: tl, start: "top 75%", end: "bottom 75%", scrub: true },
+      },
+    );
+  })();
 
   /* ---------- Resume tabs ---------- */
   const tabs = document.querySelectorAll(".tab");
@@ -902,6 +1351,133 @@
     },
   };
 
+  /* ---------- WORK OF FAME — editorial index built from the Hall-of-Fame grid ----------
+     Reuses the curated names/years/images already in #portfolio-grid (single
+     source of truth) + portfolioData for role/modal. Rows carry data-archive-id
+     (not data-id) so the generic modal handler never double-binds them. */
+  function initArchive() {
+    const listEl = document.getElementById("archive-list");
+    const filtersEl = document.getElementById("archive-filters");
+    const grid = document.getElementById("portfolio-grid");
+    if (!listEl || !grid) return;
+
+    // id → category (portfolioData has no category field, so map it here)
+    const CATS = {
+      1:"UI/UX",2:"UI/UX",3:"UI/UX",4:"UI/UX",5:"UI/UX",6:"UI/UX",8:"UI/UX",
+      9:"UI/UX",10:"UI/UX",17:"UI/UX",18:"UI/UX",19:"UI/UX",20:"UI/UX",21:"UI/UX",
+      7:"Web Dev",11:"Web Dev",12:"Web Dev",13:"Web Dev",14:"Web Dev",15:"Web Dev",16:"Web Dev",
+      22:"AI Builds",23:"AI Builds",24:"AI Builds",25:"AI Builds",26:"AI Builds",27:"AI Builds",28:"AI Builds",29:"AI Builds",
+    };
+    const lastYear = (s) => {
+      const m = String(s || "").match(/\d{4}/g);
+      return m ? parseInt(m[m.length - 1], 10) : 0;
+    };
+    const esc = (s) => String(s).replace(/"/g, "&quot;");
+
+    const items = Array.from(grid.querySelectorAll(".hof-card")).map((card) => {
+      const id = card.getAttribute("data-id");
+      const imgEl = card.querySelector("img");
+      const nameEl = card.querySelector(".hof-card__name");
+      const yearEl = card.querySelector(".hof-card__year");
+      const yearTxt = yearEl ? yearEl.textContent.trim() : "";
+      return {
+        id: id,
+        name: nameEl ? nameEl.textContent.trim() : "",
+        img: imgEl ? imgEl.getAttribute("src") : "",
+        year: lastYear(yearTxt),
+        yearTxt: yearTxt,
+        cat: CATS[id] || "UI/UX",
+        role: (portfolioData[id] && portfolioData[id].role) || "",
+      };
+    }).sort((a, b) => b.year - a.year || (a.name < b.name ? -1 : 1));
+
+    // Build rows
+    listEl.innerHTML = "";
+    items.forEach((it, idx) => {
+      const num = String(idx + 1).padStart(2, "0");
+      const info = it.cat + " · " + it.yearTxt + (it.role ? " · " + it.role : "");
+      const li = document.createElement("li");
+      li.className = "archive__row";
+      li.setAttribute("data-cat", it.cat);
+      li.innerHTML =
+        '<button class="archive__row-main" type="button"' +
+          ' data-archive-id="' + it.id + '"' +
+          ' data-img="' + esc(it.img) + '"' +
+          ' data-name="' + esc(it.name) + '"' +
+          ' data-info="' + esc(info) + '" aria-expanded="false">' +
+          '<span class="archive__num">' + num + '</span>' +
+          '<span class="archive__name">' + it.name + '</span>' +
+          '<span class="archive__cat">' + it.cat + '</span>' +
+          '<span class="archive__year">' + it.yearTxt + '</span>' +
+          '<span class="archive__arrow" aria-hidden="true">↗</span>' +
+        '</button>' +
+        '<div class="archive__row-preview">' +
+          '<img src="' + esc(it.img) + '" alt="" loading="lazy" />' +
+          '<button class="archive__details" type="button" data-archive-id="' + it.id + '">View details →</button>' +
+        '</div>';
+      listEl.appendChild(li);
+    });
+
+    // Filter chips from the categories actually present
+    if (filtersEl) {
+      const cats = ["All"].concat(Array.from(new Set(items.map((i) => i.cat))));
+      filtersEl.innerHTML = cats.map((c, i) =>
+        '<button class="archive__chip' + (i === 0 ? " is-active" : "") +
+        '" type="button" data-filter="' + c + '">' + c + "</button>"
+      ).join("");
+      filtersEl.addEventListener("click", (e) => {
+        const chip = e.target.closest(".archive__chip");
+        if (!chip) return;
+        filtersEl.querySelectorAll(".archive__chip").forEach((c) => c.classList.remove("is-active"));
+        chip.classList.add("is-active");
+        const f = chip.getAttribute("data-filter");
+        listEl.querySelectorAll(".archive__row").forEach((row) => {
+          const show = f === "All" || row.getAttribute("data-cat") === f;
+          row.classList.toggle("is-hidden", !show);
+          row.classList.remove("is-open");
+        });
+      });
+    }
+
+    // Live preview (desktop) — hovering a row swaps the sticky image + meta.
+    const pImg = document.getElementById("archive-preview-img");
+    const pName = document.getElementById("archive-preview-name");
+    const pInfo = document.getElementById("archive-preview-info");
+    const setPreview = (btn) => {
+      if (pImg) pImg.src = btn.getAttribute("data-img");
+      if (pName) pName.textContent = btn.getAttribute("data-name");
+      if (pInfo) pInfo.textContent = btn.getAttribute("data-info");
+    };
+    const firstBtn = listEl.querySelector(".archive__row-main");
+    if (firstBtn) setPreview(firstBtn);
+
+    const isCompact = () => window.matchMedia("(max-width: 919px)").matches;
+
+    listEl.querySelectorAll(".archive__row-main").forEach((btn) => {
+      btn.addEventListener("mouseenter", () => { if (!isCompact()) setPreview(btn); });
+      btn.addEventListener("click", () => {
+        const id = btn.getAttribute("data-archive-id");
+        if (isCompact()) {
+          const row = btn.closest(".archive__row");
+          const open = row.classList.toggle("is-open");
+          btn.setAttribute("aria-expanded", open ? "true" : "false");
+        } else if (openPortfolio) {
+          openPortfolio(id);
+        }
+      });
+    });
+
+    listEl.querySelectorAll(".archive__details").forEach((d) => {
+      d.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (openPortfolio) openPortfolio(d.getAttribute("data-archive-id"));
+      });
+    });
+  }
+  initArchive();
+  // Inserting ~29 rows changes document height; recompute ScrollTrigger offsets.
+  if (window.ScrollTrigger) window.ScrollTrigger.refresh();
+
   const modal = document.getElementById("portfolio-modal");
   if (modal) {
     const closeBtn = document.getElementById("modal-close");
@@ -942,6 +1518,8 @@
       document.body.style.overflow = "hidden";
       if (lenis) lenis.stop();
     }
+
+    openPortfolio = openModal;
 
     function closeModal() {
       modal.classList.remove("open");

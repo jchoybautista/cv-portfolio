@@ -20,7 +20,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Caveat:wght@600;700&family=Allison&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Prata&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Caveat:wght@600;700&family=Allison&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="assets/style.css" />
@@ -38,15 +38,23 @@
     </header>
 
     <main>
+      <!-- ===================== HERO + STATEMENT — shared dark background zone ===================== -->
+      <div class="dark-zone">
+
+        <!-- Fixed background layer — gradient + contour canvas.
+             position: fixed so it stays pinned to the viewport while hero and
+             statement content scrolls over it (same effect as landonorris.com). -->
+        <div class="hero__dark" aria-hidden="true">
+          <!-- Fades in across the About section to shift the canvas olive → black -->
+          <div class="hero__black-layer" id="hero-black-layer" aria-hidden="true"></div>
+          <!-- Fades in during the works section to shift the canvas from black to warm light -->
+          <div class="hero__light-layer" aria-hidden="true"></div>
+          <canvas class="hero__contours" id="hero-contours"></canvas>
+        </div>
+
       <!-- ===================== HERO ===================== -->
       <section class="hero" id="home">
         <div class="hero__stage">
-
-          <!-- Dark background layer — always full size, behind the shrinking panel.
-               The topographic contour field is drawn + animated on this canvas. -->
-          <div class="hero__dark" aria-hidden="true">
-            <canvas class="hero__contours" id="hero-contours"></canvas>
-          </div>
 
           <!-- Marquee text rows — sit behind video, revealed as panel shrinks on scroll -->
           <div class="hero__marquee" aria-hidden="true">
@@ -103,84 +111,217 @@
         </div>
       </section>
 
-      <!-- ===================== MESSAGE FROM JONATHAN ===================== -->
-      <section class="message" id="message">
-        <p class="eyebrow"><span class="eyebrow__idx">01</span> — Message from Jonathan</p>
-        <div class="message__grid">
-          <div class="message__text">
-            <h2 class="message__copy reveal">
-              <span class="accent">Design-led, code-fluent, AI-accelerated.</span>
-              I turn the messiest ideas into digital products people genuinely
-              enjoy using — and then I build them.
+      <!-- ===================== ABOUT — assembled on the contour stage =====================
+           Two columns slide in from opposite edges and meet while the background
+           transitions olive → black and the contour lines distort and turn white. -->
+      <section class="stage-about" id="about" aria-label="About Jonathan Bautista">
+        <div class="about__inner stage-about__inner">
+
+          <!-- Left rail — slides in from the left -->
+          <aside class="about__aside stage-about__col stage-about__col--left">
+            <span class="about__kicker">About</span>
+            <h2 class="about__lead">
+              Bridging <span class="accent">design vision</span> and
+              <span class="accent">technical reality</span> across 13+ years,
+              two disciplines and dozens of brands.
             </h2>
-            <p class="signature reveal">Jonathan Bautista</p>
+
+            <div class="about__contact">
+              <span class="about__contact-label">Let's connect</span>
+              <div class="about__icons">
+                <a href="https://www.facebook.com/jonathanndroid" target="_blank" rel="noopener" aria-label="Facebook"><img src="assets/img/facebook-logo.svg" alt="" /></a>
+                <a href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener" aria-label="Instagram"><img src="assets/img/instagram-logo.svg" alt="" /></a>
+                <a href="https://www.linkedin.com/in/jonathan-bautista-92038839/" target="_blank" rel="noopener" aria-label="LinkedIn"><img src="assets/img/linkedin-logo.svg" alt="" /></a>
+                <a href="mailto:jchoybautista@gmail.com" aria-label="Email Jonathan"><img src="assets/img/gmail-logo.svg" alt="" /></a>
+                <a href="tel:+639171825114" aria-label="Call Jonathan"><img src="assets/img/phone-logo.svg" alt="" /></a>
+              </div>
+              <a class="btn about__cv" href="assets/files/jonathan_bautista_CV.docx" download>Download CV</a>
+            </div>
+          </aside>
+
+          <!-- Right column — slides in from the right -->
+          <div class="about__body stage-about__col stage-about__col--right">
+            <p class="about__p">
+              I've spent <strong>13+ years</strong> as a Senior UI/UX Designer, tackling
+              the messiest ideas and sculpting them into digital products people genuinely
+              enjoy using. I manage the whole process, from initial research and wireframes
+              all the way through to polished, high-fidelity prototypes, then translate it
+              perfectly into code.
+            </p>
+            <p class="about__p">
+              My comprehensive portfolio includes <strong class="about__strong">UI/UX
+              Designs</strong> for websites and mobile applications for major brands such as
+              <span class="about__brands">AEON Cambodia, Travelbook PH, Content House Inc.,
+              Angel's Pizza, Figaro Coffee, Yamaha Motors Philippines</span>, and more.
+            </p>
+            <p class="about__p">
+              In addition to design, as a <strong class="about__strong">Front-End
+              Developer</strong>, I delivered critical responsive web projects. I pioneered
+              the transition of <span class="about__brands">Smart Communications</span> and
+              <span class="about__brands">Talk 'N Text</span> into fully optimized
+              mobile-web responsive experiences, and developed the front-end architecture
+              for platforms such as <span class="about__brands">beep™, Visor PH, East West
+              Bank, Camel Appliances, It's More Fun in the Philippines, POEA, PRU Life UK,
+              Bonakid</span>, and more.
+            </p>
+            <p class="about__p about__p--close">
+              This dual expertise ensures seamless execution, bridging the gap between
+              design vision and technical implementation to deliver superior user
+              experiences.
+            </p>
           </div>
-          <div class="message__photo reveal">
-            <img src="assets/img/hero_image2.jpg" alt="Jonathan Bautista" onerror="this.src='assets/img/hero_image.png'" />
-          </div>
+
         </div>
       </section>
+      </div><!-- /.dark-zone -->
 
-      <!-- ===================== QUOTE + LABELED MOMENTS ===================== -->
-      <section class="moments" id="moments">
-        <div class="moments__quote">
-          <h2 class="quote reveal">"It's not about where the idea starts — it's how far you take it."</h2>
-          <p class="signature signature--sm reveal">Jonathan Bautista</p>
-        </div>
-        <div class="moments__rail" id="moments-rail">
-          <figure class="moment"><img src="assets/img/project-30.png" alt="Velocità" loading="lazy" /><figcaption>Velocità · 2026</figcaption></figure>
-          <figure class="moment"><img src="assets/img/project-29.png" alt="Final Fantasy VII" loading="lazy" /><figcaption>Final Fantasy VII · 2026</figcaption></figure>
-          <figure class="moment"><img src="assets/img/project-23.png" alt="Content House" loading="lazy" /><figcaption>Content House · 2020</figcaption></figure>
-          <figure class="moment"><img src="assets/img/project-18.png" alt="Yamaha Motors" loading="lazy" /><figcaption>Yamaha Motors · 2018</figcaption></figure>
-          <figure class="moment"><img src="assets/img/project-21.png" alt="AEON Cambodia" loading="lazy" /><figcaption>AEON Cambodia · 2019</figcaption></figure>
-          <figure class="moment"><img src="assets/img/project-19.png" alt="Figaro Coffee" loading="lazy" /><figcaption>Figaro Coffee · 2018</figcaption></figure>
-          <figure class="moment"><img src="assets/img/project-14.png" alt="MyPocketDoctor" loading="lazy" /><figcaption>MyPocketDoctor · 2016</figcaption></figure>
-          <figure class="moment"><img src="assets/img/project-12.jpg" alt="Travelbook PH" loading="lazy" /><figcaption>Travelbook PH · 2014</figcaption></figure>
-        </div>
-      </section>
+      <!-- ===================== WORKS — Lando-style horizontal scroll ===================== -->
+      <section class="works" id="works">
 
-      <!-- ===================== ORIGIN / BIO ===================== -->
-      <section class="bio" id="bio">
-        <h2 class="bio__copy reveal">
-          Since 2010, when I built my first website as a freelance designer, I've
-          worked tirelessly to bridge the gap between <span class="accent">design vision</span>
-          and <span class="accent">technical reality</span> — across 13+ years, two
-          disciplines, and dozens of brands.
-        </h2>
-        <p class="signature signature--green reveal">Jonathan Bautista</p>
-      </section>
+        <!-- 3D flip card. At the end of the horizontal scroll the whole card
+             flips right-to-left (rotateY) so the works strip (front) turns away
+             and the Work Hall of Fame opener (back) faces the viewer. -->
+        <div class="works__flip" id="works-flip">
+          <div class="works__face works__face--front">
 
-      <!-- ===================== SPLIT: DESIGN / CODE ===================== -->
-      <section class="split" id="disciplines">
-        <div class="split__col reveal">
-          <span class="split__top">UI / UX</span>
-          <span class="split__big">DESIGN</span>
-          <p class="split__copy">Research, wireframes and high-fidelity prototypes for websites and mobile apps — the craft behind products people love.</p>
-          <a class="link-cta" href="#work"><span>View design work</span> <span class="link-cta__arrow">→</span></a>
+        <!-- Section intro — fades in alone, then clears as the first thumbnail
+             flies up from the corner. The heading for "featured work". -->
+        <div class="works__intro" id="works-intro">
+          <span class="works__intro-kicker">Featured Work</span>
+          <h2 class="works__intro-title">A Few <em>Highlights</em></h2>
         </div>
-        <div class="split__media reveal">
-          <img src="assets/img/project-8.png" alt="" loading="lazy" />
-          <img src="assets/img/project-6.png" alt="" loading="lazy" />
-          <img src="assets/img/project-25.png" alt="" loading="lazy" />
-        </div>
-        <div class="split__col split__col--right reveal">
-          <span class="split__top">Front-End</span>
-          <span class="split__big outline">CODE</span>
-          <p class="split__copy">Responsive, production-ready builds — translated from design into clean code, now AI-accelerated with Claude &amp; modern tooling.</p>
-          <a class="link-cta" href="#builds"><span>View dev work</span> <span class="link-cta__arrow">→</span></a>
-        </div>
-      </section>
 
-      <!-- ===================== WORK — HALL OF FAME (hover grid) ===================== -->
+        <!-- Horizontal strip — 3 panels × 100vw = 300vw total -->
+        <div class="works__strip" id="works-strip">
+
+          <!-- ── Panel 1 — Projects 01–03 ── -->
+          <div class="works__panel">
+
+            <article class="work-item work-item--sm" style="--wi-top:8vh;--wi-left:4vw">
+              <span class="work-item__cat">Brand Identity · 2024</span>
+              <a class="work-item__link" href="#" aria-label="View Aether Brand project">
+                <figure class="work-item__thumb" style="--wi-clr:#1c2212">
+                  <span class="work-item__num">01</span>
+                </figure>
+              </a>
+              <p class="work-item__name">Aether Brand</p>
+            </article>
+
+            <article class="work-item work-item--lg" style="--wi-top:32vh;--wi-left:32vw">
+              <span class="work-item__cat">UI / UX Design · 2024</span>
+              <a class="work-item__link" href="#" aria-label="View Orbit Platform project">
+                <figure class="work-item__thumb" style="--wi-clr:#141e10">
+                  <span class="work-item__num">02</span>
+                </figure>
+              </a>
+              <p class="work-item__name">Orbit Platform</p>
+            </article>
+
+            <article class="work-item work-item--sm" style="--wi-top:5vh;--wi-left:78vw">
+              <span class="work-item__cat">Web Development · 2023</span>
+              <a class="work-item__link" href="#" aria-label="View Flux Dashboard project">
+                <figure class="work-item__thumb" style="--wi-clr:#1a1e14">
+                  <span class="work-item__num">03</span>
+                </figure>
+              </a>
+              <p class="work-item__name">Flux Dashboard</p>
+            </article>
+
+          </div><!-- /.works__panel 1 -->
+
+          <!-- ── Panel 2 — Projects 04–06 ── -->
+          <div class="works__panel">
+
+            <article class="work-item work-item--sm" style="--wi-top:14vh;--wi-left:4vw">
+              <span class="work-item__cat">Mobile App · 2024</span>
+              <a class="work-item__link" href="#" aria-label="View Nova Mobile project">
+                <figure class="work-item__thumb" style="--wi-clr:#162014">
+                  <span class="work-item__num">04</span>
+                </figure>
+              </a>
+              <p class="work-item__name">Nova Mobile</p>
+            </article>
+
+            <article class="work-item work-item--lg" style="--wi-top:18vh;--wi-left:32vw">
+              <span class="work-item__cat">Product Design · 2024</span>
+              <a class="work-item__link" href="#" aria-label="View Prism AI Tool project">
+                <figure class="work-item__thumb" style="--wi-clr:#1e2218">
+                  <span class="work-item__num">05</span>
+                </figure>
+              </a>
+              <p class="work-item__name">Prism AI Tool</p>
+            </article>
+
+            <article class="work-item work-item--sm" style="--wi-top:52vh;--wi-left:78vw">
+              <span class="work-item__cat">Brand Identity · 2023</span>
+              <a class="work-item__link" href="#" aria-label="View Helix Brand project">
+                <figure class="work-item__thumb" style="--wi-clr:#181c12">
+                  <span class="work-item__num">06</span>
+                </figure>
+              </a>
+              <p class="work-item__name">Helix Brand</p>
+            </article>
+
+          </div><!-- /.works__panel 2 -->
+
+          <!-- ── Panel 3 — Projects 07–09 ── -->
+          <div class="works__panel">
+
+            <article class="work-item work-item--sm" style="--wi-top:10vh;--wi-left:4vw">
+              <span class="work-item__cat">SaaS Platform · 2023</span>
+              <a class="work-item__link" href="#" aria-label="View Zenith SaaS project">
+                <figure class="work-item__thumb" style="--wi-clr:#1a2016">
+                  <span class="work-item__num">07</span>
+                </figure>
+              </a>
+              <p class="work-item__name">Zenith SaaS</p>
+            </article>
+
+            <article class="work-item work-item--lg" style="--wi-top:26vh;--wi-left:32vw">
+              <span class="work-item__cat">E-Commerce · 2023</span>
+              <a class="work-item__link" href="#" aria-label="View Cascade Shop project">
+                <figure class="work-item__thumb" style="--wi-clr:#141812">
+                  <span class="work-item__num">08</span>
+                </figure>
+              </a>
+              <p class="work-item__name">Cascade Shop</p>
+            </article>
+
+            <article class="work-item work-item--sm" style="--wi-top:6vh;--wi-left:78vw">
+              <span class="work-item__cat">Dashboard · 2024</span>
+              <a class="work-item__link" href="#" aria-label="View Pulse Analytics project">
+                <figure class="work-item__thumb" style="--wi-clr:#1e2414">
+                  <span class="work-item__num">09</span>
+                </figure>
+              </a>
+              <p class="work-item__name">Pulse Analytics</p>
+            </article>
+
+          </div><!-- /.works__panel 3 -->
+
+        </div><!-- /.works__strip -->
+
+          </div><!-- /.works__face--front -->
+
+          <!-- Back of the card — Hall of Fame opener, revealed by the flip -->
+          <div class="works__face works__face--back">
+            <div class="hof-cover">
+              <span class="hof-cover__kicker">The Complete Archive</span>
+              <h2 class="hof-cover__title">Work <em>Hall of Fame</em></h2>
+              <p class="hof-cover__lead">
+                Every project I've designed and shipped over 13+ years — across
+                major brands and, more recently, AI-accelerated builds. All of it,
+                in one place.
+              </p>
+              <span class="hof-cover__cue" aria-hidden="true">Scroll to browse</span>
+            </div>
+          </div><!-- /.works__face--back -->
+        </div><!-- /.works__flip -->
+
+      </section><!-- /.works -->
+
+      <!-- ===================== WORK HALL OF FAME (grid) ===================== -->
       <section class="hof" id="work">
-        <div class="section-head">
-          <h2 class="hof__title reveal">Work</h2>
-          <p class="hof__sub reveal">Hall of Fame</p>
-          <p class="hof__lead reveal">
-            13+ years of UI/UX design and front-end development — for major brands and,
-            more recently, AI-accelerated builds. Hover a project, tap to open the case.
-          </p>
-        </div>
 
         <div class="hof__grid" id="portfolio-grid">
           <button class="hof-card reveal" data-id="28"><span class="hof-card__img"><img src="assets/img/project-30.png" alt="Velocità E-Commerce Website" loading="lazy" /></span><span class="hof-card__name">Velocità E-Commerce</span><span class="hof-card__year">2026</span></button>
@@ -217,70 +358,7 @@
         <div class="hof__more"><button class="btn" id="load-more-btn">View all work</button></div>
       </section>
 
-      <!-- ===================== LIVE BUILDS (Store analog) ===================== -->
-      <section class="builds" id="builds">
-        <div class="builds__head">
-          <h2 class="builds__title reveal">Live Builds</h2>
-          <p class="builds__sub reveal">Shipped with AI</p>
-          <p class="builds__lead reveal">Real, deployed products I designed and built end-to-end with Claude Code &amp; Figma Make — refined by hand for production.</p>
-        </div>
-        <div class="builds__rail" id="builds-rail">
-          <a class="build" href="https://scooter-store.vercel.app/" target="_blank" rel="noopener">
-            <span class="build__img"><img src="assets/img/project-30.png" alt="Velocità E-Commerce" loading="lazy" /></span>
-            <span class="build__name">Velocità E-Commerce</span>
-            <span class="build__tag">React · Tailwind · Supabase</span>
-          </a>
-          <a class="build" href="https://scooter-store-admin.vercel.app/dashboard/" target="_blank" rel="noopener">
-            <span class="build__img"><img src="assets/img/project-31.png" alt="Velocità Admin" loading="lazy" /></span>
-            <span class="build__name">Velocità Admin</span>
-            <span class="build__tag">Dashboard · CRUD</span>
-          </a>
-          <a class="build" href="https://final-fantasy-7.vercel.app/" target="_blank" rel="noopener">
-            <span class="build__img"><img src="assets/img/project-29.png" alt="Final Fantasy VII Landing" loading="lazy" /></span>
-            <span class="build__name">Final Fantasy VII Landing</span>
-            <span class="build__tag">Cinematic landing page</span>
-          </a>
-          <a class="build" href="https://try-undo-36289219.figma.site" target="_blank" rel="noopener">
-            <span class="build__img"><img src="assets/img/project-27.png" alt="Gacha Social App" loading="lazy" /></span>
-            <span class="build__name">Gacha Social App</span>
-            <span class="build__tag">Figma Make</span>
-          </a>
-          <a class="build" href="https://pear-jeep-99379078.figma.site" target="_blank" rel="noopener">
-            <span class="build__img"><img src="assets/img/project-26.png" alt="Vanguard Landing" loading="lazy" /></span>
-            <span class="build__name">Vanguard Landing</span>
-            <span class="build__tag">Figma Make</span>
-          </a>
-        </div>
-        <div class="builds__cta reveal"><a class="btn" href="https://scooter-store.vercel.app/" target="_blank" rel="noopener">Visit a live site →</a></div>
-      </section>
 
-      <!-- ===================== CLIENTS & BRANDS (Partners analog) ===================== -->
-      <section class="clients" id="clients">
-        <div class="section-head">
-          <h2 class="clients__title reveal">clients</h2>
-          <p class="clients__sub reveal">&amp; brands</p>
-          <p class="clients__lead reveal">Over 13+ years I've designed and built for brands across fintech, food, automotive, travel, real estate and telco.</p>
-        </div>
-        <div class="clients__grid">
-          <span class="client reveal">AEON Cambodia</span>
-          <span class="client reveal">Yamaha Motors</span>
-          <span class="client reveal">Figaro Coffee</span>
-          <span class="client reveal">Angel's Pizza</span>
-          <span class="client reveal">Travelbook PH</span>
-          <span class="client reveal">Content House</span>
-          <span class="client reveal">Coreproc</span>
-          <span class="client reveal">Smart Communications</span>
-          <span class="client reveal">Talk 'N Text</span>
-          <span class="client reveal">PRU Life UK</span>
-          <span class="client reveal">MyPocketDoctor</span>
-          <span class="client reveal">Mansmith</span>
-          <span class="client reveal">It's More Fun in PH</span>
-          <span class="client reveal">Nexgo Express</span>
-          <span class="client reveal">DXC Technology</span>
-          <span class="client reveal">East West Bank</span>
-        </div>
-        <div class="clients__cta reveal"><a class="link-cta" href="#resume"><span>View the journey</span> <span class="link-cta__arrow">→</span></a></div>
-      </section>
 
       <!-- ===================== THE JOURNEY (Calendar analog → résumé) ===================== -->
       <section class="resume" id="resume">
@@ -361,24 +439,159 @@
 
       <!-- ===================== SOCIALS ===================== -->
       <section class="socials" id="socials">
-        <div class="section-head">
-          <h2 class="socials__title reveal">What's up</h2>
-          <p class="socials__sub reveal">on socials</p>
-        </div>
-        <div class="socials__rail" id="socials-rail">
-          <img src="assets/img/project-27.png" alt="" loading="lazy" />
-          <img src="assets/img/project-28.png" alt="" loading="lazy" />
-          <img src="assets/img/project-26.png" alt="" loading="lazy" />
-          <img src="assets/img/project-29.png" alt="" loading="lazy" />
-          <img src="assets/img/project-30.png" alt="" loading="lazy" />
-          <img src="assets/img/project-17.png" alt="" loading="lazy" />
-          <img src="assets/img/project-20.png" alt="" loading="lazy" />
+        <div class="socials__stage" id="socials-stage">
+          <div class="section-head socials__head">
+            <h2 class="socials__title">What's up</h2>
+            <p class="socials__sub">on socials</p>
+          </div>
+          <div class="socials__deck" id="socials-deck" aria-label="Social posts">
+            <a class="social-card" href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener">
+              <span class="social-card__inner">
+                <img src="assets/img/project-21.png" alt="Social post" loading="lazy" />
+                <span class="social-card__tag">@jonathanndroid</span>
+              </span>
+            </a>
+            <a class="social-card" href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener">
+              <span class="social-card__inner">
+                <img src="assets/img/project-28.png" alt="Social post" loading="lazy" />
+                <span class="social-card__tag">@jonathanndroid</span>
+              </span>
+            </a>
+            <a class="social-card" href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener">
+              <span class="social-card__inner">
+                <img src="assets/img/project-26.png" alt="Social post" loading="lazy" />
+                <span class="social-card__tag">@jonathanndroid</span>
+              </span>
+            </a>
+            <a class="social-card social-card--feature" href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener">
+              <span class="social-card__inner">
+                <img src="assets/img/project-29.png" alt="Social post" loading="lazy" />
+                <span class="social-card__tag">@jonathanndroid</span>
+              </span>
+            </a>
+            <a class="social-card" href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener">
+              <span class="social-card__inner">
+                <img src="assets/img/project-30.png" alt="Social post" loading="lazy" />
+                <span class="social-card__tag">@jonathanndroid</span>
+              </span>
+            </a>
+            <a class="social-card" href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener">
+              <span class="social-card__inner">
+                <img src="assets/img/project-17.png" alt="Social post" loading="lazy" />
+                <span class="social-card__tag">@jonathanndroid</span>
+              </span>
+            </a>
+            <a class="social-card" href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener">
+              <span class="social-card__inner">
+                <img src="assets/img/project-20.png" alt="Social post" loading="lazy" />
+                <span class="social-card__tag">@jonathanndroid</span>
+              </span>
+            </a>
+          </div>
         </div>
         <div class="socials__links">
           <a href="https://www.linkedin.com/in/jonathan-bautista-92038839/" target="_blank" rel="noopener">LinkedIn</a>
           <a href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener">Instagram</a>
           <a href="https://www.facebook.com/jonathanndroid" target="_blank" rel="noopener">Facebook</a>
           <a href="mailto:jchoybautista@gmail.com">Email</a>
+        </div>
+      </section>
+
+      <!-- ===================== WORK OF FAME (editorial index) ===================== -->
+      <section class="archive" id="archive">
+        <div class="archive__head">
+          <span class="archive__kicker">The Complete Archive</span>
+          <h2 class="archive__title">Work <em>of Fame</em></h2>
+        </div>
+        <div class="archive__filters" id="archive-filters" role="tablist" aria-label="Filter projects"></div>
+        <div class="archive__layout">
+          <ol class="archive__list" id="archive-list"></ol>
+          <aside class="archive__preview" id="archive-preview" aria-hidden="true">
+            <div class="archive__preview-frame"><img id="archive-preview-img" src="" alt="" /></div>
+            <div class="archive__preview-meta">
+              <span id="archive-preview-name"></span>
+              <span id="archive-preview-info"></span>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ===================== JOURNEY (scrollytelling timeline) ===================== -->
+      <section class="journey" id="journey">
+        <div class="journey__head">
+          <span class="journey__kicker">2007–Present</span>
+          <h2 class="journey__title">The <em>Journey</em></h2>
+        </div>
+
+        <div class="journey__timeline" id="journey-timeline">
+          <div class="journey__spine" aria-hidden="true"><span class="journey__progress" id="journey-progress"></span></div>
+
+          <article class="journey__node reveal" data-side="right">
+            <span class="journey__year">2017–Present</span>
+            <h3 class="journey__role">Sr. UI/UX Designer</h3>
+            <span class="journey__org">Content House Inc.</span>
+            <ul class="journey__points">
+              <li>Lead a small UI/UX design team.</li>
+              <li>Design websites &amp; mobile apps in Adobe XD / Figma.</li>
+              <li>Build responsive Squarespace sites with custom HTML, CSS, JS &amp; jQuery.</li>
+              <li>Support devs building Vue/React components.</li>
+            </ul>
+          </article>
+
+          <article class="journey__node reveal" data-side="left">
+            <span class="journey__year">2015–2020</span>
+            <h3 class="journey__role">Lead UI/UX Designer &amp; Front-End Developer</h3>
+            <span class="journey__org">Coreproc Inc.</span>
+            <ul class="journey__points">
+              <li>UI/UX for websites &amp; mobile apps; PSD slicing.</li>
+              <li>Converted designs into responsive front-end builds.</li>
+              <li>Guided the team toward excellent UI/UX.</li>
+            </ul>
+          </article>
+
+          <article class="journey__node reveal" data-side="right">
+            <span class="journey__year">Taguig</span>
+            <h3 class="journey__role">UI/UX Designer</h3>
+            <span class="journey__org">DXC Technology</span>
+            <ul class="journey__points">
+              <li>UI/UX designs for web applications.</li>
+              <li>RPA automations with WinAutomation.</li>
+            </ul>
+          </article>
+
+          <article class="journey__node reveal" data-side="left">
+            <span class="journey__year">2010–2014</span>
+            <h3 class="journey__role">UI/UX Designer &amp; Web Developer</h3>
+            <span class="journey__org">Freelance</span>
+            <ul class="journey__points">
+              <li>Photo editing, coupons &amp; posters in Photoshop.</li>
+              <li>Designed websites and converted them into WordPress.</li>
+            </ul>
+          </article>
+
+          <div class="journey__toolkit reveal">
+            <h3>Toolkit</h3>
+            <div class="journey__bars">
+              <div class="bar"><div class="bar__head"><span>UI/UX Design</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
+              <div class="bar"><div class="bar__head"><span>Figma</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
+              <div class="bar"><div class="bar__head"><span>Adobe XD</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
+              <div class="bar"><div class="bar__head"><span>Prototyping</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
+              <div class="bar"><div class="bar__head"><span>HTML5</span><span>97%</span></div><div class="bar__track"><div class="bar__fill" data-width="97"></div></div></div>
+              <div class="bar"><div class="bar__head"><span>CSS3 / SASS</span><span>95%</span></div><div class="bar__track"><div class="bar__fill" data-width="95"></div></div></div>
+              <div class="bar"><div class="bar__head"><span>Mobile-Web Responsive</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
+              <div class="bar"><div class="bar__head"><span>CSS Frameworks</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
+              <div class="bar"><div class="bar__head"><span>Vibe Coding</span><span>87%</span></div><div class="bar__track"><div class="bar__fill" data-width="87"></div></div></div>
+              <div class="bar"><div class="bar__head"><span>Generative AI</span><span>85%</span></div><div class="bar__track"><div class="bar__fill" data-width="85"></div></div></div>
+              <div class="bar"><div class="bar__head"><span>Photoshop</span><span>90%</span></div><div class="bar__track"><div class="bar__fill" data-width="90"></div></div></div>
+              <div class="bar"><div class="bar__head"><span>jQuery</span><span>55%</span></div><div class="bar__track"><div class="bar__fill" data-width="55"></div></div></div>
+            </div>
+          </div>
+
+          <article class="journey__node journey__node--edu reveal" data-side="right">
+            <span class="journey__year">2003–2007</span>
+            <h3 class="journey__role">BS, Major in Marketing</h3>
+            <span class="journey__org">Far Eastern University — Manila</span>
+          </article>
         </div>
       </section>
     </main>
@@ -391,9 +604,8 @@
       <div class="footer__grid">
         <nav class="footer__nav">
           <a href="#home">Home</a>
-          <a href="#disciplines">Design</a>
+          <a href="#about">About</a>
           <a href="#work">Work</a>
-          <a href="#clients">Clients</a>
           <a href="#resume">Journey</a>
           <a href="assets/files/jonathan_bautista_CV.docx" download>Download CV</a>
         </nav>
