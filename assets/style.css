@@ -2178,6 +2178,13 @@ section {
   .hero__sig {
     width: min(88vw, 78vh, 640px);
   }
+  .hero__sig-svg {
+    will-change: transform;
+    filter: none;
+  }
+  .hero__sig-pen {
+    display: none;
+  }
   .hero__marquee {
     top: auto;
     transform: none;

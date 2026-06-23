@@ -587,14 +587,13 @@
           } // last stroke with ink = the frontier
           cum += len;
         }
-        if (sigPen && penIdx >= 0 && p > 0.002 && p < 0.998) {
+        if (sigPen && penIdx >= 0 && p > 0.002 && p < 0.998 && window.innerWidth > 880) {
           try {
             const pt = sigStrokes[penIdx].getPointAtLength(
               Math.min(penLocal, sigLens[penIdx]),
             );
             const scale = sigSvg.clientWidth / SIG_VB_W;
-            sigPen.style.left = (pt.x - SIG_VB_X) * scale + "px";
-            sigPen.style.top = (pt.y - SIG_VB_Y) * scale + "px";
+            sigPen.style.transform = `translate(${(pt.x - SIG_VB_X) * scale}px, ${(pt.y - SIG_VB_Y) * scale}px)`;
             sigPen.style.opacity = "1";
           } catch (e) {}
         } else if (sigPen) {
@@ -614,7 +613,7 @@
           trigger: heroSection,
           start: "top top",
           end: () => `+=${window.innerWidth <= 880 ? 140 : 65}%`,
-          scrub: 1.1,
+          scrub: window.innerWidth <= 880 ? 0.3 : 1.1,
           pin: true,
           anticipatePin: 1,
           invalidateOnRefresh: true,
