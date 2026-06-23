@@ -316,7 +316,6 @@
       lenis.on("scroll", ({ scroll }) => {
         if (window.ScrollTrigger) window.ScrollTrigger.update();
         updateLogoSize(scroll);
-        updateLogoColor();
       });
     } else {
       requestAnimationFrame(raf);
@@ -345,12 +344,14 @@
        • olive background  → #e7fcb0 (the one exception)
      The hero (off-panel), about and works sections share ONE fixed canvas
      whose colour is driven olive → black by _aboutP. The logo also tracks
-     the works card flip. Everything below is dark except Socials (white). */
+     the works card flip. HOF and Socials are white (black logo); everything else is dark. */
   const nav = document.getElementById("nav");
   const progressBar = document.querySelector(".scroll-progress span");
   const navLogo = nav ? nav.querySelector(".nav__logo") : null;
   const sectHero = document.querySelector(".hero");
   const sectAbout = document.querySelector(".stage-about");
+  const sectHof = document.querySelector(".hof");
+  const sectResume = document.querySelector(".resume");
   const sectSocials = document.querySelector(".socials");
 
   const LOGO_WHITE = [255, 255, 255];
@@ -388,11 +389,36 @@
       const b = el.getBoundingClientRect();
       return b.top <= y && b.bottom > y;
     };
+    // True when any part of el is on screen AND its bottom is still below the nav.
+    // Unlike within(), doesn't require el.top <= y — handles pinned elements that
+    // start below the nav but have a white page bg extending to the top.
+    const onScreen = (el) => {
+      if (!el) return false;
+      const b = el.getBoundingClientRect();
+      return b.bottom > y && b.top < window.innerHeight;
+    };
 
     let rgb;
     if (within(sectAbout)) {
-      // Past the flip midpoint the dark HOF-cover back face faces us → white logo.
-      rgb = _worksFlipP > 0.5 ? LOGO_WHITE : canvasLogoColor();
+      const backFace = sectAbout.querySelector(".about__face--back");
+      if (window.innerWidth <= 880 && backFace && within(backFace)) {
+        // Mobile: the white "Some of My Work" cover sits statically in flow —
+        // black logo keeps it legible (the flip's _worksFlipP never runs here).
+        rgb = LOGO_BLACK;
+      } else {
+        // During back-face expansion (0.5→1) the white "Some of My Work" cover
+        // is revealed — lerp logo from white to black so it stays legible.
+        if (_worksFlipP > 0.5) {
+          const t = (_worksFlipP - 0.5) * 2; // 0→1 during back face expansion
+          rgb = lerp3(LOGO_WHITE, LOGO_BLACK, t);
+        } else {
+          rgb = canvasLogoColor();
+        }
+      }
+    } else if (onScreen(sectHof) && !within(sectResume)) {
+      // HOF is on screen and the journey section hasn't slid over the nav yet —
+      // white bg (including the gap above the pinned grid) so logo must be black.
+      rgb = LOGO_BLACK;
     } else if (within(sectHero)) {
       // Blend between the dark panel (white logo) and the olive canvas as the
       // panel edge sweeps across the logo.
@@ -411,8 +437,13 @@
   function updateLogoSize(y) {
     if (!navLogo) return;
     const t = Math.min(1, Math.max(0, y / 120));
-    navLogo.style.width = 245 - 85 * t + "px";
-    navLogo.style.height = 78 - 27 * t + "px";
+    const isMobile = window.innerWidth <= 768;
+    const startW = isMobile ? 165 : 245;
+    const startH = isMobile ? 53  : 78;
+    const shrinkW = isMobile ? 55  : 85;
+    const shrinkH = isMobile ? 17  : 27;
+    navLogo.style.width  = startW - shrinkW * t + "px";
+    navLogo.style.height = startH - shrinkH * t + "px";
   }
 
   function onScroll() {
@@ -422,7 +453,6 @@
       progressBar.style.width = (h > 0 ? (y / h) * 100 : 0) + "%";
     }
     if (!lenis) updateLogoSize(y);
-    updateLogoColor();
   }
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
@@ -513,9 +543,6 @@
     const heroPanel = document.getElementById("hero-panel");
 
     if (heroSection && heroPanel) {
-      // Logo starts white (over the full-screen panel); colour is updated each frame.
-      updateLogoColor();
-
       // Signature: a single hand-drawn stroke path that writes itself on via
       // stroke-dashoffset, scrubbed to scroll — drawing from its start point
       // (top of the first loop) through to the end, with a glowing pen nib
@@ -717,10 +744,25 @@
     // Phase 2 — pin the section once it fills the viewport, then flip the card.
     // Uses a two-phase scaleX approach: front collapses to zero (first half),
     // back expands from zero (second half). Content is always readable.
-    if (!prefersReduced && flipper) {
+    // DESKTOP ONLY (>880px): on phones the front-face content is taller than the
+    // viewport, so pinning + flipping would (a) collapse the text before it can
+    // be read and (b) inject ~1.4× viewport of pin-spacer that buries the work
+    // grid. Mobile gets the scroll-stack transition in the else-if branch below.
+    if (!prefersReduced && flipper && window.innerWidth > 880) {
       const front = flipper.querySelector(".about__face--front");
       const back  = flipper.querySelector(".about__face--back");
       const FLIP_PX = Math.round(window.innerHeight * 1.4);
+
+      // Spacer goes white ONLY once the flip reveals the white "Some of My Work"
+      // cover (back face starts expanding at the midpoint), and reverts when you
+      // scroll back up to the dark About face. Toggling a class on THIS section's
+      // spacer keeps the white scoped to Work — the hero spacer stays untouched —
+      // and shows up as a real rule in devtools (.pin-spacer.is-work-white).
+      const FLIP_WHITE_AT = 0.5; // back face begins to show at the flip midpoint
+      const setSpacerWhite = (on) => {
+        const spacer = section.closest(".pin-spacer");
+        if (spacer) spacer.classList.toggle("is-work-white", on);
+      };
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -730,12 +772,15 @@
           start: "top top",
           end: `+=${FLIP_PX}`,
           scrub: 1,
+          onRefresh: (self) => setSpacerWhite(self.progress >= FLIP_WHITE_AT),
           onUpdate(self) {
             _worksFlipP = Math.min(1, Math.max(0, self.progress));
+            setSpacerWhite(self.progress >= FLIP_WHITE_AT);
             updateLogoColor();
           },
           onLeaveBack() {
             _worksFlipP = 0;
+            setSpacerWhite(false);
             updateLogoColor();
           },
         },
@@ -757,6 +802,26 @@
           0.5,
         );
       }
+    } else if (!prefersReduced && flipper && window.innerWidth <= 880) {
+      // Mobile: reuse the site's scroll-stack transition (the same effect used
+      // for Work → Journey → Socials). Freeze the about copy once its bottom
+      // reaches the viewport bottom — so it has been fully read — then let the
+      // white "Some of My Work" cover scroll up and over it. pinSpacing:false
+      // adds no scroll distance, so the work grid stays close. The cover paints
+      // above the pinned copy via its higher z-index (set in the mobile CSS).
+      const front = flipper.querySelector(".about__face--front");
+      const back = flipper.querySelector(".about__face--back");
+      if (front && back) {
+        window.ScrollTrigger.create({
+          trigger: front,
+          start: "bottom bottom",
+          endTrigger: back,
+          end: "bottom bottom",
+          pin: true,
+          pinSpacing: false,
+          invalidateOnRefresh: true,
+        });
+      }
     }
   })();
 
@@ -768,6 +833,22 @@
 
     const cards = Array.from(deck.querySelectorAll(".social-card"));
     if (!cards.length) return;
+
+    // Tap / click focus — the cards no longer navigate anywhere, so a tap just
+    // toggles `.is-active`, which the CSS renders with the same colour + glow +
+    // lift the desktop pointer gets on hover. Tapping another card moves the
+    // spotlight; tapping the active card (or anywhere off the deck) clears it.
+    cards.forEach((card) => {
+      card.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const wasActive = card.classList.contains("is-active");
+        cards.forEach((c) => c.classList.remove("is-active"));
+        if (!wasActive) card.classList.add("is-active");
+      });
+    });
+    document.addEventListener("click", () => {
+      cards.forEach((c) => c.classList.remove("is-active"));
+    });
 
     const mid = (cards.length - 1) / 2; // 3 for 7 cards
 
@@ -1363,6 +1444,15 @@
     const hof = document.querySelector(".hof");
     const footer = document.querySelector(".footer");
     if (!hof || !footer) return;
+    // The Work grid is white, but GSAP's pin-spacer is transparent. On wide/short
+    // viewports the grid is shorter than the screen, so when it pins (bottom-bottom)
+    // the dark body shows through the spacer as a band above the grid. The grid is
+    // always white, so its spacer is always white too — reuse the flip's class.
+    // GSAP rebuilds pin-spacers on refresh, so re-apply via onRefresh.
+    const whitenHofSpacer = () => {
+      const sp = hof.closest(".pin-spacer");
+      if (sp) sp.classList.add("is-work-white");
+    };
     window.ScrollTrigger.create({
       trigger: hof,
       start: "bottom bottom",
@@ -1371,7 +1461,9 @@
       pin: true,
       pinSpacing: false,
       invalidateOnRefresh: true,
+      onRefresh: whitenHofSpacer,
     });
+    whitenHofSpacer();
   })();
 
   /* ---------- Journey entry buffer: start the resume section 120 px below
@@ -1451,6 +1543,10 @@
       setLink(xdBtn, data.xdLink);
       setLink(webBtn, data.websiteLink);
       setLink(claudeBtn, data.claudeLink);
+      const isFigmaMake = data.websiteLink && data.websiteLink.includes("figma.site");
+      webBtn.querySelector("img").src = isFigmaMake ? "assets/img/Figma-logo.svg" : "assets/img/web-icon.svg";
+      webBtn.querySelector("span").textContent = isFigmaMake ? "Live Build" : "Website";
+      webBtn.setAttribute("aria-label", isFigmaMake ? "Open live Figma Make build" : "Visit website");
       lastFocused = document.activeElement;
       modal.classList.add("open");
       modal.setAttribute("aria-hidden", "false");
