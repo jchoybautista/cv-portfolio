@@ -12,9 +12,6 @@
     "(prefers-reduced-motion: reduce)",
   ).matches;
 
-  // 0 = dark mode (hero/statement), 1 = light mode (works Phase 2).
-  // Written by initWorks, read by initContours every draw frame.
-  let _contourLightP = 0; // 0→1 across the works section (→ warm light)
   let _aboutP = 0; // 0→1 across the about section (olive → black, lines → white)
   // Logo-colour signals (read by updateLogoColor):
   let _heroP = 0; // 0→1 hero pin progress (panel shrink)
@@ -42,30 +39,29 @@
     const LINE_LIGHT = [120, 122, 115, 0.38]; // warm olive
     const lerp = (a, b, t) => a + (b - a) * t;
     function getLineColor() {
-      const ap = _aboutP,
-        wp = _contourLightP;
-      // hero → about (lime → dark gray), then about → works (→ warm olive)
-      let r = lerp(lerp(LINE_DARK[0], LINE_ABOUT[0], ap), LINE_LIGHT[0], wp);
-      let g = lerp(lerp(LINE_DARK[1], LINE_ABOUT[1], ap), LINE_LIGHT[1], wp);
-      let b = lerp(lerp(LINE_DARK[2], LINE_ABOUT[2], ap), LINE_LIGHT[2], wp);
-      let a = lerp(lerp(LINE_DARK[3], LINE_ABOUT[3], ap), LINE_LIGHT[3], wp);
-      // sine arches keep the lines readable through each mid-transition
-      a += 0.22 * Math.sin(Math.PI * ap) + 0.18 * Math.sin(Math.PI * wp);
+      const ap = _aboutP;
+      // hero → about (lime → dark gray)
+      let r = lerp(LINE_DARK[0], LINE_ABOUT[0], ap);
+      let g = lerp(LINE_DARK[1], LINE_ABOUT[1], ap);
+      let b = lerp(LINE_DARK[2], LINE_ABOUT[2], ap);
+      let a = lerp(LINE_DARK[3], LINE_ABOUT[3], ap);
+      // sine arch keeps the lines readable through the mid-transition
+      a += 0.22 * Math.sin(Math.PI * ap);
       return `rgba(${Math.round(r)},${Math.round(g)},${Math.round(b)},${a.toFixed(3)})`;
     }
 
     // Scroll-ramped distortion — the contour points wobble as the About section
-    // takes over (peaks at aboutP=1) and settle again as works turns it light.
+    // takes over (peaks at aboutP=1).
     let _t = 0;
     const DIST_AMP = 24;
     function distM(px, py) {
-      const d = _aboutP * (1 - _contourLightP) * DIST_AMP;
+      const d = _aboutP * DIST_AMP;
       if (d > 0.01)
         ctx.moveTo(px + d * Math.sin(py * 0.016 + _t * 1.6), py + d * Math.cos(px * 0.016 + _t * 1.3));
       else ctx.moveTo(px, py);
     }
     function distL(px, py) {
-      const d = _aboutP * (1 - _contourLightP) * DIST_AMP;
+      const d = _aboutP * DIST_AMP;
       if (d > 0.01)
         ctx.lineTo(px + d * Math.sin(py * 0.016 + _t * 1.6), py + d * Math.cos(px * 0.016 + _t * 1.3));
       else ctx.lineTo(px, py);
@@ -305,9 +301,6 @@
     );
   });
 
-  // Set by the modal block; lets initArchive() open the shared project modal.
-  let openPortfolio = null;
-
   /* ---------- Lenis smooth scroll ---------- */
   let lenis = null;
   if (typeof window.Lenis === "function" && !prefersReduced) {
@@ -350,17 +343,15 @@
        • dark background   → WHITE
        • light background  → BLACK
        • olive background  → #e7fcb0 (the one exception)
-     The hero (off-panel), about and works sections all share ONE fixed canvas
-     whose colour is driven olive → black → warm-light by the same _aboutP /
-     _contourLightP signals that drive the contour field — so the logo colour
-     is a pure function of those, plus the shrinking video panel in the hero
-     and the card flip in works. Everything below works is the dark page bg. */
+     The hero (off-panel), about and works sections share ONE fixed canvas
+     whose colour is driven olive → black by _aboutP. The logo also tracks
+     the works card flip. Everything below is dark except Socials (white). */
   const nav = document.getElementById("nav");
   const progressBar = document.querySelector(".scroll-progress span");
   const navLogo = nav ? nav.querySelector(".nav__logo") : null;
   const sectHero = document.querySelector(".hero");
   const sectAbout = document.querySelector(".stage-about");
-  const sectWorks = document.querySelector(".works");
+  const sectSocials = document.querySelector(".socials");
 
   const LOGO_WHITE = [255, 255, 255];
   const LOGO_BLACK = [0, 0, 0];
@@ -372,12 +363,9 @@
     a[2] + (b[2] - a[2]) * t,
   ];
 
-  // Colour the logo would take over the shared fixed canvas at its current
-  // state: olive →(_aboutP)→ black →(_contourLightP)→ warm light, which maps to
-  // logo OLIVE → WHITE → BLACK.
+  // Logo colour over the shared fixed canvas: olive →(_aboutP)→ white.
   function canvasLogoColor() {
-    const base = lerp3(LOGO_OLIVE, LOGO_WHITE, clamp01(_aboutP));
-    return lerp3(base, LOGO_BLACK, clamp01(_contourLightP));
+    return lerp3(LOGO_OLIVE, LOGO_WHITE, clamp01(_aboutP));
   }
 
   // Fraction of the logo still covered by the shrinking (dark) hero video panel
@@ -402,17 +390,18 @@
     };
 
     let rgb;
-    if (within(sectWorks)) {
-      // Past the flip midpoint the dark back face faces us → white logo.
+    if (within(sectAbout)) {
+      // Past the flip midpoint the dark HOF-cover back face faces us → white logo.
       rgb = _worksFlipP > 0.5 ? LOGO_WHITE : canvasLogoColor();
-    } else if (within(sectAbout)) {
-      rgb = canvasLogoColor();
     } else if (within(sectHero)) {
       // Blend between the dark panel (white logo) and the olive canvas as the
       // panel edge sweeps across the logo.
       rgb = lerp3(canvasLogoColor(), LOGO_WHITE, heroPanelCoverage(r));
+    } else if (within(sectSocials)) {
+      // Socials has a white background — logo must be black for contrast.
+      rgb = LOGO_BLACK;
     } else {
-      // Hall of Fame, Journey, Socials, Footer — all the dark page background.
+      // Hall of Fame, Journey, Footer — dark page background.
       rgb = LOGO_WHITE;
     }
     navLogo.style.backgroundColor =
@@ -438,6 +427,11 @@
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
 
+  /* ---------- Skill bars fill (defined early so reveal IO can call it) ---------- */
+  function fillBar(bar) {
+    bar.style.transform = `scaleX(${(bar.getAttribute("data-width") || 0) / 100})`;
+  }
+
   /* ---------- Reveal on scroll (IntersectionObserver) ---------- */
   const revealEls = document.querySelectorAll(".reveal");
   if ("IntersectionObserver" in window) {
@@ -446,6 +440,8 @@
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add("in");
+            // Fill any bars inside this element so they animate as it fades in
+            entry.target.querySelectorAll(".bar__fill").forEach(fillBar);
             obs.unobserve(entry.target);
           }
         });
@@ -489,13 +485,10 @@
     }
   });
 
-  /* ---------- Skill bars fill ---------- */
-  function fillBar(bar) {
-    bar.style.transform = `scaleX(${(bar.getAttribute("data-width") || 0) / 100})`;
-  }
+  /* ---------- Skill bars fill (IO as secondary trigger for bars outside .reveal) ---------- */
   const bars = document.querySelectorAll(".bar__fill");
   if ("IntersectionObserver" in window) {
-    const io = new IntersectionObserver(
+    const barIo = new IntersectionObserver(
       (entries, obs) => {
         entries.forEach((e) => {
           if (e.isIntersecting) {
@@ -504,9 +497,9 @@
           }
         });
       },
-      { threshold: 0.2 },
+      { threshold: 0 },
     );
-    bars.forEach((b) => io.observe(b));
+    bars.forEach((b) => barIo.observe(b));
   } else {
     bars.forEach(fillBar);
   }
@@ -667,27 +660,27 @@
     }
   }
 
-  /* ---------- ABOUT — two columns slide in + olive→black background ----------
-     As the section scrolls through, the left and right columns slide in from
-     opposite edges and meet, while _aboutP drives the canvas (olive → black,
-     lime lines → white + distortion) and a black overlay fades over the bg. */
+  /* ---------- ABOUT — columns slide in, then section pins and flips to HOF cover ----------
+     Phase 1 (scroll): olive→black canvas transition + columns slide in from edges.
+     Phase 2 (pinned): card flips right-to-left, revealing the Work Hall of Fame cover. */
   (function initStageAbout() {
     if (!window.gsap || !window.ScrollTrigger) return;
     const gsap = window.gsap;
     const section = document.querySelector(".stage-about");
     if (!section) return;
-    const left = section.querySelector(".stage-about__col--left");
-    const right = section.querySelector(".stage-about__col--right");
+    const left    = section.querySelector(".stage-about__col--left");
+    const right   = section.querySelector(".stage-about__col--right");
     const blackLayer = document.getElementById("hero-black-layer");
+    const flipper = document.getElementById("about-flip");
 
-    // Background transition — always runs (even reduced-motion / mobile) so the
-    // olive→black + white-contour mood change happens for everyone.
+    // Phase 1a — background canvas olive→black. Always runs so the mood change
+    // happens on every device, even without motion/animation.
     gsap
       .timeline({
         scrollTrigger: {
           trigger: section,
           start: "top 80%",
-          end: "top top", // fully black only once the About has covered the hero
+          end: "top top",
           scrub: true,
           onUpdate(self) {
             _aboutP = self.progress;
@@ -699,160 +692,71 @@
           },
         },
       })
-      .fromTo(
-        blackLayer,
-        { opacity: 0 },
-        { opacity: 1, ease: "none" },
-        0,
-      );
+      .fromTo(blackLayer, { opacity: 0 }, { opacity: 1, ease: "none" }, 0);
 
-    // Column slide-in — desktop, motion-OK only. The two columns travel in from
-    // opposite edges and settle into the two-column grid ("meet").
-    if (prefersReduced || window.innerWidth < 880 || !left || !right) return;
-    const colTrigger = {
-      trigger: section,
-      // Start a touch later than the background darkening so the columns slide
-      // in after the olive→black shift is already under way.
-      start: "top 64%",
-      end: "top 18%", // columns have met before the section finishes framing
-      scrub: true,
-    };
-    gsap.fromTo(
-      left,
-      { xPercent: -118, opacity: 0 },
-      { xPercent: 0, opacity: 1, ease: "power2.out", scrollTrigger: colTrigger },
-    );
-    gsap.fromTo(
-      right,
-      { xPercent: 118, opacity: 0 },
-      { xPercent: 0, opacity: 1, ease: "power2.out", scrollTrigger: colTrigger },
-    );
-  })();
-
-  /* ---------- WORKS — diagonal entry + horizontal scroll ---------- */
-  (function initWorks() {
-    if (!window.gsap || !window.ScrollTrigger || prefersReduced) return;
-
-    const gsap = window.gsap;
-    const section = document.querySelector(".works");
-    const strip = document.getElementById("works-strip");
-    if (!section || !strip) return;
-
-    const PANELS  = strip.querySelectorAll(".works__panel").length; // 3
-    // The whole works choreography runs INSIDE a single pin so it always plays
-    // against a full-screen canvas:
-    //   HEAD_PX  — the "Featured Work" heading fades in ALONE and holds, before
-    //              any thumbnail is visible. It then clears as the entry begins.
-    //   ENTER_PX — the first panel flies up the diagonal from the very
-    //              bottom-right CORNER of the viewport. This has to happen while
-    //              pinned; during a normal scroll-in the section's bottom is
-    //              still below the fold, so the corner part of the path is
-    //              off-screen and the panel only ever appears mid-screen.
-    //   H_PX     — horizontal scroll right-to-left across all panels.
-    //   FLIP_PX  — the whole card flips right-to-left (rotateY 0 → -180) so the
-    //              strip turns away and the Hall of Fame opener faces the viewer.
-    // Pin ends when the flip completes; the Hall of Fame grid then scrolls up.
-    const HEAD_PX  = Math.round(window.innerHeight * 0.7);  // heading reveal + hold
-    const ENTER_PX = Math.round(window.innerHeight * 0.85); // diagonal corner entry
-    const H_PX     = window.innerHeight * 2 * (PANELS - 1); // horizontal travel
-    const FLIP_PX  = Math.round(window.innerHeight * 1.1);  // the flip
-    const PIN_PX   = HEAD_PX + ENTER_PX + H_PX + FLIP_PX;
-    const headDur  = HEAD_PX / PIN_PX;
-    const eDur     = ENTER_PX / PIN_PX;
-    const hDur     = H_PX / PIN_PX;
-    const fDur     = FLIP_PX / PIN_PX;
-
-    const lightLayer = document.querySelector(".hero__light-layer");
-    const flipper    = document.getElementById("works-flip");
-    const intro      = section.querySelector(".works__intro");
-
-    const tl = gsap.timeline({
-      scrollTrigger: {
+    // Phase 1b — column slide-in (desktop + motion-OK only).
+    if (!prefersReduced && window.innerWidth >= 880 && left && right) {
+      const colTrigger = {
         trigger: section,
-        pin: true,
-        pinSpacing: true,
-        start: "top top",
-        end: `+=${PIN_PX}`,
-        scrub: 1,
-        onUpdate(self) {
-          // Track the line colour to the horizontal-scroll window (where the
-          // warm-light background actually fades in), not the whole pin — so it
-          // stays dark through the heading reveal and corner entry.
-          const start = headDur + eDur;
-          const span = hDur || 1;
-          _contourLightP = Math.min(1, Math.max(0, (self.progress - start) / span));
-          // Flip progress — past its midpoint the dark back face (var(--bg))
-          // faces the viewer, so the logo must return to white.
-          const flipStart = headDur + eDur + hDur;
-          _worksFlipP = Math.min(1, Math.max(0, (self.progress - flipStart) / (fDur || 1)));
-          updateLogoColor();
-        },
-        onLeaveBack() {
-          _contourLightP = 0;
-          _worksFlipP = 0;
-          updateLogoColor();
-        },
-      },
-    });
-
-    // Beat 0 — heading reveal. Reveal → hold → exit ALL happen inside the HEAD
-    // window, while the strip is still parked off the corner, so the heading is
-    // fully gone before the first thumbnail enters and never overlaps a slide.
-    if (intro) {
-      tl.fromTo(
-        intro,
-        { opacity: 0, y: 40 },
-        { opacity: 1, y: 0, ease: "power2.out", duration: headDur * 0.35 },
-        0,
+        start: "top 64%",
+        end: "top 18%",
+        scrub: true,
+      };
+      gsap.fromTo(
+        left,
+        { xPercent: -118, opacity: 0 },
+        { xPercent: 0, opacity: 1, ease: "power2.out", scrollTrigger: colTrigger },
       );
-      // Clear it out over the last ~30% of the HEAD beat — done before entry.
-      tl.to(
-        intro,
-        { opacity: 0, y: -40, ease: "power2.in", duration: headDur * 0.3 },
-        headDur * 0.7,
+      gsap.fromTo(
+        right,
+        { xPercent: 118, opacity: 0 },
+        { xPercent: 0, opacity: 1, ease: "power2.out", scrollTrigger: colTrigger },
       );
     }
 
-    // Beat 1 — diagonal entry. Strip starts off the bottom-right corner
-    // (matches the CSS pre-offset, so no jump) and eases up to (0, 0). Because
-    // the section is pinned full-screen, the first panel is clearly seen
-    // travelling up the diagonal out of the corner.
-    tl.fromTo(
-      strip,
-      { x: "100vw", y: "100vh" },
-      { x: 0, y: 0, ease: "power2.out", duration: eDur },
-      headDur,
-    );
+    // Phase 2 — pin the section once it fills the viewport, then flip the card.
+    // Uses a two-phase scaleX approach: front collapses to zero (first half),
+    // back expands from zero (second half). Content is always readable.
+    if (!prefersReduced && flipper) {
+      const front = flipper.querySelector(".about__face--front");
+      const back  = flipper.querySelector(".about__face--back");
+      const FLIP_PX = Math.round(window.innerHeight * 1.4);
 
-    // Beat 2 — horizontal scroll across the remaining panels.
-    tl.fromTo(
-      strip,
-      { x: 0, immediateRender: false },
-      { x: `-${(PANELS - 1) * 100}vw`, ease: "none", duration: hDur },
-      headDur + eDur,
-    );
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          pin: true,
+          pinSpacing: true,
+          start: "top top",
+          end: `+=${FLIP_PX}`,
+          scrub: 1,
+          onUpdate(self) {
+            _worksFlipP = Math.min(1, Math.max(0, self.progress));
+            updateLogoColor();
+          },
+          onLeaveBack() {
+            _worksFlipP = 0;
+            updateLogoColor();
+          },
+        },
+      });
 
-    // Light layer reaches full opacity as the horizontal scroll ends.
-    if (lightLayer) {
-      tl.fromTo(
-        lightLayer,
-        { opacity: 0, immediateRender: false },
-        { opacity: 1, ease: "none", duration: hDur },
-        headDur + eDur,
-      );
-    }
-
-    // Beat 3 — flip the whole card right-to-left. rotateY 0 → -180 turns the
-    // strip (front) away past 90° and brings the Hall of Fame opener (back,
-    // pre-rotated 180°) to face the viewer. Eased in/out so it reads as a
-    // deliberate card turn. Reverses cleanly on scroll-up (scrubbed).
-    if (flipper) {
-      tl.fromTo(
-        flipper,
-        { rotationY: 0 },
-        { rotationY: -180, ease: "power1.inOut", duration: fDur },
-        headDur + eDur + hDur,
-      );
+      if (front) {
+        tl.fromTo(
+          front,
+          { scaleX: 1 },
+          { scaleX: 0, ease: "power1.in", duration: 0.5 },
+          0,
+        );
+      }
+      if (back) {
+        tl.fromTo(
+          back,
+          { scaleX: 0 },
+          { scaleX: 1, ease: "power1.out", duration: 0.5 },
+          0.5,
+        );
+      }
     }
   })();
 
@@ -975,18 +879,45 @@
     });
   })();
 
-  /* ---------- JOURNEY — scroll-scrubbed progress line ---------- */
+  /* ---------- JOURNEY — scroll-scrubbed progress line + node lighting ---------- */
   (function initJourney() {
     if (!window.gsap || !window.ScrollTrigger || prefersReduced) return;
     const tl = document.getElementById("journey-timeline");
     const prog = document.getElementById("journey-progress");
     if (!tl || !prog) return;
+
+    const nodes = Array.from(tl.querySelectorAll(".journey__node"));
+
+    // Fractional position (0–1) of each node's circle within the timeline.
+    // The ::before pseudo-element sits at top:5px within the node.
+    let thresholds = [];
+    function computeThresholds() {
+      const h = tl.offsetHeight || 1;
+      thresholds = nodes.map((n) => (n.offsetTop + 5) / h);
+    }
+    computeThresholds();
+
     window.gsap.fromTo(
       prog,
       { scaleY: 0 },
       {
-        scaleY: 1, ease: "none", transformOrigin: "top",
-        scrollTrigger: { trigger: tl, start: "top 75%", end: "bottom 75%", scrub: true },
+        scaleY: 1,
+        ease: "none",
+        transformOrigin: "top",
+        scrollTrigger: {
+          trigger: tl,
+          start: "top 75%",
+          end: "bottom 75%",
+          scrub: true,
+          invalidateOnRefresh: true,
+          onRefresh: computeThresholds,
+          onUpdate(self) {
+            const p = self.progress;
+            nodes.forEach((node, i) => {
+              node.classList.toggle("journey__node--lit", p >= (thresholds[i] ?? 0));
+            });
+          },
+        },
       },
     );
   })();
@@ -1014,7 +945,7 @@
   const cards = Array.from(document.querySelectorAll(".hof-card"));
   const loadMoreBtn = document.getElementById("load-more-btn");
   const PER_LOAD = 12;
-  let visible = 12;
+  let visible = 16;
   cards.forEach((c, i) => {
     if (i >= visible) c.classList.add("hidden");
   });
@@ -1351,132 +1282,136 @@
     },
   };
 
-  /* ---------- WORK OF FAME — editorial index built from the Hall-of-Fame grid ----------
-     Reuses the curated names/years/images already in #portfolio-grid (single
-     source of truth) + portfolioData for role/modal. Rows carry data-archive-id
-     (not data-id) so the generic modal handler never double-binds them. */
-  function initArchive() {
-    const listEl = document.getElementById("archive-list");
-    const filtersEl = document.getElementById("archive-filters");
+  /* ---------- WORK HALL OF FAME — Lando-style staggered columns ----------
+     Re-flows the existing #portfolio-grid cards into N vertical columns. The
+     even (2nd / 4th) columns start offset down and "catch up" to align as the
+     grid scrolls into view (GSAP scrub). Rebuilds on breakpoint change. Cards
+     keep their data-id so the shared modal handler still wires them. */
+  function initHofGrid() {
     const grid = document.getElementById("portfolio-grid");
-    if (!listEl || !grid) return;
+    if (!grid) return;
+    const allCards = Array.from(grid.querySelectorAll(".hof-card"));
+    if (!allCards.length) return;
+    // The column convergence is the entrance, so drop the generic reveal fade.
+    allCards.forEach((c) => c.classList.remove("reveal"));
 
-    // id → category (portfolioData has no category field, so map it here)
-    const CATS = {
-      1:"UI/UX",2:"UI/UX",3:"UI/UX",4:"UI/UX",5:"UI/UX",6:"UI/UX",8:"UI/UX",
-      9:"UI/UX",10:"UI/UX",17:"UI/UX",18:"UI/UX",19:"UI/UX",20:"UI/UX",21:"UI/UX",
-      7:"Web Dev",11:"Web Dev",12:"Web Dev",13:"Web Dev",14:"Web Dev",15:"Web Dev",16:"Web Dev",
-      22:"AI Builds",23:"AI Builds",24:"AI Builds",25:"AI Builds",26:"AI Builds",27:"AI Builds",28:"AI Builds",29:"AI Builds",
-    };
-    const lastYear = (s) => {
-      const m = String(s || "").match(/\d{4}/g);
-      return m ? parseInt(m[m.length - 1], 10) : 0;
-    };
-    const esc = (s) => String(s).replace(/"/g, "&quot;");
+    const colsFor = () => (window.innerWidth < 760 ? 2 : 4);
+    let builtCols = 0;
+    let conv = null;
 
-    const items = Array.from(grid.querySelectorAll(".hof-card")).map((card) => {
-      const id = card.getAttribute("data-id");
-      const imgEl = card.querySelector("img");
-      const nameEl = card.querySelector(".hof-card__name");
-      const yearEl = card.querySelector(".hof-card__year");
-      const yearTxt = yearEl ? yearEl.textContent.trim() : "";
-      return {
-        id: id,
-        name: nameEl ? nameEl.textContent.trim() : "",
-        img: imgEl ? imgEl.getAttribute("src") : "",
-        year: lastYear(yearTxt),
-        yearTxt: yearTxt,
-        cat: CATS[id] || "UI/UX",
-        role: (portfolioData[id] && portfolioData[id].role) || "",
-      };
-    }).sort((a, b) => b.year - a.year || (a.name < b.name ? -1 : 1));
+    function build() {
+      const COLS = colsFor();
+      builtCols = COLS;
+      if (conv) {
+        if (conv.scrollTrigger) conv.scrollTrigger.kill();
+        conv.kill();
+        conv = null;
+      }
+      const cols = [];
+      for (let i = 0; i < COLS; i++) {
+        const col = document.createElement("div");
+        col.className = "hof-col" + (i % 2 === 1 ? " hof-col--offset" : "");
+        cols.push(col);
+      }
+      allCards.forEach((card, i) => cols[i % COLS].appendChild(card));
+      grid.innerHTML = "";
+      cols.forEach((c) => grid.appendChild(c));
 
-    // Build rows
-    listEl.innerHTML = "";
-    items.forEach((it, idx) => {
-      const num = String(idx + 1).padStart(2, "0");
-      const info = it.cat + " · " + it.yearTxt + (it.role ? " · " + it.role : "");
-      const li = document.createElement("li");
-      li.className = "archive__row";
-      li.setAttribute("data-cat", it.cat);
-      li.innerHTML =
-        '<button class="archive__row-main" type="button"' +
-          ' data-archive-id="' + it.id + '"' +
-          ' data-img="' + esc(it.img) + '"' +
-          ' data-name="' + esc(it.name) + '"' +
-          ' data-info="' + esc(info) + '" aria-expanded="false">' +
-          '<span class="archive__num">' + num + '</span>' +
-          '<span class="archive__name">' + it.name + '</span>' +
-          '<span class="archive__cat">' + it.cat + '</span>' +
-          '<span class="archive__year">' + it.yearTxt + '</span>' +
-          '<span class="archive__arrow" aria-hidden="true">↗</span>' +
-        '</button>' +
-        '<div class="archive__row-preview">' +
-          '<img src="' + esc(it.img) + '" alt="" loading="lazy" />' +
-          '<button class="archive__details" type="button" data-archive-id="' + it.id + '">View details →</button>' +
-        '</div>';
-      listEl.appendChild(li);
-    });
-
-    // Filter chips from the categories actually present
-    if (filtersEl) {
-      const cats = ["All"].concat(Array.from(new Set(items.map((i) => i.cat))));
-      filtersEl.innerHTML = cats.map((c, i) =>
-        '<button class="archive__chip' + (i === 0 ? " is-active" : "") +
-        '" type="button" data-filter="' + c + '">' + c + "</button>"
-      ).join("");
-      filtersEl.addEventListener("click", (e) => {
-        const chip = e.target.closest(".archive__chip");
-        if (!chip) return;
-        filtersEl.querySelectorAll(".archive__chip").forEach((c) => c.classList.remove("is-active"));
-        chip.classList.add("is-active");
-        const f = chip.getAttribute("data-filter");
-        listEl.querySelectorAll(".archive__row").forEach((row) => {
-          const show = f === "All" || row.getAttribute("data-cat") === f;
-          row.classList.toggle("is-hidden", !show);
-          row.classList.remove("is-open");
-        });
-      });
+      const gsap = window.gsap;
+      if (!gsap || !window.ScrollTrigger || prefersReduced) return;
+      const offsetCols = cols.filter((_, i) => i % 2 === 1);
+      if (!offsetCols.length) return;
+      const OFFSET = window.innerWidth < 760 ? 80 : 180;
+      conv = gsap.fromTo(
+        offsetCols,
+        { y: OFFSET },
+        {
+          y: 0,
+          ease: "none",
+          scrollTrigger: {
+            trigger: grid,
+            start: "top 90%",
+            end: "top -10%",
+            scrub: true,
+            invalidateOnRefresh: true,
+          },
+        },
+      );
     }
 
-    // Live preview (desktop) — hovering a row swaps the sticky image + meta.
-    const pImg = document.getElementById("archive-preview-img");
-    const pName = document.getElementById("archive-preview-name");
-    const pInfo = document.getElementById("archive-preview-info");
-    const setPreview = (btn) => {
-      if (pImg) pImg.src = btn.getAttribute("data-img");
-      if (pName) pName.textContent = btn.getAttribute("data-name");
-      if (pInfo) pInfo.textContent = btn.getAttribute("data-info");
-    };
-    const firstBtn = listEl.querySelector(".archive__row-main");
-    if (firstBtn) setPreview(firstBtn);
+    build();
 
-    const isCompact = () => window.matchMedia("(max-width: 919px)").matches;
-
-    listEl.querySelectorAll(".archive__row-main").forEach((btn) => {
-      btn.addEventListener("mouseenter", () => { if (!isCompact()) setPreview(btn); });
-      btn.addEventListener("click", () => {
-        const id = btn.getAttribute("data-archive-id");
-        if (isCompact()) {
-          const row = btn.closest(".archive__row");
-          const open = row.classList.toggle("is-open");
-          btn.setAttribute("aria-expanded", open ? "true" : "false");
-        } else if (openPortfolio) {
-          openPortfolio(id);
+    let rt;
+    window.addEventListener("resize", () => {
+      clearTimeout(rt);
+      rt = setTimeout(() => {
+        if (colsFor() !== builtCols) {
+          build();
+          if (window.ScrollTrigger) window.ScrollTrigger.refresh();
         }
-      });
-    });
-
-    listEl.querySelectorAll(".archive__details").forEach((d) => {
-      d.addEventListener("click", (e) => {
-        e.stopPropagation();
-        if (openPortfolio) openPortfolio(d.getAttribute("data-archive-id"));
-      });
+      }, 200);
     });
   }
-  initArchive();
-  // Inserting ~29 rows changes document height; recompute ScrollTrigger offsets.
+  initHofGrid();
+  // Re-flowing the grid into columns changes layout; recompute ScrollTrigger.
   if (window.ScrollTrigger) window.ScrollTrigger.refresh();
+
+  /* ---------- HOF scroll-stack pin: freeze when its bottom reaches the
+     viewport bottom so resume / socials / journey / footer scroll up over it */
+  (function () {
+    if (!window.gsap || !window.ScrollTrigger || prefersReduced) return;
+    const hof = document.querySelector(".hof");
+    const footer = document.querySelector(".footer");
+    if (!hof || !footer) return;
+    window.ScrollTrigger.create({
+      trigger: hof,
+      start: "bottom bottom",
+      endTrigger: footer,
+      end: "bottom top",
+      pin: true,
+      pinSpacing: false,
+      invalidateOnRefresh: true,
+    });
+  })();
+
+  /* ---------- Journey entry buffer: start the resume section 120 px below
+     its natural scroll position and ease to 0 over the first ~150 px of
+     scroll. This keeps the HOF "View all work" button visible longer before
+     the Journey section slides up and covers it. */
+  (function () {
+    if (!window.gsap || !window.ScrollTrigger || prefersReduced) return;
+    const resume = document.querySelector(".resume");
+    if (!resume) return;
+    gsap.from(resume, {
+      y: 120,
+      ease: "none",
+      scrollTrigger: {
+        trigger: resume,
+        start: "top bottom",
+        end: "top 72%",
+        scrub: true,
+        invalidateOnRefresh: true,
+      },
+    });
+  })();
+
+  /* ---------- Journey scroll-stack pin: freeze when its bottom reaches the
+     viewport bottom so socials / footer scroll up over it */
+  (function () {
+    if (!window.gsap || !window.ScrollTrigger || prefersReduced) return;
+    const resume = document.querySelector(".resume");
+    const footer = document.querySelector(".footer");
+    if (!resume || !footer) return;
+    window.ScrollTrigger.create({
+      trigger: resume,
+      start: "bottom bottom",
+      endTrigger: footer,
+      end: "bottom top",
+      pin: true,
+      pinSpacing: false,
+      invalidateOnRefresh: true,
+    });
+  })();
 
   const modal = document.getElementById("portfolio-modal");
   if (modal) {
@@ -1485,12 +1420,15 @@
     const xdBtn = modal.querySelector(".xd-link");
     const webBtn = modal.querySelector(".website-link");
     const claudeBtn = modal.querySelector(".claude-link");
+    let lastFocused = null;
+
+    const FOCUSABLE = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
     function setLink(btn, url) {
       if (!btn) return;
       if (url) {
         btn.href = url;
-        btn.style.display = "grid";
+        btn.style.display = "inline-flex";
       } else {
         btn.style.display = "none";
       }
@@ -1513,20 +1451,48 @@
       setLink(xdBtn, data.xdLink);
       setLink(webBtn, data.websiteLink);
       setLink(claudeBtn, data.claudeLink);
+      lastFocused = document.activeElement;
       modal.classList.add("open");
       modal.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
       if (lenis) lenis.stop();
+      // Move focus into modal after transition begins
+      requestAnimationFrame(() => closeBtn.focus());
     }
-
-    openPortfolio = openModal;
 
     function closeModal() {
       modal.classList.remove("open");
       modal.setAttribute("aria-hidden", "true");
       document.body.style.overflow = "";
       if (lenis) lenis.start();
+      // Return focus to the element that triggered the modal
+      if (lastFocused) {
+        lastFocused.focus();
+        lastFocused = null;
+      }
     }
+
+    // Focus trap — keep Tab/Shift+Tab inside the modal while it's open
+    modal.addEventListener("keydown", (e) => {
+      if (!modal.classList.contains("open") || e.key !== "Tab") return;
+      const focusable = Array.from(modal.querySelectorAll(FOCUSABLE)).filter(
+        (el) => !el.hasAttribute("disabled") && el.offsetParent !== null
+      );
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    });
 
     document.querySelectorAll("[data-id]").forEach((el) => {
       el.addEventListener("click", () => openModal(el.getAttribute("data-id")));

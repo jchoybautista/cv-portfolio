@@ -9,6 +9,51 @@
       content="Jonathan Bautista — Senior UI/UX Designer & Front-End Developer. 13+ years turning messy ideas into digital products people genuinely enjoy using."
     />
 
+    <!-- Canonical -->
+    <link rel="canonical" href="https://choybautista.github.io/" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://choybautista.github.io/" />
+    <meta property="og:title" content="Jonathan Bautista — Senior UI/UX Designer & Front-End Developer" />
+    <meta property="og:description" content="13+ years turning messy ideas into digital products people genuinely enjoy using. Design vision meets technical reality." />
+    <meta property="og:image" content="https://choybautista.github.io/assets/img/project-30.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:site_name" content="Jonathan Bautista Portfolio" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Jonathan Bautista — Senior UI/UX Designer & Front-End Developer" />
+    <meta name="twitter:description" content="13+ years turning messy ideas into digital products people genuinely enjoy using." />
+    <meta name="twitter:image" content="https://choybautista.github.io/assets/img/project-30.png" />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Jonathan Bautista",
+      "jobTitle": "Senior UI/UX Designer & Front-End Developer",
+      "url": "https://choybautista.github.io/",
+      "email": "jchoybautista@gmail.com",
+      "telephone": "+639171825114",
+      "description": "13+ years turning messy ideas into digital products people genuinely enjoy using. Bridging design vision and technical reality across two disciplines and dozens of brands.",
+      "sameAs": [
+        "https://www.linkedin.com/in/jonathan-bautista-92038839/",
+        "https://www.instagram.com/jonathanndroid/",
+        "https://www.facebook.com/jonathanndroid"
+      ],
+      "knowsAbout": ["UI/UX Design", "Front-End Development", "Figma", "HTML5", "CSS3", "JavaScript", "React", "Vue"],
+      "alumniOf": {
+        "@type": "CollegeOrUniversity",
+        "name": "Far Eastern University",
+        "address": { "@type": "PostalAddress", "addressLocality": "Manila" }
+      }
+    }
+    </script>
+
     <script>
       document.documentElement.classList.remove("no-js");
       document.documentElement.classList.add("js");
@@ -27,6 +72,7 @@
   </head>
 
   <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
     <div class="grain" aria-hidden="true"></div>
     <div class="scroll-progress" aria-hidden="true"><span></span></div>
 
@@ -37,7 +83,7 @@
       </a>
     </header>
 
-    <main>
+    <main id="main-content" tabindex="-1">
       <!-- ===================== HERO + STATEMENT — shared dark background zone ===================== -->
       <div class="dark-zone">
 
@@ -47,8 +93,6 @@
         <div class="hero__dark" aria-hidden="true">
           <!-- Fades in across the About section to shift the canvas olive → black -->
           <div class="hero__black-layer" id="hero-black-layer" aria-hidden="true"></div>
-          <!-- Fades in during the works section to shift the canvas from black to warm light -->
-          <div class="hero__light-layer" aria-hidden="true"></div>
           <canvas class="hero__contours" id="hero-contours"></canvas>
         </div>
 
@@ -73,7 +117,7 @@
           </div>
 
           <!-- Shrinking video panel (scale animated via ScrollTrigger) -->
-          <div class="hero__panel" id="hero-panel">
+          <div class="hero__panel" id="hero-panel" aria-hidden="true">
             <!-- Cinematic video fill -->
             <video class="hero__video" autoplay muted loop playsinline preload="auto">
               <source src="C0495a.mp4" type="video/mp4">
@@ -110,215 +154,88 @@
 
         </div>
       </section>
-
-      <!-- ===================== ABOUT — assembled on the contour stage =====================
-           Two columns slide in from opposite edges and meet while the background
-           transitions olive → black and the contour lines distort and turn white. -->
-      <section class="stage-about" id="about" aria-label="About Jonathan Bautista">
-        <div class="about__inner stage-about__inner">
-
-          <!-- Left rail — slides in from the left -->
-          <aside class="about__aside stage-about__col stage-about__col--left">
-            <span class="about__kicker">About</span>
-            <h2 class="about__lead">
-              Bridging <span class="accent">design vision</span> and
-              <span class="accent">technical reality</span> across 13+ years,
-              two disciplines and dozens of brands.
-            </h2>
-
-            <div class="about__contact">
-              <span class="about__contact-label">Let's connect</span>
-              <div class="about__icons">
-                <a href="https://www.facebook.com/jonathanndroid" target="_blank" rel="noopener" aria-label="Facebook"><img src="assets/img/facebook-logo.svg" alt="" /></a>
-                <a href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener" aria-label="Instagram"><img src="assets/img/instagram-logo.svg" alt="" /></a>
-                <a href="https://www.linkedin.com/in/jonathan-bautista-92038839/" target="_blank" rel="noopener" aria-label="LinkedIn"><img src="assets/img/linkedin-logo.svg" alt="" /></a>
-                <a href="mailto:jchoybautista@gmail.com" aria-label="Email Jonathan"><img src="assets/img/gmail-logo.svg" alt="" /></a>
-                <a href="tel:+639171825114" aria-label="Call Jonathan"><img src="assets/img/phone-logo.svg" alt="" /></a>
-              </div>
-              <a class="btn about__cv" href="assets/files/jonathan_bautista_CV.docx" download>Download CV</a>
-            </div>
-          </aside>
-
-          <!-- Right column — slides in from the right -->
-          <div class="about__body stage-about__col stage-about__col--right">
-            <p class="about__p">
-              I've spent <strong>13+ years</strong> as a Senior UI/UX Designer, tackling
-              the messiest ideas and sculpting them into digital products people genuinely
-              enjoy using. I manage the whole process, from initial research and wireframes
-              all the way through to polished, high-fidelity prototypes, then translate it
-              perfectly into code.
-            </p>
-            <p class="about__p">
-              My comprehensive portfolio includes <strong class="about__strong">UI/UX
-              Designs</strong> for websites and mobile applications for major brands such as
-              <span class="about__brands">AEON Cambodia, Travelbook PH, Content House Inc.,
-              Angel's Pizza, Figaro Coffee, Yamaha Motors Philippines</span>, and more.
-            </p>
-            <p class="about__p">
-              In addition to design, as a <strong class="about__strong">Front-End
-              Developer</strong>, I delivered critical responsive web projects. I pioneered
-              the transition of <span class="about__brands">Smart Communications</span> and
-              <span class="about__brands">Talk 'N Text</span> into fully optimized
-              mobile-web responsive experiences, and developed the front-end architecture
-              for platforms such as <span class="about__brands">beep™, Visor PH, East West
-              Bank, Camel Appliances, It's More Fun in the Philippines, POEA, PRU Life UK,
-              Bonakid</span>, and more.
-            </p>
-            <p class="about__p about__p--close">
-              This dual expertise ensures seamless execution, bridging the gap between
-              design vision and technical implementation to deliver superior user
-              experiences.
-            </p>
-          </div>
-
-        </div>
-      </section>
       </div><!-- /.dark-zone -->
 
-      <!-- ===================== WORKS — Lando-style horizontal scroll ===================== -->
-      <section class="works" id="works">
+      <!-- ===================== ABOUT — flip card: columns slide in, then flips to HOF cover ===================== -->
+      <section class="stage-about" id="about" aria-label="About Jonathan Bautista">
+        <div class="about__flip" id="about-flip">
 
-        <!-- 3D flip card. At the end of the horizontal scroll the whole card
-             flips right-to-left (rotateY) so the works strip (front) turns away
-             and the Work Hall of Fame opener (back) faces the viewer. -->
-        <div class="works__flip" id="works-flip">
-          <div class="works__face works__face--front">
+          <!-- Front face — existing about content -->
+          <div class="about__face about__face--front">
+            <div class="about__inner stage-about__inner">
 
-        <!-- Section intro — fades in alone, then clears as the first thumbnail
-             flies up from the corner. The heading for "featured work". -->
-        <div class="works__intro" id="works-intro">
-          <span class="works__intro-kicker">Featured Work</span>
-          <h2 class="works__intro-title">A Few <em>Highlights</em></h2>
-        </div>
+              <!-- Left rail — slides in from the left -->
+              <aside class="about__aside stage-about__col stage-about__col--left">
+                <span class="about__kicker">About</span>
+                <h2 class="about__lead">
+                  Bridging <span class="accent">design vision</span> and
+                  <span class="accent">technical reality</span> across 13+ years,
+                  two disciplines and dozens of brands.
+                </h2>
 
-        <!-- Horizontal strip — 3 panels × 100vw = 300vw total -->
-        <div class="works__strip" id="works-strip">
+                <div class="about__contact">
+                  <span class="about__contact-label">Let's connect</span>
+                  <div class="about__icons">
+                    <a href="https://www.facebook.com/jonathanndroid" target="_blank" rel="noopener" aria-label="Facebook"><img src="assets/img/facebook-logo.svg" alt="" /></a>
+                    <a href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener" aria-label="Instagram"><img src="assets/img/instagram-logo.svg" alt="" /></a>
+                    <a href="https://www.linkedin.com/in/jonathan-bautista-92038839/" target="_blank" rel="noopener" aria-label="LinkedIn"><img src="assets/img/linkedin-logo.svg" alt="" /></a>
+                    <a href="mailto:jchoybautista@gmail.com" aria-label="Email Jonathan"><img src="assets/img/gmail-logo.svg" alt="" /></a>
+                    <a href="tel:+639171825114" aria-label="Call Jonathan"><img src="assets/img/phone-logo.svg" alt="" /></a>
+                  </div>
+                  <a class="btn about__cv" href="assets/files/jonathan_bautista_CV.docx" download>Download CV</a>
+                </div>
+              </aside>
 
-          <!-- ── Panel 1 — Projects 01–03 ── -->
-          <div class="works__panel">
+              <!-- Right column — slides in from the right -->
+              <div class="about__body stage-about__col stage-about__col--right">
+                <p class="about__p">
+                  I've spent <strong>13+ years</strong> as a Senior UI/UX Designer, tackling
+                  the messiest ideas and sculpting them into digital products people genuinely
+                  enjoy using. I manage the whole process, from initial research and wireframes
+                  all the way through to polished, high-fidelity prototypes, then translate it
+                  perfectly into code.
+                </p>
+                <p class="about__p">
+                  My comprehensive portfolio includes <strong class="about__strong">UI/UX
+                  Designs</strong> for websites and mobile applications for major brands such as
+                  <span class="about__brands">AEON Cambodia, Travelbook PH, Content House Inc.,
+                  Angel's Pizza, Figaro Coffee, Yamaha Motors Philippines</span>, and more.
+                </p>
+                <p class="about__p">
+                  In addition to design, as a <strong class="about__strong">Front-End
+                  Developer</strong>, I delivered critical responsive web projects. I pioneered
+                  the transition of <span class="about__brands">Smart Communications</span> and
+                  <span class="about__brands">Talk 'N Text</span> into fully optimized
+                  mobile-web responsive experiences, and developed the front-end architecture
+                  for platforms such as <span class="about__brands">beep™, Visor PH, East West
+                  Bank, Camel Appliances, It's More Fun in the Philippines, POEA, PRU Life UK,
+                  Bonakid</span>, and more.
+                </p>
+                <p class="about__p about__p--close">
+                  This dual expertise ensures seamless execution, bridging the gap between
+                  design vision and technical implementation to deliver superior user
+                  experiences.
+                </p>
+              </div>
 
-            <article class="work-item work-item--sm" style="--wi-top:8vh;--wi-left:4vw">
-              <span class="work-item__cat">Brand Identity · 2024</span>
-              <a class="work-item__link" href="#" aria-label="View Aether Brand project">
-                <figure class="work-item__thumb" style="--wi-clr:#1c2212">
-                  <span class="work-item__num">01</span>
-                </figure>
-              </a>
-              <p class="work-item__name">Aether Brand</p>
-            </article>
+            </div>
+          </div><!-- /.about__face--front -->
 
-            <article class="work-item work-item--lg" style="--wi-top:32vh;--wi-left:32vw">
-              <span class="work-item__cat">UI / UX Design · 2024</span>
-              <a class="work-item__link" href="#" aria-label="View Orbit Platform project">
-                <figure class="work-item__thumb" style="--wi-clr:#141e10">
-                  <span class="work-item__num">02</span>
-                </figure>
-              </a>
-              <p class="work-item__name">Orbit Platform</p>
-            </article>
-
-            <article class="work-item work-item--sm" style="--wi-top:5vh;--wi-left:78vw">
-              <span class="work-item__cat">Web Development · 2023</span>
-              <a class="work-item__link" href="#" aria-label="View Flux Dashboard project">
-                <figure class="work-item__thumb" style="--wi-clr:#1a1e14">
-                  <span class="work-item__num">03</span>
-                </figure>
-              </a>
-              <p class="work-item__name">Flux Dashboard</p>
-            </article>
-
-          </div><!-- /.works__panel 1 -->
-
-          <!-- ── Panel 2 — Projects 04–06 ── -->
-          <div class="works__panel">
-
-            <article class="work-item work-item--sm" style="--wi-top:14vh;--wi-left:4vw">
-              <span class="work-item__cat">Mobile App · 2024</span>
-              <a class="work-item__link" href="#" aria-label="View Nova Mobile project">
-                <figure class="work-item__thumb" style="--wi-clr:#162014">
-                  <span class="work-item__num">04</span>
-                </figure>
-              </a>
-              <p class="work-item__name">Nova Mobile</p>
-            </article>
-
-            <article class="work-item work-item--lg" style="--wi-top:18vh;--wi-left:32vw">
-              <span class="work-item__cat">Product Design · 2024</span>
-              <a class="work-item__link" href="#" aria-label="View Prism AI Tool project">
-                <figure class="work-item__thumb" style="--wi-clr:#1e2218">
-                  <span class="work-item__num">05</span>
-                </figure>
-              </a>
-              <p class="work-item__name">Prism AI Tool</p>
-            </article>
-
-            <article class="work-item work-item--sm" style="--wi-top:52vh;--wi-left:78vw">
-              <span class="work-item__cat">Brand Identity · 2023</span>
-              <a class="work-item__link" href="#" aria-label="View Helix Brand project">
-                <figure class="work-item__thumb" style="--wi-clr:#181c12">
-                  <span class="work-item__num">06</span>
-                </figure>
-              </a>
-              <p class="work-item__name">Helix Brand</p>
-            </article>
-
-          </div><!-- /.works__panel 2 -->
-
-          <!-- ── Panel 3 — Projects 07–09 ── -->
-          <div class="works__panel">
-
-            <article class="work-item work-item--sm" style="--wi-top:10vh;--wi-left:4vw">
-              <span class="work-item__cat">SaaS Platform · 2023</span>
-              <a class="work-item__link" href="#" aria-label="View Zenith SaaS project">
-                <figure class="work-item__thumb" style="--wi-clr:#1a2016">
-                  <span class="work-item__num">07</span>
-                </figure>
-              </a>
-              <p class="work-item__name">Zenith SaaS</p>
-            </article>
-
-            <article class="work-item work-item--lg" style="--wi-top:26vh;--wi-left:32vw">
-              <span class="work-item__cat">E-Commerce · 2023</span>
-              <a class="work-item__link" href="#" aria-label="View Cascade Shop project">
-                <figure class="work-item__thumb" style="--wi-clr:#141812">
-                  <span class="work-item__num">08</span>
-                </figure>
-              </a>
-              <p class="work-item__name">Cascade Shop</p>
-            </article>
-
-            <article class="work-item work-item--sm" style="--wi-top:6vh;--wi-left:78vw">
-              <span class="work-item__cat">Dashboard · 2024</span>
-              <a class="work-item__link" href="#" aria-label="View Pulse Analytics project">
-                <figure class="work-item__thumb" style="--wi-clr:#1e2414">
-                  <span class="work-item__num">09</span>
-                </figure>
-              </a>
-              <p class="work-item__name">Pulse Analytics</p>
-            </article>
-
-          </div><!-- /.works__panel 3 -->
-
-        </div><!-- /.works__strip -->
-
-          </div><!-- /.works__face--front -->
-
-          <!-- Back of the card — Hall of Fame opener, revealed by the flip -->
-          <div class="works__face works__face--back">
+          <!-- Back face — Work Hall of Fame cover, revealed by the flip -->
+          <div class="about__face about__face--back">
             <div class="hof-cover">
               <span class="hof-cover__kicker">The Complete Archive</span>
               <h2 class="hof-cover__title">Work <em>Hall of Fame</em></h2>
               <p class="hof-cover__lead">
                 Every project I've designed and shipped over 13+ years — across
-                major brands and, more recently, AI-accelerated builds. All of it,
-                in one place.
+                major brands and, more recently, AI-accelerated builds.
               </p>
-              <span class="hof-cover__cue" aria-hidden="true">Scroll to browse</span>
+              <p class="hof-cover__nda">Not everything is here — most client work lives under NDA.</p>
             </div>
-          </div><!-- /.works__face--back -->
-        </div><!-- /.works__flip -->
+          </div><!-- /.about__face--back -->
 
-      </section><!-- /.works -->
+        </div><!-- /.about__flip -->
+      </section>
 
       <!-- ===================== WORK HALL OF FAME (grid) ===================== -->
       <section class="hof" id="work">
@@ -360,79 +277,179 @@
 
 
 
-      <!-- ===================== THE JOURNEY (Calendar analog → résumé) ===================== -->
+      <!-- ===================== THE JOURNEY (scrollytelling timeline) ===================== -->
       <section class="resume" id="resume">
-        <div class="section-head">
-          <h2 class="resume__title reveal">The Journey</h2>
-          <p class="resume__sub reveal">13+ years in the craft</p>
+        <div class="journey__inner">
+        <div class="journey__head">
+          <span class="journey__kicker">2007–Present</span>
+          <h2 class="journey__title">The <em>Journey</em></h2>
         </div>
 
-        <div class="tabs reveal" role="tablist">
-          <button class="tab active" data-tab="experience" role="tab">Experience</button>
-          <button class="tab" data-tab="skills" role="tab">Skills</button>
-          <button class="tab" data-tab="education" role="tab">Education</button>
+        <p class="journey__phase">Experience</p>
+        <div class="journey__timeline" id="journey-timeline">
+          <div class="journey__spine" aria-hidden="true"><span class="journey__progress" id="journey-progress"></span></div>
+
+          <article class="journey__node reveal" data-side="right">
+            <span class="journey__year">2026</span>
+            <h3 class="journey__role">Senior UI/UX Product Designer</h3>
+            <span class="journey__org">OutDesk</span>
+            <ul class="journey__points">
+              <li>Lead the design strategy for the Data Quality Web Application, developing wireframes, high-fidelity mockups, and interactive prototypes.</li>
+              <li>Collaborate directly with clients to translate complex requirements into an intuitive and functional data quality platform.</li>
+              <li>Leverage Generative AI tools to streamline the design-to-code workflow, significantly reducing front-end development turnaround time.</li>
+              <li>Architect user workflows and journey maps to simplify data management processes for end-users.</li>
+              <li>Conduct in-depth competitor analysis and market research on data quality standards to ensure the product remains a leader in the industry.</li>
+              <li>Help developers build my designs accurately by providing clear technical instructions based on my coding experience.</li>
+            </ul>
+          </article>
+
+          <article class="journey__node reveal" data-side="left">
+            <span class="journey__year">2020–2025</span>
+            <h3 class="journey__role">Sr. UI/UX Designer</h3>
+            <span class="journey__org">Content House Inc.</span>
+            <ul class="journey__points">
+              <li>Lead a creative team of UI/UX designers, providing mentorship and direction to ensure high-quality design standards across all projects.</li>
+              <li>Design high-fidelity websites and mobile apps using Figma and Adobe XD, focusing on modern aesthetics and a seamless user experience.</li>
+              <li>Develop responsive websites on Squarespace using custom advanced HTML, CSS, JavaScript, and jQuery for a fully tailored look and feel.</li>
+              <li>Direct the visual identity of the company by managing the creation of all marketing materials and brand assets.</li>
+              <li>Collaborate with developers to design and implement Vue.js and React.js components, ensuring a perfect match between the design and the live code.</li>
+              <li>Partner with the CEO, Project Managers, and Engineering teams to align design strategies with business goals and technical requirements.</li>
+            </ul>
+          </article>
+
+          <article class="journey__node reveal" data-side="right">
+            <span class="journey__year">2019–2020</span>
+            <h3 class="journey__role">UI/UX Designer</h3>
+            <span class="journey__org">DXC Technology</span>
+            <ul class="journey__points">
+              <li>Design and architect intuitive UI/UX for complex web applications, focusing on user efficiency and a modern visual style.</li>
+              <li>Develop RPA (Robotic Process Automation) solutions using Winautomation to streamline workflows and eliminate repetitive manual tasks.</li>
+              <li>Maintain SharePoint environments, regularly deploying new features, custom pages, and functional updates to improve team collaboration.</li>
+            </ul>
+          </article>
+
+          <article class="journey__node reveal" data-side="left">
+            <span class="journey__year">2014–2019</span>
+            <h3 class="journey__role">Lead UI/UX Designer &amp; Front-End Developer</h3>
+            <span class="journey__org">Coreproc Inc.</span>
+            <ul class="journey__points">
+              <li>Responsible for creating UI/UX designs for websites and mobile apps using Adobe Photoshop, Adobe XD and other wireframe applications.</li>
+              <li>Transform complex designs into fully responsive websites, ensuring a seamless and consistent experience across all screen sizes and devices.</li>
+              <li>Execute precision asset extraction and optimization (formerly PSD slicing) to ensure fast-loading, high-quality visuals for web development.</li>
+              <li>Mentor and provide creative direction to the team, establishing high standards for UI/UX excellence and consistency.</li>
+              <li>Assist other teams with solving UI/UX problems, specifically on the web and mobile view of the website using excellent knowledge and experience with HTML and CSS.</li>
+              <li>Act as a strategic partner to clients, managing communications through meetings and consultations to translate their vision into effective, high-impact design solutions.</li>
+            </ul>
+          </article>
+
+          <article class="journey__node reveal" data-side="right">
+            <span class="journey__year">2012–2014</span>
+            <h3 class="journey__role">UI/UX Designer &amp; Web Developer</h3>
+            <span class="journey__org">Freelance</span>
+            <ul class="journey__points">
+              <li>Design, develop and deploy fully functional WordPress websites, transforming custom UI/UX concepts into responsive, high-performance web platforms.</li>
+              <li>Execute advanced image retouching and digital compositing to produce polished marketing materials for both digital and print media.</li>
+            </ul>
+          </article>
+
+        </div><!-- /.journey__timeline -->
+
+        <p class="journey__phase journey__phase--edu">Education</p>
+        <div class="journey__studies reveal">
+          <div class="study">
+            <span class="study__year">2003–2007</span>
+            <div class="study__body">
+              <h3 class="study__role">BS, Major in Marketing</h3>
+              <span class="study__org">Far Eastern University — Manila</span>
+            </div>
+          </div>
         </div>
+        </div><!-- /.journey__inner -->
 
-        <div class="tab-panels">
-          <!-- EXPERIENCE -->
-          <div class="panel active" id="experience" role="tabpanel">
-            <div class="timeline">
-              <article class="tcard"><div class="tcard__head"><h3>Sr. UI/UX Designer</h3><span class="tcard__loc">Content House Inc. · 2017–Present</span></div>
-                <ul><li>Lead a small UI/UX design team.</li><li>Design websites &amp; mobile apps in Adobe XD / Figma.</li><li>Build responsive Squarespace sites with custom HTML, CSS, JS &amp; jQuery.</li><li>Create all company marketing materials.</li><li>Support devs building Vue/React components.</li></ul></article>
-              <article class="tcard"><div class="tcard__head"><h3>Lead UI/UX Designer &amp; Front-End Developer</h3><span class="tcard__loc">Coreproc Inc. · 2015–2020</span></div>
-                <ul><li>UI/UX for websites &amp; mobile apps; PSD slicing.</li><li>Converted designs into responsive front-end builds.</li><li>Guided the team toward excellent UI/UX.</li><li>Client communication via meetings, calls &amp; email.</li></ul></article>
-              <article class="tcard"><div class="tcard__head"><h3>UI/UX Designer</h3><span class="tcard__loc">DXC Technology · Taguig</span></div>
-                <ul><li>UI/UX designs for web applications.</li><li>RPA automations with WinAutomation.</li><li>Added pages &amp; features to a SharePoint site.</li></ul></article>
-              <article class="tcard"><div class="tcard__head"><h3>UI/UX Designer &amp; Web Developer</h3><span class="tcard__loc">Freelance · 2010–2014</span></div>
-                <ul><li>Photo editing, coupons &amp; posters in Photoshop.</li><li>Designed websites and converted them into WordPress.</li></ul></article>
+        <!-- ===================== PROFESSIONAL SKILLS ===================== -->
+        <div class="skills" id="skills">
+          <div class="skills__inner">
+            <div class="skills__head reveal">
+              <h2 class="skills__title">Professional <em>Skills</em></h2>
+              <ul class="skills__legend" aria-label="Proficiency key">
+                <li class="is-expert">Expert</li>
+                <li class="is-advanced">Advanced</li>
+                <li class="is-working">Working Knowledge</li>
+              </ul>
             </div>
-          </div>
 
-          <!-- SKILLS -->
-          <div class="panel" id="skills" role="tabpanel">
-            <div class="skills">
-              <div class="skills__col">
-                <h3 class="skills__heading">Skills</h3>
-                <div class="bar"><div class="bar__head"><span>UI/UX Design</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>Research</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>Wireframing</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>High-Fidelity Design</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>Prototyping</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>Vibe Coding</span><span>87%</span></div><div class="bar__track"><div class="bar__fill" data-width="87"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>Generative AI</span><span>85%</span></div><div class="bar__track"><div class="bar__fill" data-width="85"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>HTML5</span><span>97%</span></div><div class="bar__track"><div class="bar__fill" data-width="97"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>CSS3 / SASS</span><span>95%</span></div><div class="bar__track"><div class="bar__fill" data-width="95"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>JavaScript ES6</span><span>45%</span></div><div class="bar__track"><div class="bar__fill" data-width="45"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>jQuery</span><span>55%</span></div><div class="bar__track"><div class="bar__fill" data-width="55"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>React.js</span><span>25%</span></div><div class="bar__track"><div class="bar__fill" data-width="25"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>Mobile-Web Responsive</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>CSS Frameworks (Bootstrap, Tailwind, MUI)</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>Squarespace</span><span>85%</span></div><div class="bar__track"><div class="bar__fill" data-width="85"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>Leadership &amp; Communication</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
-              </div>
-              <div class="skills__col">
-                <h3 class="skills__heading">Tools</h3>
-                <div class="bar"><div class="bar__head"><span>Figma</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>Adobe XD</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>AI Tools (Claude Code, ChatGPT, Gemini, Figma Make)</span><span>87%</span></div><div class="bar__track"><div class="bar__fill" data-width="87"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>Adobe Photoshop</span><span>90%</span></div><div class="bar__track"><div class="bar__fill" data-width="90"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>Balsamiq Mockups</span><span>90%</span></div><div class="bar__track"><div class="bar__fill" data-width="90"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>InVision</span><span>90%</span></div><div class="bar__track"><div class="bar__fill" data-width="90"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>VS Code</span><span>80%</span></div><div class="bar__track"><div class="bar__fill" data-width="80"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>Jira</span><span>80%</span></div><div class="bar__track"><div class="bar__fill" data-width="80"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>Webflow</span><span>50%</span></div><div class="bar__track"><div class="bar__fill" data-width="50"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>Framer</span><span>50%</span></div><div class="bar__track"><div class="bar__fill" data-width="50"></div></div></div>
-                <div class="bar"><div class="bar__head"><span>Git</span><span>30%</span></div><div class="bar__track"><div class="bar__fill" data-width="30"></div></div></div>
-              </div>
+            <div class="skills__grid">
+              <section class="skills__group reveal">
+                <h3 class="skills__cat">Design &amp; Strategy</h3>
+                <ul class="skills__set">
+                  <li class="is-expert">UI/UX Design</li>
+                  <li class="is-expert">Research</li>
+                  <li class="is-expert">Wireframing</li>
+                  <li class="is-expert">High-Fidelity Design</li>
+                  <li class="is-expert">Prototyping</li>
+                  <li class="is-expert">Leadership</li>
+                  <li class="is-expert">Communication</li>
+                  <li class="is-advanced">Generative AI</li>
+                  <li class="is-advanced">Vibe Coding</li>
+                </ul>
+              </section>
+
+              <section class="skills__group reveal">
+                <h3 class="skills__cat">Front-End Development</h3>
+                <ul class="skills__set">
+                  <li class="is-expert">HTML5</li>
+                  <li class="is-expert">CSS3</li>
+                  <li class="is-expert">SASS / LESS</li>
+                  <li class="is-expert">Responsive Web</li>
+                  <li class="is-expert">CSS Frameworks</li>
+                  <li class="is-working">JavaScript ES6</li>
+                  <li class="is-working">jQuery</li>
+                  <li class="is-working">React</li>
+                  <li class="is-working">Vue</li>
+                  <li class="is-working">Command Line</li>
+                </ul>
+              </section>
+
+              <section class="skills__group reveal">
+                <h3 class="skills__cat">Design Tools</h3>
+                <ul class="skills__set">
+                  <li class="is-expert">Figma</li>
+                  <li class="is-expert">Adobe XD</li>
+                  <li class="is-expert">Claude Code</li>
+                  <li class="is-expert">Sublime Text</li>
+                  <li class="is-advanced">AI Tools</li>
+                  <li class="is-advanced">Adobe Photoshop</li>
+                  <li class="is-advanced">InVision</li>
+                  <li class="is-advanced">Balsamiq</li>
+                  <li class="is-advanced">VS Code</li>
+                  <li class="is-working">Adobe Illustrator</li>
+                  <li class="is-working">Adobe Premiere Pro</li>
+                </ul>
+              </section>
+
+              <section class="skills__group reveal">
+                <h3 class="skills__cat">Platforms &amp; CMS</h3>
+                <ul class="skills__set">
+                  <li class="is-advanced">Squarespace</li>
+                  <li class="is-working">WordPress</li>
+                  <li class="is-working">Shopify</li>
+                  <li class="is-working">Webflow</li>
+                  <li class="is-working">Framer</li>
+                </ul>
+              </section>
+
+              <section class="skills__group reveal">
+                <h3 class="skills__cat">Workflow &amp; Collaboration</h3>
+                <ul class="skills__set">
+                  <li class="is-advanced">Jira</li>
+                  <li class="is-advanced">IntelliJ IDEA</li>
+                  <li class="is-advanced">Google Docs</li>
+                  <li class="is-advanced">MS Office</li>
+                  <li class="is-working">Git</li>
+                  <li class="is-working">Chrome DevTools</li>
+                </ul>
+              </section>
             </div>
-          </div>
-
-          <!-- EDUCATION -->
-          <div class="panel" id="education" role="tabpanel">
-            <article class="edu">
-              <img src="assets/img/college-logo.svg" alt="Far Eastern University" onerror="this.style.display='none'" />
-              <div><h3>Bachelor of Science, Major in Marketing</h3><p>Far Eastern University — Manila · 2003–2007</p></div>
-            </article>
           </div>
         </div>
       </section>
@@ -445,163 +462,92 @@
             <p class="socials__sub">on socials</p>
           </div>
           <div class="socials__deck" id="socials-deck" aria-label="Social posts">
-            <a class="social-card" href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener">
+            <a class="social-card" href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener" aria-label="AEON Cambodia app — view on Instagram">
               <span class="social-card__inner">
-                <img src="assets/img/project-21.png" alt="Social post" loading="lazy" />
+                <img src="assets/img/project-21.png" alt="AEON Cambodia mobile app design" loading="lazy" />
                 <span class="social-card__tag">@jonathanndroid</span>
               </span>
             </a>
-            <a class="social-card" href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener">
+            <a class="social-card" href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener" aria-label="Dragon Ball Flappy Goku game — view on Instagram">
               <span class="social-card__inner">
-                <img src="assets/img/project-28.png" alt="Social post" loading="lazy" />
+                <img src="assets/img/project-28.png" alt="Dragon Ball Flappy Goku retro game design" loading="lazy" />
                 <span class="social-card__tag">@jonathanndroid</span>
               </span>
             </a>
-            <a class="social-card" href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener">
+            <a class="social-card" href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener" aria-label="Vanguard landing page — view on Instagram">
               <span class="social-card__inner">
-                <img src="assets/img/project-26.png" alt="Social post" loading="lazy" />
+                <img src="assets/img/project-26.png" alt="Vanguard landing page design" loading="lazy" />
                 <span class="social-card__tag">@jonathanndroid</span>
               </span>
             </a>
-            <a class="social-card social-card--feature" href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener">
+            <a class="social-card social-card--feature" href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener" aria-label="Final Fantasy VII landing page — view on Instagram">
               <span class="social-card__inner">
-                <img src="assets/img/project-29.png" alt="Social post" loading="lazy" />
+                <img src="assets/img/project-29.png" alt="Final Fantasy VII marketing landing page design" loading="lazy" />
                 <span class="social-card__tag">@jonathanndroid</span>
               </span>
             </a>
-            <a class="social-card" href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener">
+            <a class="social-card" href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener" aria-label="Velocità e-commerce website — view on Instagram">
               <span class="social-card__inner">
-                <img src="assets/img/project-30.png" alt="Social post" loading="lazy" />
+                <img src="assets/img/project-30.png" alt="Velocità e-commerce website design" loading="lazy" />
                 <span class="social-card__tag">@jonathanndroid</span>
               </span>
             </a>
-            <a class="social-card" href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener">
+            <a class="social-card" href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener" aria-label="Mansmith Conference app — view on Instagram">
               <span class="social-card__inner">
-                <img src="assets/img/project-17.png" alt="Social post" loading="lazy" />
+                <img src="assets/img/project-17.png" alt="Mansmith Conference 2020 mobile app design" loading="lazy" />
                 <span class="social-card__tag">@jonathanndroid</span>
               </span>
             </a>
-            <a class="social-card" href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener">
+            <a class="social-card" href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener" aria-label="Angel's Pizza mobile app — view on Instagram">
               <span class="social-card__inner">
-                <img src="assets/img/project-20.png" alt="Social post" loading="lazy" />
+                <img src="assets/img/project-20.png" alt="Angel's Pizza mobile app design" loading="lazy" />
                 <span class="social-card__tag">@jonathanndroid</span>
               </span>
             </a>
           </div>
-        </div>
-        <div class="socials__links">
-          <a href="https://www.linkedin.com/in/jonathan-bautista-92038839/" target="_blank" rel="noopener">LinkedIn</a>
-          <a href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener">Instagram</a>
-          <a href="https://www.facebook.com/jonathanndroid" target="_blank" rel="noopener">Facebook</a>
-          <a href="mailto:jchoybautista@gmail.com">Email</a>
-        </div>
-      </section>
-
-      <!-- ===================== WORK OF FAME (editorial index) ===================== -->
-      <section class="archive" id="archive">
-        <div class="archive__head">
-          <span class="archive__kicker">The Complete Archive</span>
-          <h2 class="archive__title">Work <em>of Fame</em></h2>
-        </div>
-        <div class="archive__filters" id="archive-filters" role="tablist" aria-label="Filter projects"></div>
-        <div class="archive__layout">
-          <ol class="archive__list" id="archive-list"></ol>
-          <aside class="archive__preview" id="archive-preview" aria-hidden="true">
-            <div class="archive__preview-frame"><img id="archive-preview-img" src="" alt="" /></div>
-            <div class="archive__preview-meta">
-              <span id="archive-preview-name"></span>
-              <span id="archive-preview-info"></span>
-            </div>
-          </aside>
-        </div>
-      </section>
-
-      <!-- ===================== JOURNEY (scrollytelling timeline) ===================== -->
-      <section class="journey" id="journey">
-        <div class="journey__head">
-          <span class="journey__kicker">2007–Present</span>
-          <h2 class="journey__title">The <em>Journey</em></h2>
-        </div>
-
-        <div class="journey__timeline" id="journey-timeline">
-          <div class="journey__spine" aria-hidden="true"><span class="journey__progress" id="journey-progress"></span></div>
-
-          <article class="journey__node reveal" data-side="right">
-            <span class="journey__year">2017–Present</span>
-            <h3 class="journey__role">Sr. UI/UX Designer</h3>
-            <span class="journey__org">Content House Inc.</span>
-            <ul class="journey__points">
-              <li>Lead a small UI/UX design team.</li>
-              <li>Design websites &amp; mobile apps in Adobe XD / Figma.</li>
-              <li>Build responsive Squarespace sites with custom HTML, CSS, JS &amp; jQuery.</li>
-              <li>Support devs building Vue/React components.</li>
-            </ul>
-          </article>
-
-          <article class="journey__node reveal" data-side="left">
-            <span class="journey__year">2015–2020</span>
-            <h3 class="journey__role">Lead UI/UX Designer &amp; Front-End Developer</h3>
-            <span class="journey__org">Coreproc Inc.</span>
-            <ul class="journey__points">
-              <li>UI/UX for websites &amp; mobile apps; PSD slicing.</li>
-              <li>Converted designs into responsive front-end builds.</li>
-              <li>Guided the team toward excellent UI/UX.</li>
-            </ul>
-          </article>
-
-          <article class="journey__node reveal" data-side="right">
-            <span class="journey__year">Taguig</span>
-            <h3 class="journey__role">UI/UX Designer</h3>
-            <span class="journey__org">DXC Technology</span>
-            <ul class="journey__points">
-              <li>UI/UX designs for web applications.</li>
-              <li>RPA automations with WinAutomation.</li>
-            </ul>
-          </article>
-
-          <article class="journey__node reveal" data-side="left">
-            <span class="journey__year">2010–2014</span>
-            <h3 class="journey__role">UI/UX Designer &amp; Web Developer</h3>
-            <span class="journey__org">Freelance</span>
-            <ul class="journey__points">
-              <li>Photo editing, coupons &amp; posters in Photoshop.</li>
-              <li>Designed websites and converted them into WordPress.</li>
-            </ul>
-          </article>
-
-          <div class="journey__toolkit reveal">
-            <h3>Toolkit</h3>
-            <div class="journey__bars">
-              <div class="bar"><div class="bar__head"><span>UI/UX Design</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
-              <div class="bar"><div class="bar__head"><span>Figma</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
-              <div class="bar"><div class="bar__head"><span>Adobe XD</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
-              <div class="bar"><div class="bar__head"><span>Prototyping</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
-              <div class="bar"><div class="bar__head"><span>HTML5</span><span>97%</span></div><div class="bar__track"><div class="bar__fill" data-width="97"></div></div></div>
-              <div class="bar"><div class="bar__head"><span>CSS3 / SASS</span><span>95%</span></div><div class="bar__track"><div class="bar__fill" data-width="95"></div></div></div>
-              <div class="bar"><div class="bar__head"><span>Mobile-Web Responsive</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
-              <div class="bar"><div class="bar__head"><span>CSS Frameworks</span><span>100%</span></div><div class="bar__track"><div class="bar__fill" data-width="100"></div></div></div>
-              <div class="bar"><div class="bar__head"><span>Vibe Coding</span><span>87%</span></div><div class="bar__track"><div class="bar__fill" data-width="87"></div></div></div>
-              <div class="bar"><div class="bar__head"><span>Generative AI</span><span>85%</span></div><div class="bar__track"><div class="bar__fill" data-width="85"></div></div></div>
-              <div class="bar"><div class="bar__head"><span>Photoshop</span><span>90%</span></div><div class="bar__track"><div class="bar__fill" data-width="90"></div></div></div>
-              <div class="bar"><div class="bar__head"><span>jQuery</span><span>55%</span></div><div class="bar__track"><div class="bar__fill" data-width="55"></div></div></div>
+          <div class="socials__follow">
+            <h3 class="socials__follow-title">Follow Jonathan Bautista on social media</h3>
+            <div class="socials__follow-links">
+              <a href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener" aria-label="Instagram">
+                <img src="assets/img/instagram-logo.svg" alt="Instagram" />
+              </a>
+              <a href="https://www.linkedin.com/in/jonathan-bautista-92038839/" target="_blank" rel="noopener" aria-label="LinkedIn">
+                <img src="assets/img/linkedin-logo.svg" alt="LinkedIn" />
+              </a>
+              <a href="https://www.facebook.com/jonathanndroid" target="_blank" rel="noopener" aria-label="Facebook">
+                <img src="assets/img/facebook-logo.svg" alt="Facebook" />
+              </a>
             </div>
           </div>
-
-          <article class="journey__node journey__node--edu reveal" data-side="right">
-            <span class="journey__year">2003–2007</span>
-            <h3 class="journey__role">BS, Major in Marketing</h3>
-            <span class="journey__org">Far Eastern University — Manila</span>
-          </article>
         </div>
       </section>
+
+      <!-- Placeholder anchor for #journey nav link — content lives in #resume above -->
+      <div id="journey" aria-hidden="true"></div>
     </main>
 
     <!-- ===================== FOOTER ===================== -->
     <footer class="footer" id="contact">
-      <h2 class="footer__tag reveal">Design it.<br />Build it.</h2>
-      <a class="footer__email reveal" href="mailto:jchoybautista@gmail.com">jchoybautista@gmail.com</a>
+      <div class="footer__inner">
 
-      <div class="footer__grid">
+        <div class="footer__identity">
+          <h2 class="footer__tag reveal">Design it.<br /><span class="footer__tag-build">Build it.</span></h2>
+        </div>
+
+        <div class="footer__contact">
+          <span class="footer__contact-label">Available for work</span>
+          <a class="footer__email reveal" href="mailto:jchoybautista@gmail.com">jchoybautista@gmail.com</a>
+          <div class="footer__social">
+            <a href="https://www.linkedin.com/in/jonathan-bautista-92038839/" target="_blank" rel="noopener" aria-label="LinkedIn"><img src="assets/img/linkedin-logo.svg" alt="" /></a>
+            <a href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener" aria-label="Instagram"><img src="assets/img/instagram-logo.svg" alt="" /></a>
+            <a href="https://www.facebook.com/jonathanndroid" target="_blank" rel="noopener" aria-label="Facebook"><img src="assets/img/facebook-logo.svg" alt="" /></a>
+            <a href="tel:+639171825114" aria-label="Phone"><img src="assets/img/phone-logo.svg" alt="" /></a>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="footer__base">
         <nav class="footer__nav">
           <a href="#home">Home</a>
           <a href="#about">About</a>
@@ -609,17 +555,7 @@
           <a href="#resume">Journey</a>
           <a href="assets/files/jonathan_bautista_CV.docx" download>Download CV</a>
         </nav>
-        <div class="footer__social">
-          <a href="https://www.linkedin.com/in/jonathan-bautista-92038839/" target="_blank" rel="noopener" aria-label="LinkedIn"><img src="assets/img/linkedin-logo.svg" alt="" /></a>
-          <a href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener" aria-label="Instagram"><img src="assets/img/instagram-logo.svg" alt="" /></a>
-          <a href="https://www.facebook.com/jonathanndroid" target="_blank" rel="noopener" aria-label="Facebook"><img src="assets/img/facebook-logo.svg" alt="" /></a>
-          <a href="tel:+639171825114" aria-label="Phone"><img src="assets/img/phone-logo.svg" alt="" /></a>
-        </div>
-      </div>
-
-      <div class="footer__base">
         <span>© 2026 Jonathan Bautista. All rights reserved.</span>
-        <span>Designed &amp; built with Claude Code</span>
       </div>
     </footer>
 
@@ -637,10 +573,10 @@
               <div><span class="modal__label">Role</span><span class="modal__value" id="modal-role"></span></div>
             </div>
             <div class="modal__links">
-              <a href="" class="figma-link" target="_blank" rel="noopener" aria-label="Open in Figma"><img src="assets/img/Figma-logo.svg" alt="Figma" /></a>
-              <a href="" class="xd-link" download aria-label="Download XD file"><img src="assets/img/xd-logo.svg" alt="Adobe XD" /></a>
-              <a href="" class="website-link" target="_blank" rel="noopener" aria-label="Visit website"><img src="assets/img/web-icon.svg" alt="Website" /></a>
-              <a href="" class="claude-link" target="_blank" rel="noopener" aria-label="Visit live build"><img src="assets/img/claudecode.svg" alt="Live build" /></a>
+              <a href="" class="figma-link" target="_blank" rel="noopener" aria-label="Open in Figma"><img src="assets/img/Figma-logo.svg" alt="" /><span>Figma</span></a>
+              <a href="" class="xd-link" download aria-label="Download XD file"><img src="assets/img/xd-logo.svg" alt="" /><span>Adobe XD</span></a>
+              <a href="" class="website-link" target="_blank" rel="noopener" aria-label="Visit website"><img src="assets/img/web-icon.svg" alt="" /><span>Website</span></a>
+              <a href="" class="claude-link" target="_blank" rel="noopener" aria-label="Visit live build"><img src="assets/img/claudecode.svg" alt="" /><span>Live build</span></a>
             </div>
           </div>
         </div>
