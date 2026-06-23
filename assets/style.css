@@ -604,8 +604,8 @@ section {
 .clients,
 .resume,
 .socials {
-  padding-top: clamp(80px, 12vh, 140px);
-  padding-bottom: clamp(60px, 10vh, 120px);
+  padding-top: clamp(48px, 8vh, 96px);
+  padding-bottom: clamp(40px, 6vh, 80px);
   position: relative;
   z-index: 2;
   background: var(--bg);
@@ -631,10 +631,10 @@ section {
 .socials .socials__sub {
   font-family: var(--display);
   color: #000;
-  font-size: 66px;
+  font-size: clamp(32px, 5vw, 56px);
   text-transform: uppercase;
   transform: none;
-  margin: 0;
+  margin: 12px 0 0;
 }
 
 /* Scroll-stack: sections that slide up over the pinned HOF sit above it */
@@ -1128,9 +1128,9 @@ section {
     position: relative;
     inset: auto;
     z-index: 2;
-    height: 100svh;
+    height: auto;
     transform: none;
-    padding: clamp(32px, 6vw, 60px);
+    padding: clamp(64px, 12vh, 100px) clamp(32px, 6vw, 60px) 24px;
   }
 }
 
@@ -2306,8 +2306,8 @@ section {
 .journey {
   position: relative;
   background: var(--bg);
-  padding-top: clamp(80px, 12vh, 140px);
-  padding-bottom: clamp(60px, 10vh, 120px);
+  padding-top: clamp(48px, 8vh, 96px);
+  padding-bottom: clamp(40px, 6vh, 80px);
 }
 .journey__inner {
   max-width: var(--maxw);
