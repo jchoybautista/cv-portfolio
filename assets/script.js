@@ -1,159 +1,1060 @@
-// --- 1. Rotating Text Effect (Hero Section) ---
-document.addEventListener("DOMContentLoaded", function () {
-  const roles = ["UI/UX Designer", "Front-End Developer"];
-  const textElement = document.getElementById("rotating-text");
-  let roleIndex = 0;
-  let charIndex = 0;
-  let isDeleting = false;
+/* =========================================================
+   Jonathan Bautista — Portfolio (redesign)
+   Lenis smooth-scroll + GSAP parallax + UI logic
+   All animation is progressive enhancement; the page is
+   fully usable if the CDN libraries fail to load.
+   ========================================================= */
 
-  function type() {
-    const currentRole = roles[roleIndex];
-    const display = isDeleting
-      ? currentRole.substring(0, charIndex - 1)
-      : currentRole.substring(0, charIndex + 1);
+(function () {
+  "use strict";
 
-    textElement.textContent = display;
+  const prefersReduced = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
 
-    if (!isDeleting && charIndex === currentRole.length) {
-      isDeleting = true;
-      setTimeout(type, 1200); // Pause before deleting
-      return;
-    } else if (isDeleting && charIndex === 0) {
-      isDeleting = false;
-      roleIndex = (roleIndex + 1) % roles.length;
-      setTimeout(type, 100); // Pause before typing next role
-      return;
+  let _aboutP = 0; // 0→1 across the about section (olive → black, lines → white)
+  // Logo-colour signals (read by updateLogoColor):
+  let _heroP = 0; // 0→1 hero pin progress (panel shrink)
+  let _worksFlipP = 0; // 0→1 across the works card flip (front→dark back face)
+
+  /* ---------- Hero topographic contour field ----------
+     A handful of slowly drifting Gaussian "energy" sources define a scalar
+     field; each frame we trace iso-contours through it with marching squares
+     and stroke them as faint lime lines. Because the field moves, the contours
+     continuously grow, shrink, split and merge — like an animated topo map.
+     Pauses when the hero scrolls out of view; static single frame for
+     reduced-motion. No libraries. */
+  function initContours() {
+    const canvas = document.getElementById("hero-contours");
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    // Line colour follows the background through three states:
+    //   hero  — faint lime on dark olive            (aboutP 0, worksP 0)
+    //   about — bright white on black               (aboutP 1, worksP 0)
+    //   works — dark warm-olive on warm light        (aboutP 1, worksP 1)
+    const LINE_DARK = [168, 214, 84, 0.14]; // lime
+    const LINE_ABOUT = [31, 31, 31, 0.45]; // near-black — barely perceptible on black bg
+    const LINE_LIGHT = [120, 122, 115, 0.38]; // warm olive
+    const lerp = (a, b, t) => a + (b - a) * t;
+    function getLineColor() {
+      const ap = _aboutP;
+      // hero → about (lime → dark gray)
+      let r = lerp(LINE_DARK[0], LINE_ABOUT[0], ap);
+      let g = lerp(LINE_DARK[1], LINE_ABOUT[1], ap);
+      let b = lerp(LINE_DARK[2], LINE_ABOUT[2], ap);
+      let a = lerp(LINE_DARK[3], LINE_ABOUT[3], ap);
+      // sine arch keeps the lines readable through the mid-transition
+      a += 0.22 * Math.sin(Math.PI * ap);
+      return `rgba(${Math.round(r)},${Math.round(g)},${Math.round(b)},${a.toFixed(3)})`;
     }
 
-    charIndex += isDeleting ? -1 : 1;
-    const typingSpeed = isDeleting ? 15 : 25;
-    setTimeout(type, typingSpeed);
-  }
+    // Scroll-ramped distortion — the contour points wobble as the About section
+    // takes over (peaks at aboutP=1).
+    let _t = 0;
+    const DIST_AMP = 24;
+    function distM(px, py) {
+      const d = _aboutP * DIST_AMP;
+      if (d > 0.01)
+        ctx.moveTo(px + d * Math.sin(py * 0.016 + _t * 1.6), py + d * Math.cos(px * 0.016 + _t * 1.3));
+      else ctx.moveTo(px, py);
+    }
+    function distL(px, py) {
+      const d = _aboutP * DIST_AMP;
+      if (d > 0.01)
+        ctx.lineTo(px + d * Math.sin(py * 0.016 + _t * 1.6), py + d * Math.cos(px * 0.016 + _t * 1.3));
+      else ctx.lineTo(px, py);
+    }
+    const THRESHOLDS = [0.18, 0.34, 0.54, 0.78, 1.05, 1.4];
+    const GRID = 38; // px spacing of the sampling grid (CSS px)
 
-  type();
-});
+    // Drifting field sources, in normalised [0,1] space.
+    const N = 6;
+    const blobs = [];
+    for (let i = 0; i < N; i++) {
+      blobs.push({
+        x: Math.random(),
+        y: Math.random(),
+        vx: (Math.random() * 2 - 1) * 0.012,
+        vy: (Math.random() * 2 - 1) * 0.012,
+        sig: 0.13 + Math.random() * 0.12, // base spread
+        amp: 0.75 + Math.random() * 0.6, // base strength
+        ph: Math.random() * Math.PI * 2, // pulse phase
+        pf: 0.15 + Math.random() * 0.35, // pulse frequency
+      });
+    }
 
-// --- 2. Scroll Reveal Animation (Intersection Observer) ---
-document.addEventListener("DOMContentLoaded", function () {
-  const revealElements = document.querySelectorAll(".reveal");
+    let W = 0,
+      H = 0,
+      cols = 0,
+      rows = 0,
+      sx = 0,
+      sy = 0;
+    let field = null;
+    const dpr = 1; // faint decorative lines — full res isn't worth the fill cost
 
-  const observerOptions = {
-    root: null,
-    rootMargin: "0px",
-    threshold: 0.1,
-  };
+    function resize() {
+      W = canvas.clientWidth;
+      H = canvas.clientHeight;
+      canvas.width = Math.round(W * dpr);
+      canvas.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      cols = Math.ceil(W / GRID) + 1;
+      rows = Math.ceil(H / GRID) + 1;
+      sx = W / (cols - 1);
+      sy = H / (rows - 1);
+      field = new Float32Array(cols * rows);
+    }
 
-  const observer = new IntersectionObserver((entries, observer) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("active");
-        observer.unobserve(entry.target);
+    function computeField(t) {
+      // advance + bounce the sources, pulse their spread/strength
+      for (let i = 0; i < N; i++) {
+        const b = blobs[i];
+        b.x += b.vx;
+        b.y += b.vy;
+        if (b.x < -0.1 || b.x > 1.1) b.vx *= -1;
+        if (b.y < -0.1 || b.y > 1.1) b.vy *= -1;
+      }
+      for (let r = 0; r < rows; r++) {
+        const ny = (r * sy) / H;
+        for (let c = 0; c < cols; c++) {
+          const nx = (c * sx) / W;
+          let v = 0;
+          for (let i = 0; i < N; i++) {
+            const b = blobs[i];
+            const sig = b.sig * (1 + 0.45 * Math.sin(t * b.pf + b.ph));
+            const amp = b.amp * (1 + 0.25 * Math.sin(t * b.pf * 0.7 + b.ph));
+            const dx = nx - b.x,
+              dy = ny - b.y;
+            v += amp * Math.exp(-(dx * dx + dy * dy) / (2 * sig * sig));
+          }
+          field[r * cols + c] = v;
+        }
+      }
+    }
+
+    // Allocation-free marching squares (no per-cell closures/arrays — that was
+    // generating tens of thousands of throwaway objects per frame).
+    function drawContours() {
+      ctx.clearRect(0, 0, W, H);
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = getLineColor();
+      for (let li = 0; li < THRESHOLDS.length; li++) {
+        const thr = THRESHOLDS[li];
+        ctx.beginPath();
+        for (let r = 0; r < rows - 1; r++) {
+          const y = r * sy;
+          const off = r * cols;
+          for (let c = 0; c < cols - 1; c++) {
+            const tl = field[off + c];
+            const tr = field[off + c + 1];
+            const br = field[off + cols + c + 1];
+            const bl = field[off + cols + c];
+            let id = 0;
+            if (tl > thr) id |= 8;
+            if (tr > thr) id |= 4;
+            if (br > thr) id |= 2;
+            if (bl > thr) id |= 1;
+            if (id === 0 || id === 15) continue;
+            const x = c * sx;
+            // edge crossings (only computed for the edges a case needs)
+            let ax, ay, bx, by;
+            switch (id) {
+              case 1:
+              case 14: // left → bottom
+                ax = x;
+                ay = y + (sy * (thr - tl)) / (bl - tl);
+                bx = x + (sx * (thr - bl)) / (br - bl);
+                by = y + sy;
+                break;
+              case 2:
+              case 13: // bottom → right
+                ax = x + (sx * (thr - bl)) / (br - bl);
+                ay = y + sy;
+                bx = x + sx;
+                by = y + (sy * (thr - tr)) / (br - tr);
+                break;
+              case 3:
+              case 12: // left → right
+                ax = x;
+                ay = y + (sy * (thr - tl)) / (bl - tl);
+                bx = x + sx;
+                by = y + (sy * (thr - tr)) / (br - tr);
+                break;
+              case 4:
+              case 11: // top → right
+                ax = x + (sx * (thr - tl)) / (tr - tl);
+                ay = y;
+                bx = x + sx;
+                by = y + (sy * (thr - tr)) / (br - tr);
+                break;
+              case 6:
+              case 9: // top → bottom
+                ax = x + (sx * (thr - tl)) / (tr - tl);
+                ay = y;
+                bx = x + (sx * (thr - bl)) / (br - bl);
+                by = y + sy;
+                break;
+              case 7:
+              case 8: // top → left
+                ax = x + (sx * (thr - tl)) / (tr - tl);
+                ay = y;
+                bx = x;
+                by = y + (sy * (thr - tl)) / (bl - tl);
+                break;
+              case 5: {
+                // saddle: top-left + bottom-right
+                const ry = y + (sy * (thr - tr)) / (br - tr);
+                distM(x + (sx * (thr - tl)) / (tr - tl), y);
+                distL(x, y + (sy * (thr - tl)) / (bl - tl));
+                distM(x + (sx * (thr - bl)) / (br - bl), y + sy);
+                distL(x + sx, ry);
+                continue;
+              }
+              case 10: {
+                // saddle: top-right + bottom-left
+                const ry = y + (sy * (thr - tr)) / (br - tr);
+                distM(x + (sx * (thr - tl)) / (tr - tl), y);
+                distL(x + sx, ry);
+                distM(x + (sx * (thr - bl)) / (br - bl), y + sy);
+                distL(x, y + (sy * (thr - tl)) / (bl - tl));
+                continue;
+              }
+              default:
+                continue;
+            }
+            distM(ax, ay);
+            distL(bx, by);
+          }
+        }
+        ctx.stroke();
+      }
+    }
+
+    let rafId = null,
+      running = false,
+      last = 0;
+    const FRAME_MS = 1000 / 30; // 30fps is plenty for slow-drifting contours
+    function frame(now) {
+      if (!running) return;
+      rafId = requestAnimationFrame(frame);
+      if (now - last < FRAME_MS) return;
+      last = now;
+      _t = now * 0.001;
+      computeField(_t);
+      drawContours();
+    }
+    function start() {
+      if (running || prefersReduced) return;
+      running = true;
+      rafId = requestAnimationFrame(frame);
+    }
+    function stop() {
+      running = false;
+      if (rafId) cancelAnimationFrame(rafId);
+    }
+
+    resize();
+    window.addEventListener("resize", () => {
+      resize();
+      if (prefersReduced || !running) {
+        computeField(0);
+        drawContours();
       }
     });
-  }, observerOptions);
 
-  revealElements.forEach((element) => {
-    if (!element.classList.contains("active")) {
-      observer.observe(element);
+    if (prefersReduced) {
+      computeField(0);
+      drawContours();
+      return;
     }
+
+    // Animate while the hero OR the works section is on screen (works shares
+    // the same fixed canvas background and needs it live during Phase 2).
+    const hero = document.querySelector(".hero");
+    const aboutEl = document.querySelector(".stage-about");
+    const worksEl = document.querySelector(".works");
+    if ("IntersectionObserver" in window) {
+      const visible = new Set();
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) =>
+          e.isIntersecting ? visible.add(e.target) : visible.delete(e.target)
+        );
+        visible.size > 0 ? start() : stop();
+      }, { threshold: 0 });
+      [hero, aboutEl, worksEl].filter(Boolean).forEach((el) => io.observe(el));
+    } else {
+      start();
+    }
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) stop();
+      else start();
+    });
+  }
+  initContours();
+
+  /* ---------- Hero intro trigger ---------- */
+  window.addEventListener("load", () => {
+    requestAnimationFrame(() =>
+      document.documentElement.classList.add("loaded"),
+    );
   });
-});
 
-// --- 3. Resume Tab Functionality ---
-document.addEventListener("DOMContentLoaded", function () {
-  const tabButtons = document.querySelectorAll(".resume-tab-btn");
-  const contentContainer = document.getElementById("resume-content-container");
-
-  // Find the initially active content and set its display to block
-  const initialActiveContent = contentContainer.querySelector(
-    ".resume-tab-content.active",
-  );
-  if (initialActiveContent) {
-    initialActiveContent.style.display = "block";
+  /* ---------- Lenis smooth scroll ---------- */
+  let lenis = null;
+  if (typeof window.Lenis === "function" && !prefersReduced) {
+    lenis = new window.Lenis({ lerp: 0.1, wheelMultiplier: 1 });
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    // If GSAP is present we sync via its ticker (smoother); otherwise rAF.
+    if (window.gsap && window.gsap.ticker) {
+      window.gsap.ticker.add((t) => lenis.raf(t * 1000));
+      window.gsap.ticker.lagSmoothing(0);
+      lenis.on("scroll", ({ scroll }) => {
+        if (window.ScrollTrigger) window.ScrollTrigger.update();
+        updateLogoSize(scroll);
+      });
+    } else {
+      requestAnimationFrame(raf);
+    }
   }
 
-  tabButtons.forEach((button) => {
-    button.addEventListener("click", function () {
-      const targetTabId = this.getAttribute("data-tab");
+  /* ---------- Anchor links via Lenis ---------- */
+  document.querySelectorAll('a[href^="#"]').forEach((a) => {
+    a.addEventListener("click", (e) => {
+      const id = a.getAttribute("href");
+      if (id === "#" || id.length < 2) return;
+      const target = document.querySelector(id);
+      if (!target) return;
+      e.preventDefault();
+      if (lenis) lenis.scrollTo(target, { offset: -70 });
+      else target.scrollIntoView({ behavior: "smooth" });
+    });
+  });
 
-      // 1. Remove 'active' from all buttons
-      tabButtons.forEach((btn) => btn.classList.remove("active"));
+  /* ---------- Nav: logo-only with background-aware colour ----------
+     The logo is a CSS-masked glyph whose `background-color` is its fill, so
+     adapting it to the background is just a matter of writing that colour.
+     Rule (concept "dark bg → light logo"):
+       • dark background   → WHITE
+       • light background  → BLACK
+       • olive background  → #e7fcb0 (the one exception)
+     The hero (off-panel), about and works sections share ONE fixed canvas
+     whose colour is driven olive → black by _aboutP. The logo also tracks
+     the works card flip. HOF and Socials are white (black logo); everything else is dark. */
+  const nav = document.getElementById("nav");
+  const progressBar = document.querySelector(".scroll-progress span");
+  const navLogo = nav ? nav.querySelector(".nav__logo") : null;
+  const sectHero = document.querySelector(".hero");
+  const sectAbout = document.querySelector(".stage-about");
+  const sectHof = document.querySelector(".hof");
+  const sectResume = document.querySelector(".resume");
+  const sectSocials = document.querySelector(".socials");
 
-      // 2. Add 'active' to the clicked button
-      this.classList.add("active");
+  const LOGO_WHITE = [255, 255, 255];
+  const LOGO_BLACK = [0, 0, 0];
+  const LOGO_OLIVE = [231, 252, 176]; // #e7fcb0
+  const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
+  const lerp3 = (a, b, t) => [
+    a[0] + (b[0] - a[0]) * t,
+    a[1] + (b[1] - a[1]) * t,
+    a[2] + (b[2] - a[2]) * t,
+  ];
 
-      // 3. Hide all content with a fade effect
-      const allContents = contentContainer.querySelectorAll(
-        ".resume-tab-content",
+  // Logo colour over the shared fixed canvas: olive →(_aboutP)→ white.
+  function canvasLogoColor() {
+    return lerp3(LOGO_OLIVE, LOGO_WHITE, clamp01(_aboutP));
+  }
+
+  // Fraction of the logo still covered by the shrinking (dark) hero video panel
+  // — 1 = fully over the panel, 0 = fully clear of it (over the olive canvas).
+  function heroPanelCoverage(rect) {
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const finalS = Math.min(1, Math.min(943 / vw, 608 / vh)); // matches GSAP scale target
+    const curS = 1 - clamp01(_heroP) * (1 - finalS);
+    const panelLeft = (vw * (1 - curS)) / 2; // panel occupies [panelLeft … vw-panelLeft]
+    return clamp01((rect.right - panelLeft) / (rect.width || 1));
+  }
+
+  function updateLogoColor() {
+    if (!navLogo || !nav) return;
+    const r = nav.getBoundingClientRect();
+    const y = r.top + r.height / 2; // vertical line the logo sits on
+    const within = (el) => {
+      if (!el) return false;
+      const b = el.getBoundingClientRect();
+      return b.top <= y && b.bottom > y;
+    };
+    // True when any part of el is on screen AND its bottom is still below the nav.
+    // Unlike within(), doesn't require el.top <= y — handles pinned elements that
+    // start below the nav but have a white page bg extending to the top.
+    const onScreen = (el) => {
+      if (!el) return false;
+      const b = el.getBoundingClientRect();
+      return b.bottom > y && b.top < window.innerHeight;
+    };
+
+    let rgb;
+    if (within(sectAbout)) {
+      const backFace = sectAbout.querySelector(".about__face--back");
+      if (window.innerWidth <= 880 && backFace && within(backFace)) {
+        // Mobile: the white "Some of My Work" cover sits statically in flow —
+        // black logo keeps it legible (the flip's _worksFlipP never runs here).
+        rgb = LOGO_BLACK;
+      } else {
+        // During back-face expansion (0.5→1) the white "Some of My Work" cover
+        // is revealed — lerp logo from white to black so it stays legible.
+        if (_worksFlipP > 0.5) {
+          const t = (_worksFlipP - 0.5) * 2; // 0→1 during back face expansion
+          rgb = lerp3(LOGO_WHITE, LOGO_BLACK, t);
+        } else {
+          rgb = canvasLogoColor();
+        }
+      }
+    } else if (onScreen(sectHof) && !within(sectResume)) {
+      // HOF is on screen and the journey section hasn't slid over the nav yet —
+      // white bg (including the gap above the pinned grid) so logo must be black.
+      rgb = LOGO_BLACK;
+    } else if (within(sectHero)) {
+      // Blend between the dark panel (white logo) and the olive canvas as the
+      // panel edge sweeps across the logo.
+      rgb = lerp3(canvasLogoColor(), LOGO_WHITE, heroPanelCoverage(r));
+    } else if (within(sectSocials)) {
+      // Socials has a white background — logo must be black for contrast.
+      rgb = LOGO_BLACK;
+    } else {
+      // Hall of Fame, Journey, Footer — dark page background.
+      rgb = LOGO_WHITE;
+    }
+    navLogo.style.backgroundColor =
+      "rgb(" + (rgb[0] | 0) + "," + (rgb[1] | 0) + "," + (rgb[2] | 0) + ")";
+  }
+
+  function updateLogoSize(y) {
+    if (!navLogo) return;
+    const t = Math.min(1, Math.max(0, y / 120));
+    const isMobile = window.innerWidth <= 768;
+    const startW = isMobile ? 165 : 245;
+    const startH = isMobile ? 53  : 78;
+    const shrinkW = isMobile ? 55  : 85;
+    const shrinkH = isMobile ? 17  : 27;
+    navLogo.style.width  = startW - shrinkW * t + "px";
+    navLogo.style.height = startH - shrinkH * t + "px";
+  }
+
+  function onScroll() {
+    const y = window.scrollY || document.documentElement.scrollTop;
+    if (progressBar) {
+      const h = document.documentElement.scrollHeight - window.innerHeight;
+      progressBar.style.width = (h > 0 ? (y / h) * 100 : 0) + "%";
+    }
+    if (!lenis) updateLogoSize(y);
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  /* ---------- Skill bars fill (defined early so reveal IO can call it) ---------- */
+  function fillBar(bar) {
+    bar.style.transform = `scaleX(${(bar.getAttribute("data-width") || 0) / 100})`;
+  }
+
+  /* ---------- Reveal on scroll (IntersectionObserver) ---------- */
+  const revealEls = document.querySelectorAll(".reveal");
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("in");
+            // Fill any bars inside this element so they animate as it fades in
+            entry.target.querySelectorAll(".bar__fill").forEach(fillBar);
+            obs.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
+    );
+    revealEls.forEach((el) => io.observe(el));
+  } else {
+    revealEls.forEach((el) => el.classList.add("in"));
+  }
+
+  /* ---------- Animated stat counters ---------- */
+  function animateCount(el) {
+    const target = parseInt(el.getAttribute("data-count"), 10) || 0;
+    const dur = 1500;
+    const start = performance.now();
+    function step(now) {
+      const p = Math.min((now - start) / dur, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(target * eased);
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  document.querySelectorAll(".stat__num").forEach((el) => {
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver(
+        (entries, obs) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              animateCount(el);
+              obs.unobserve(el);
+            }
+          });
+        },
+        { threshold: 0.6 },
       );
-      allContents.forEach((content) => {
-        content.classList.remove("active"); // Remove active for opacity transition
-        setTimeout(() => (content.style.display = "none"), 400); // Wait for fade out (400ms defined in CSS transition)
+      io.observe(el);
+    } else {
+      el.textContent = el.getAttribute("data-count");
+    }
+  });
+
+  /* ---------- Skill bars fill (IO as secondary trigger for bars outside .reveal) ---------- */
+  const bars = document.querySelectorAll(".bar__fill");
+  if ("IntersectionObserver" in window) {
+    const barIo = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            fillBar(e.target);
+            obs.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0 },
+    );
+    bars.forEach((b) => barIo.observe(b));
+  } else {
+    bars.forEach(fillBar);
+  }
+
+  /* ---------- GSAP hero scroll animation ---------- */
+  if (window.gsap && window.ScrollTrigger && !prefersReduced) {
+    const gsap = window.gsap;
+    gsap.registerPlugin(window.ScrollTrigger);
+
+    const heroSection = document.querySelector(".hero");
+    const heroPanel = document.getElementById("hero-panel");
+
+    if (heroSection && heroPanel) {
+      // Signature: a single hand-drawn stroke path that writes itself on via
+      // stroke-dashoffset, scrubbed to scroll — drawing from its start point
+      // (top of the first loop) through to the end, with a glowing pen nib
+      // riding the leading edge. The drawSig/measureSig logic is generic over
+      // any list of `.hero__sig-mp` paths, so one path just works.
+      const sigEl = document.getElementById("hero-sig");
+      const sigSvg = document.getElementById("hero-sig-svg");
+      const sigPen = document.getElementById("hero-sig-pen");
+      const SIG_VB_X = 0,
+        SIG_VB_Y = 0,
+        SIG_VB_W = 2968; // matches viewBox
+      const sigStrokes = Array.prototype.slice.call(
+        document.querySelectorAll("#hero-sig-svg .hero__sig-mp"),
+      );
+      let sigLens = [],
+        sigTotal = 0;
+
+      function measureSig() {
+        sigLens = sigStrokes.map((p) => p.getTotalLength());
+        sigTotal = sigLens.reduce((a, b) => a + b, 0);
+        sigStrokes.forEach((p, i) => {
+          const L = sigLens[i];
+          // dash = stroke length, gap = oversized so NO wrapped dash (and its
+          // round cap) can poke back into view at the hidden offset.
+          p.style.strokeDasharray = L + " " + (L * 2 + 20);
+          p.style.strokeDashoffset = L; // fully hidden until written
+        });
+      }
+      function drawSig(prog) {
+        const p = Math.max(0, Math.min(1, prog));
+        const target = p * sigTotal; // total ink length to reveal so far
+        let cum = 0,
+          penIdx = -1,
+          penLocal = 0;
+        for (let i = 0; i < sigStrokes.length; i++) {
+          const len = sigLens[i];
+          const drawn = Math.max(0, Math.min(len, target - cum));
+          sigStrokes[i].style.strokeDashoffset = String(len - drawn);
+          if (drawn > 0) {
+            penIdx = i;
+            penLocal = drawn;
+          } // last stroke with ink = the frontier
+          cum += len;
+        }
+        if (sigPen && penIdx >= 0 && p > 0.002 && p < 0.998) {
+          try {
+            const pt = sigStrokes[penIdx].getPointAtLength(
+              Math.min(penLocal, sigLens[penIdx]),
+            );
+            const scale = sigSvg.clientWidth / SIG_VB_W;
+            sigPen.style.left = (pt.x - SIG_VB_X) * scale + "px";
+            sigPen.style.top = (pt.y - SIG_VB_Y) * scale + "px";
+            sigPen.style.opacity = "1";
+          } catch (e) {}
+        } else if (sigPen) {
+          sigPen.style.opacity = "0";
+        }
+      }
+      if (sigStrokes.length) {
+        measureSig();
+        drawSig(0);
+        window.addEventListener("resize", () => {
+          if (window.ScrollTrigger) window.ScrollTrigger.refresh();
+        });
+      }
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: heroSection,
+          start: "top top",
+          end: "+=65%",
+          scrub: 1.1,
+          pin: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            _heroP = self.progress;
+            updateLogoColor();
+          },
+          onRefresh: (self) => {
+            _heroP = self ? self.progress : 0;
+            updateLogoColor();
+          },
+        },
       });
 
-      // 4. Show the target content with a fade in effect
-      const targetContent = document.getElementById(targetTabId);
-      if (targetContent) {
-        setTimeout(() => {
-          targetContent.style.display = "block";
-          // Trigger reflow/repaint to ensure transition works
-          targetContent.offsetWidth;
-          targetContent.classList.add("active");
-        }, 400);
+      // Panel scales to exactly 943×608px regardless of viewport size.
+      tl.to(
+        heroPanel,
+        {
+          scaleX: () =>
+            Math.min(
+              1,
+              Math.min(943 / window.innerWidth, 608 / window.innerHeight),
+            ),
+          scaleY: () =>
+            Math.min(
+              1,
+              Math.min(943 / window.innerWidth, 608 / window.innerHeight),
+            ),
+          borderRadius: 64,
+          ease: "none",
+          duration: 1,
+          force3D: true,
+        },
+        0,
+      );
+
+      // The centered signature writes itself off the same scrubbed timeline, so
+      // it stays in lockstep with the shrink and un-writes when scrolling up.
+      if (sigStrokes.length) {
+        const sigState = { p: 0 };
+        tl.to(
+          sigState,
+          {
+            p: 1,
+            ease: "none",
+            duration: 1,
+            onUpdate: () => {
+              const y = window.scrollY || document.documentElement.scrollTop;
+              drawSig(y < 3 ? 0 : sigState.p);
+            },
+          },
+          0,
+        );
+
+        // After signature completes, hold the pin for an extra scroll beat
+        // before the hero unpins and the next section scrolls in.
+        tl.to({}, { duration: 0.15 });
+
+        // Instantly snap sig to hidden the moment native scroll hits zero —
+        // bypasses GSAP scrub lag and Lenis lerp settle time.
+        window.addEventListener(
+          "scroll",
+          function () {
+            if ((window.scrollY || document.documentElement.scrollTop) === 0)
+              drawSig(0);
+          },
+          { passive: true },
+        );
       }
-    });
-  });
-});
-
-// --- 4. Load More Projects Logic ---
-document.addEventListener("DOMContentLoaded", function () {
-  const projects = document.querySelectorAll(".portfolio-item");
-  const loadMoreBtn = document.getElementById("load-more-btn");
-  const itemsPerLoad = 6;
-  let visibleCount = 6;
-
-  // Initially hide projects beyond the first 6
-  projects.forEach((project, index) => {
-    if (index >= visibleCount) {
-      project.classList.add("hidden");
     }
-  });
-
-  // Hide button if total projects <= itemsPerLoad
-  if (projects.length <= itemsPerLoad) {
-    loadMoreBtn.style.display = "none";
   }
 
-  loadMoreBtn.addEventListener("click", function (e) {
-    e.preventDefault();
+  /* ---------- ABOUT — columns slide in, then section pins and flips to HOF cover ----------
+     Phase 1 (scroll): olive→black canvas transition + columns slide in from edges.
+     Phase 2 (pinned): card flips right-to-left, revealing the Work Hall of Fame cover. */
+  (function initStageAbout() {
+    if (!window.gsap || !window.ScrollTrigger) return;
+    const gsap = window.gsap;
+    const section = document.querySelector(".stage-about");
+    if (!section) return;
+    const left    = section.querySelector(".stage-about__col--left");
+    const right   = section.querySelector(".stage-about__col--right");
+    const blackLayer = document.getElementById("hero-black-layer");
+    const flipper = document.getElementById("about-flip");
 
-    const hiddenProjects = document.querySelectorAll(".portfolio-item.hidden");
+    // Phase 1a — background canvas olive→black. Always runs so the mood change
+    // happens on every device, even without motion/animation.
+    gsap
+      .timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top 80%",
+          end: "top top",
+          scrub: true,
+          onUpdate(self) {
+            _aboutP = self.progress;
+            updateLogoColor();
+          },
+          onLeaveBack() {
+            _aboutP = 0;
+            updateLogoColor();
+          },
+        },
+      })
+      .fromTo(blackLayer, { opacity: 0 }, { opacity: 1, ease: "none" }, 0);
 
-    for (let i = 0; i < itemsPerLoad; i++) {
-      if (hiddenProjects[i]) {
-        hiddenProjects[i].classList.remove("hidden");
+    // Phase 1b — column slide-in (desktop + motion-OK only).
+    if (!prefersReduced && window.innerWidth >= 880 && left && right) {
+      const colTrigger = {
+        trigger: section,
+        start: "top 64%",
+        end: "top 18%",
+        scrub: true,
+      };
+      gsap.fromTo(
+        left,
+        { xPercent: -118, opacity: 0 },
+        { xPercent: 0, opacity: 1, ease: "power2.out", scrollTrigger: colTrigger },
+      );
+      gsap.fromTo(
+        right,
+        { xPercent: 118, opacity: 0 },
+        { xPercent: 0, opacity: 1, ease: "power2.out", scrollTrigger: colTrigger },
+      );
+    }
+
+    // Phase 2 — pin the section once it fills the viewport, then flip the card.
+    // Uses a two-phase scaleX approach: front collapses to zero (first half),
+    // back expands from zero (second half). Content is always readable.
+    // DESKTOP ONLY (>880px): on phones the front-face content is taller than the
+    // viewport, so pinning + flipping would (a) collapse the text before it can
+    // be read and (b) inject ~1.4× viewport of pin-spacer that buries the work
+    // grid. Mobile gets the scroll-stack transition in the else-if branch below.
+    if (!prefersReduced && flipper && window.innerWidth > 880) {
+      const front = flipper.querySelector(".about__face--front");
+      const back  = flipper.querySelector(".about__face--back");
+      const FLIP_PX = Math.round(window.innerHeight * 1.4);
+
+      // Spacer goes white ONLY once the flip reveals the white "Some of My Work"
+      // cover (back face starts expanding at the midpoint), and reverts when you
+      // scroll back up to the dark About face. Toggling a class on THIS section's
+      // spacer keeps the white scoped to Work — the hero spacer stays untouched —
+      // and shows up as a real rule in devtools (.pin-spacer.is-work-white).
+      const FLIP_WHITE_AT = 0.5; // back face begins to show at the flip midpoint
+      const setSpacerWhite = (on) => {
+        const spacer = section.closest(".pin-spacer");
+        if (spacer) spacer.classList.toggle("is-work-white", on);
+      };
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          pin: true,
+          pinSpacing: true,
+          start: "top top",
+          end: `+=${FLIP_PX}`,
+          scrub: 1,
+          onRefresh: (self) => setSpacerWhite(self.progress >= FLIP_WHITE_AT),
+          onUpdate(self) {
+            _worksFlipP = Math.min(1, Math.max(0, self.progress));
+            setSpacerWhite(self.progress >= FLIP_WHITE_AT);
+            updateLogoColor();
+          },
+          onLeaveBack() {
+            _worksFlipP = 0;
+            setSpacerWhite(false);
+            updateLogoColor();
+          },
+        },
+      });
+
+      if (front) {
+        tl.fromTo(
+          front,
+          { scaleX: 1 },
+          { scaleX: 0, ease: "power1.in", duration: 0.5 },
+          0,
+        );
+      }
+      if (back) {
+        tl.fromTo(
+          back,
+          { scaleX: 0 },
+          { scaleX: 1, ease: "power1.out", duration: 0.5 },
+          0.5,
+        );
+      }
+    } else if (!prefersReduced && flipper && window.innerWidth <= 880) {
+      // Mobile: reuse the site's scroll-stack transition (the same effect used
+      // for Work → Journey → Socials). Freeze the about copy once its bottom
+      // reaches the viewport bottom — so it has been fully read — then let the
+      // white "Some of My Work" cover scroll up and over it. pinSpacing:false
+      // adds no scroll distance, so the work grid stays close. The cover paints
+      // above the pinned copy via its higher z-index (set in the mobile CSS).
+      const front = flipper.querySelector(".about__face--front");
+      const back = flipper.querySelector(".about__face--back");
+      if (front && back) {
+        window.ScrollTrigger.create({
+          trigger: front,
+          start: "bottom bottom",
+          endTrigger: back,
+          end: "bottom bottom",
+          pin: true,
+          pinSpacing: false,
+          invalidateOnRefresh: true,
+        });
       }
     }
+  })();
 
-    const remainingHidden = document.querySelectorAll(".portfolio-item.hidden");
-    if (remainingHidden.length === 0) {
-      loadMoreBtn.style.display = "none";
+  /* ---------- SOCIALS — stacked deck fans out on scroll ---------- */
+  (function initSocials() {
+    const stage = document.getElementById("socials-stage");
+    const deck = document.getElementById("socials-deck");
+    if (!stage || !deck) return;
+
+    const cards = Array.from(deck.querySelectorAll(".social-card"));
+    if (!cards.length) return;
+
+    // Tap / click focus — the cards no longer navigate anywhere, so a tap just
+    // toggles `.is-active`, which the CSS renders with the same colour + glow +
+    // lift the desktop pointer gets on hover. Tapping another card moves the
+    // spotlight; tapping the active card (or anywhere off the deck) clears it.
+    cards.forEach((card) => {
+      card.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const wasActive = card.classList.contains("is-active");
+        cards.forEach((c) => c.classList.remove("is-active"));
+        if (!wasActive) card.classList.add("is-active");
+      });
+    });
+    document.addEventListener("click", () => {
+      cards.forEach((c) => c.classList.remove("is-active"));
+    });
+
+    const mid = (cards.length - 1) / 2; // 3 for 7 cards
+
+    // Final fan geometry for one card, derived from the live card width so it
+    // scales with the viewport. ax = distance from centre (0,1,2,3…).
+    const geom = (i) => {
+      const cw = cards[Math.round(mid)].offsetWidth || 200;
+      const o = i - mid;
+      const ax = Math.abs(o);
+      // Tighter spread + flatter arc on phones so the fan fits a narrow portrait
+      // viewport; desktop keeps the wider, more dramatic splay.
+      const mobile = window.innerWidth < 768;
+      const spreadX = mobile ? 0.44 : 0.6;
+      const arcK = mobile ? 0.06 : 0.08;
+      const rotK = mobile ? 5 : 6.5;
+      const arc = (ax + ax * ax * 0.12) * cw * arcK;
+      const arcMax = (mid + mid * mid * 0.12) * cw * arcK;
+      return {
+        x: o * cw * spreadX, // horizontal spread (cards overlap)
+        y: arc - arcMax * 0.35, // outer cards arc down, centre rides a touch up
+        rot: o * rotK, // splay outward
+        scale: 1 - ax * 0.05, // outer cards sit a touch smaller
+      };
+    };
+
+    // Centre card always on top; neighbours recede symmetrically.
+    // Expose each card's fan scale so the CSS hover can grow every card to the
+    // same true 1.18×, regardless of how small it sits in the fan (1/scale).
+    cards.forEach((card, i) => {
+      const g = geom(i); // scale here doesn't depend on card width
+      card.style.zIndex = String(100 - Math.abs(i - mid));
+      card.style.setProperty("--inv-scale", (1 / g.scale).toFixed(4));
+    });
+
+    // Phone / tablet: present the SAME fan (no pin). It fans out from a stack
+    // once when the deck scrolls into view; static under reduced-motion / no GSAP.
+    if (window.innerWidth < 1024) {
+      const g2 = window.gsap;
+      const applyFan = (animate) => {
+        cards.forEach((card, i) => {
+          const g = geom(i);
+          if (animate && g2) {
+            g2.to(card, {
+              x: g.x, y: g.y, rotation: g.rot, scale: g.scale,
+              duration: 0.7, ease: "power3.out",
+              delay: Math.abs(i - mid) * 0.06,
+            });
+          } else {
+            card.style.transform =
+              `translate(${g.x}px, ${g.y}px) rotate(${g.rot}deg) scale(${g.scale})`;
+          }
+        });
+      };
+      if (prefersReduced || !g2) { applyFan(false); return; }
+      g2.set(cards, { x: 0, y: 0, rotation: 0, scale: 1 });
+      if ("IntersectionObserver" in window) {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((e) => {
+            if (!e.isIntersecting) return;
+            applyFan(true);
+            io.disconnect();
+          });
+        }, { threshold: 0.35 });
+        io.observe(deck);
+      } else {
+        applyFan(true);
+      }
+      return;
     }
-  });
-});
 
-// --- 5. Portfolio Modal Logic (New Feature) ---
-document.addEventListener("DOMContentLoaded", function () {
-  // DATA: Details for the first 2 items
+    const gsap = window.gsap;
+    if (!gsap) return;
+
+    // Reduced motion: skip the scroll choreography, just present the fan.
+    if (prefersReduced || !window.ScrollTrigger) {
+      cards.forEach((card, i) => {
+        const g = geom(i);
+        gsap.set(card, { x: g.x, y: g.y, rotation: g.rot, scale: g.scale });
+      });
+      return;
+    }
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: stage,
+        pin: true,
+        pinSpacing: true,
+        start: "top top",
+        end: "+=120%",
+        scrub: 1,
+        invalidateOnRefresh: true, // recompute geometry on resize
+      },
+    });
+
+    cards.forEach((card, i) => {
+      tl.fromTo(
+        card,
+        { x: 0, y: 0, rotation: 0, scale: 1, immediateRender: false },
+        {
+          x: () => geom(i).x,
+          y: () => geom(i).y,
+          rotation: () => geom(i).rot,
+          scale: () => geom(i).scale,
+          ease: "power3.out",
+          duration: 1,
+        },
+        0,
+      );
+    });
+  })();
+
+  /* ---------- JOURNEY — scroll-scrubbed progress line + node lighting ---------- */
+  (function initJourney() {
+    if (!window.gsap || !window.ScrollTrigger || prefersReduced) return;
+    const tl = document.getElementById("journey-timeline");
+    const prog = document.getElementById("journey-progress");
+    if (!tl || !prog) return;
+
+    const nodes = Array.from(tl.querySelectorAll(".journey__node"));
+
+    // Fractional position (0–1) of each node's circle within the timeline.
+    // The ::before pseudo-element sits at top:5px within the node.
+    let thresholds = [];
+    function computeThresholds() {
+      const h = tl.offsetHeight || 1;
+      thresholds = nodes.map((n) => (n.offsetTop + 5) / h);
+    }
+    computeThresholds();
+
+    window.gsap.fromTo(
+      prog,
+      { scaleY: 0 },
+      {
+        scaleY: 1,
+        ease: "none",
+        transformOrigin: "top",
+        scrollTrigger: {
+          trigger: tl,
+          start: "top 75%",
+          end: "bottom 75%",
+          scrub: true,
+          invalidateOnRefresh: true,
+          onRefresh: computeThresholds,
+          onUpdate(self) {
+            const p = self.progress;
+            nodes.forEach((node, i) => {
+              node.classList.toggle("journey__node--lit", p >= (thresholds[i] ?? 0));
+            });
+          },
+        },
+      },
+    );
+  })();
+
+  /* ---------- Resume tabs ---------- */
+  const tabs = document.querySelectorAll(".tab");
+  const panels = document.querySelectorAll(".panel");
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const id = tab.getAttribute("data-tab");
+      tabs.forEach((t) => t.classList.remove("active"));
+      panels.forEach((p) => p.classList.remove("active"));
+      tab.classList.add("active");
+      const panel = document.getElementById(id);
+      if (panel) {
+        panel.classList.add("active");
+        // re-fill any bars now visible
+        panel.querySelectorAll(".bar__fill").forEach(fillBar);
+      }
+      if (window.ScrollTrigger) window.ScrollTrigger.refresh();
+    });
+  });
+
+  /* ---------- Load more ---------- */
+  const cards = Array.from(document.querySelectorAll(".hof-card"));
+  const loadMoreBtn = document.getElementById("load-more-btn");
+  const PER_LOAD = 12;
+  let visible = 16;
+  cards.forEach((c, i) => {
+    if (i >= visible) c.classList.add("hidden");
+  });
+  if (loadMoreBtn) {
+    if (cards.length <= visible) loadMoreBtn.style.display = "none";
+    loadMoreBtn.addEventListener("click", () => {
+      const hidden = cards.filter((c) => c.classList.contains("hidden"));
+      hidden.slice(0, PER_LOAD).forEach((c) => {
+        c.classList.remove("hidden");
+        c.classList.add("in"); // already in view region; ensure visible
+      });
+      if (!document.querySelector(".hof-card.hidden")) {
+        loadMoreBtn.style.display = "none";
+      }
+      if (window.ScrollTrigger) window.ScrollTrigger.refresh();
+    });
+  }
+
+  /* ===================================================== */
+  /* ---------- Portfolio modal ---------- */
+  /* ===================================================== */
   const portfolioData = {
     1: {
       title: "NBL Basketball Website Redesign Concept",
       desc: "A conceptual design project created entirely in Figma. I focused on improving the visual appeal and content organization of the National Basketball League website for a more engaging fan experience.",
-
       created: "2025",
       role: "Designer",
       image: "assets/img/project-1.png",
-      // LINKS: Empty string means hide button
       figmaLink:
         "https://www.figma.com/design/btDoc5mZwwjTWvfmvABhEa/Personal-Projects?node-id=14-2&t=q81CPdX7Ki9ehocw-1",
       xdLink: "",
@@ -165,11 +1066,10 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2025",
       role: "Designer",
       image: "assets/img/project-3.png",
-      // LINKS: Testing conditional hiding (Only Figma visible)
       figmaLink:
         "https://www.figma.com/design/btDoc5mZwwjTWvfmvABhEa/Personal-Projects?node-id=1-893&t=q81CPdX7Ki9ehocw-1",
-      xdLink: "", // Hidden
-      websiteLink: "", // Hidden
+      xdLink: "",
+      websiteLink: "",
     },
     3: {
       title: "Codecrafted CV Website Concept",
@@ -177,7 +1077,6 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2025",
       role: "App Designer",
       image: "assets/img/project-4.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/btDoc5mZwwjTWvfmvABhEa/Personal-Projects?node-id=1-142&t=q81CPdX7Ki9ehocw-1",
       xdLink: "",
@@ -189,7 +1088,6 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2025",
       role: "App Designer",
       image: "assets/img/project-5.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/btDoc5mZwwjTWvfmvABhEa/Personal-Projects?node-id=0-1&t=q81CPdX7Ki9ehocw-1",
       xdLink: "",
@@ -201,7 +1099,6 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2020-2025",
       role: "Designer",
       image: "assets/img/project-23.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/d8mVV2q97RtrVJSPWg66j8/Content-House-Web?node-id=10-40239&t=pYixpo1NXFlICUOt-1",
       xdLink: "",
@@ -213,7 +1110,6 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2020-2025",
       role: "Designer",
       image: "assets/img/project-22.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/p2IiGez2N7lAKeNA7bdbr8/Content-House-Mobile-App?node-id=1-69106&t=TkHSp5qjfGxgS5HC-1",
       xdLink: "",
@@ -225,7 +1121,6 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2024-2025",
       role: "Designer and Developer",
       image: "assets/img/project-6.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/7dfXILsjej7ZVP2LkhUP9h/Marketing-Website?node-id=0-1&t=GGwW7AbNOWGooq9b-1",
       xdLink: "",
@@ -237,7 +1132,6 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2025",
       role: "Designer",
       image: "assets/img/project-7.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/6674NGZUI86pZ5h0nALOSK/Agents-Space-Web?node-id=15-186&t=BfNky61zPcENvgJA-1",
       xdLink: "",
@@ -249,7 +1143,6 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2023-2025",
       role: "Designer",
       image: "assets/img/project-8.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/6674NGZUI86pZ5h0nALOSK/Agents-Space-Web?node-id=1-34205&t=BfNky61zPcENvgJA-1",
       xdLink: "",
@@ -261,19 +1154,17 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2023-2025",
       role: "Designer",
       image: "assets/img/project-9.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/2dw24WW2YdNzGkje7rNbQh/Agents-Space-Mobile?node-id=1-13749&t=OQp39AaaDTkfl31s-1",
       xdLink: "",
       websiteLink: "",
     },
     11: {
-      title: "Agents Space Mobile App",
+      title: "Agents Space Marketing Website",
       desc: "The Agent's Space Mobile Application was designed simultaneously with the web application to provide Content House clients with critical, on-the-go access to their operational hub. The platform supports a wide array of interconnected, complex features, including property detail creation, quote generation, artwork review, product management, property sharing, and data reconciliation. Executed entirely in Figma, the core design challenge was adapting this high-complexity toolset to the constraints of a mobile interface while maintaining user security. I designed a sophisticated role-based access management system where features dynamically adjust based on the user's role (user, admin, or group member). My design process was rigorous and user-centric, starting with user research to map out complex agent workflows. I defined the mobile information architecture through wireframing, then produced detailed high-fidelity mockups, and finalized the experience by creating prototypes for comprehensive usability testing to ensure a highly efficient, seamless, and secure experience for agents in the field.",
       created: "2024",
       role: "Designer and Developer",
       image: "assets/img/project-10.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink: "",
       xdLink: "",
       websiteLink: "",
@@ -284,7 +1175,6 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2014-2016",
       role: "Designer and Developer",
       image: "assets/img/project-12.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/Eb0A2QxEg77paPdzwv6Wyx/Travelbook-PH?node-id=2-86&t=lEg93tpqWyTGkHwj-1",
       xdLink: "",
@@ -295,7 +1185,6 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2016",
       role: "Designer and Developer",
       image: "assets/img/project-13.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/Eb0A2QxEg77paPdzwv6Wyx/Coreproc-Inc.-Projects?node-id=2-128&t=lEg93tpqWyTGkHwj-1",
       xdLink: "assets/files/nexgo.xd",
@@ -307,7 +1196,6 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2016",
       role: "Designer and Developer",
       image: "assets/img/project-14.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/Eb0A2QxEg77paPdzwv6Wyx/Coreproc-Inc.-Projects?node-id=14-132&t=lEg93tpqWyTGkHwj-1",
       xdLink: "assets/files/mypocketdoctor.xd",
@@ -319,7 +1207,6 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2014",
       role: "Designer and Developer",
       image: "assets/img/project-15.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/Eb0A2QxEg77paPdzwv6Wyx/Coreproc-Inc.-Projects?node-id=20-10&t=BovGgegej1hnWJNf-1",
       xdLink: "",
@@ -331,7 +1218,6 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2018",
       role: "Designer and Developer",
       image: "assets/img/project-16.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/Eb0A2QxEg77paPdzwv6Wyx/Coreproc-Inc.-Projects?node-id=22-14&t=BovGgegej1hnWJNf-1",
       xdLink: "assets/files/coreproc_website.xd",
@@ -343,7 +1229,6 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2019",
       role: "Designer",
       image: "assets/img/project-17.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/Eb0A2QxEg77paPdzwv6Wyx/Coreproc-Inc.-Projects?node-id=22-22&t=BovGgegej1hnWJNf-1",
       xdLink: "",
@@ -355,7 +1240,6 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2018",
       role: "Designer",
       image: "assets/img/project-18.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/Eb0A2QxEg77paPdzwv6Wyx/Coreproc-Inc.-Projects?node-id=26-39&t=BovGgegej1hnWJNf-1",
       xdLink: "assets/files/yamaha_motors.xd",
@@ -367,7 +1251,6 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2018",
       role: "Designer",
       image: "assets/img/project-19.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/Eb0A2QxEg77paPdzwv6Wyx/Coreproc-Inc.-Projects?node-id=33-43&t=BovGgegej1hnWJNf-1",
       xdLink: "assets/files/figaro_coffee.xd",
@@ -379,7 +1262,6 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2018",
       role: "Designer",
       image: "assets/img/project-20.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/Eb0A2QxEg77paPdzwv6Wyx/Coreproc-Inc.-Projects?node-id=36-80&t=BovGgegej1hnWJNf-1",
       xdLink: "assets/files/angels_pizza.xd",
@@ -391,199 +1273,332 @@ document.addEventListener("DOMContentLoaded", function () {
       created: "2018-2019",
       role: "Designer",
       image: "assets/img/project-21.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/Eb0A2QxEg77paPdzwv6Wyx/Coreproc-Inc.-Projects?node-id=45-24&t=D51t5yxzyOLmX6hR-1",
       xdLink: "assets/files/aeon_consumer.xd",
       websiteLink: "",
     },
     22: {
-      title: "KicksMart E-Commerce App - Figma Make(AI)",
+      title: "KicksMart E-Commerce App — Figma Make (AI)",
       desc: "This is just a personal project that demonstrates a high-speed approach to mobile e-commerce design and prototyping. I designed and built the foundational Splash Screen and Home Page mockups. For efficiency, the remaining app pages were generated using Figma AI and quickly assembled into an interactive prototype. This exercise prioritizes showcasing rapid ideation and leveraging AI tools in the design workflow, resulting in a functional, albeit unpolished, proof-of-concept. This design is for mobile only.",
       created: "2025",
       role: "Designer and Developer",
       image: "assets/img/project-24.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/SVqMjYICFN33aFoWVmD5ej/Kicksmart?node-id=0-1&p=f",
       xdLink: "",
       websiteLink: "https://export-glad-87190303.figma.site/",
     },
     23: {
-      title: "Vanguard Admin Dashboard - Figma Make(AI)",
+      title: "Vanguard Admin Dashboard — Figma Make (AI)",
       desc: "This UI/UX design project for the Vanguard Admin Dashboard utilized a modern, efficient workflow. I designed the main dashboard pages, including the complete visual system for both the Light Mode and the high-contrast Dark Mode. After these core interfaces were completed, the remaining pages, secondary screens, and interactive components of the website were automatically built using AI technology through Figma Make. Crucially, I directed the AI to ensure the entire output was fully mobile web responsive. Furthermore, thanks to my solid understanding of frontend development, I was able to review and comprehend the underlying code created by the AI. This dual workflow serves as proof of concept, demonstrating my ability to effectively integrate and utilize AI tools to enhance and efficiently scale my design output while maintaining technical control.",
       created: "2025",
-      role: "Designer and Developerr",
+      role: "Designer and Developer",
       image: "assets/img/project-25.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/gs2Nkkk9qEV8Ya0mRc6vvn/Vanguar---Admin-Dashboard?node-id=0-1&t=7tKlPFrrco00moGz-1",
       xdLink: "",
       websiteLink: "https://found-grasp-74066159.figma.site",
     },
     24: {
-      title: "Vanguard Landing Page - Figma Make(AI)",
+      title: "Vanguard Landing Page — Figma Make (AI)",
       desc: "This personal project was created to explore the frontier of AI-assisted UI design, specifically showcasing my proficiency with Figma Make. By leveraging Figma’s AI capabilities, I built a cohesive and modern landing page for Vanguard, focusing on how AI can be directed to produce high-quality, brand-aligned layouts. This project demonstrates my ability to integrate emerging technologies into the design process to accelerate production without losing sight of the core user experience.",
       created: "2025",
       role: "Designer and Developer",
       image: "assets/img/project-26.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink:
         "https://www.figma.com/design/hjJ1SeflUvchY1X6Wq3C7Y/Vanguard-Landing-Page?node-id=0-1&t=uqzJgVTmhkbcRpC6-1",
       xdLink: "",
       websiteLink: "https://pear-jeep-99379078.figma.site",
     },
     25: {
-      title: "Gacha Social App - Designed and built using Figma Make(AI)",
+      title: "Gacha Social App — Figma Make (AI)",
       desc: "I developed and designed this gacha platform as a primary showcase of my AI skills, utilizing Figma AI to architect a system where users can pull and collect unique characters while engaging in a highly interactive community. The application facilitates deep social engagement through features like player battling, liking, commenting, and direct messaging. My extensive front-end development experience provided a significant advantage during the build; because I deeply understand the code the AI generates, I was able to refine every component to ensure the entire system functions perfectly. This technical oversight was key to achieving a fully mobile-web responsive design, allowing the platform to work seamlessly on both desktop and mobile browsers. Users can enjoy a high-fidelity, app-like experience on any device without the need for a separate download, maintaining a consistent and polished feel across all screens.",
       created: "2025",
       role: "Designer and Developer",
       image: "assets/img/project-27.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink: "",
       xdLink: "",
       websiteLink: "https://try-undo-36289219.figma.site",
     },
-
     26: {
-      title:
-        "Dragon Ball Flappy Goku Game (Retro Style) - Designed and built using Figma Make(AI)",
+      title: "Dragon Ball Flappy Goku Game (Retro Style) — Figma Make (AI)",
       desc: "I developed and designed this Retro Style Dragon Ball Flappy Goku game as a dedicated showcase of my AI skills, utilizing Figma AI to bring this Flappy Bird-inspired experience to life. My background in front-end development provided the necessary technical foundation to ensure the game functions perfectly; because I have a deep understanding of the code the AI generates, I was able to bridge the gap between AI-driven design and a fully playable, high-performance product. This project highlights a completely mobile-web responsive design, ensuring that the fast-paced gameplay remains smooth and intuitive whether you are playing on a desktop or a smartphone. By focusing on a seamless browser-based experience, I’ve ensured that the game delivers a polished, app-like feel on any device without the need for an external download.",
       created: "2025",
-      role: "Designer",
+      role: "Designer and Developer",
       image: "assets/img/project-28.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink: "",
       xdLink: "",
       websiteLink: "https://sniff-ahead-92042786.figma.site",
     },
-
     27: {
-      title:
-        "Final Fantasy VII Marketing Landing Page - Designed and built using Claude",
+      title: "Final Fantasy VII Marketing Landing Page — Claude Code",
       desc: "I developed this Final Fantasy VII marketing landing page to showcase my ability to leverage Claude Code for end-to-end web development. By using this agentic tool, I managed the entire design and implementation process directly from my terminal, while my front-end expertise allowed me to refine and optimize the AI-generated code for production-level performance. The result is a fully mobile-web responsive experience that maintains its cinematic impact and fluid navigation across both desktop and mobile. This project demonstrates how combining technical oversight with AI-driven workflows produces polished, high-performance results without the need for a separate app.",
       created: "2026",
       role: "Designer and Developer",
       image: "assets/img/project-29.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink: "",
       xdLink: "",
       claudeLink: "https://final-fantasy-7.vercel.app/",
     },
-
     28: {
-      title: "Velocità E-Commerce Website - Designed and built using Claude",
+      title: "Velocità E-Commerce Website — Claude Code",
       desc: "I built the Velocità E-Commerce platform and its companion admin dashboard as a personal project to showcase my design and development workflow using Claude. By leveraging Claude Code to build the system with React, Tailwind, and Supabase, I managed everything from initial design to final deployment. My front-end expertise was essential for refining the code to ensure a robust, high-performance experience. Both applications are fully mobile-web responsive, providing a seamless experience across all devices. This project highlights my ability to use AI as a force multiplier while maintaining the technical oversight required to deliver professional, scalable solutions.",
       created: "2026",
       role: "Designer and Developer",
       image: "assets/img/project-30.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink: "",
       xdLink: "",
       claudeLink: "https://scooter-store.vercel.app/",
     },
-
     29: {
-      title: "Velocità Admin Page - Designed and built using Claude",
+      title: "Velocità Admin Page — Claude Code",
       desc: "As the companion admin page for the Velocità E-Commerce platform, I built this dashboard as a personal project to showcase my end-to-end design and development workflow using Claude. By leveraging Claude Code to build this system with React, Tailwind, and Supabase, I handled everything from the initial interface design to final deployment. My front-end expertise was essential for refining the code to ensure a robust, high-performance experience. This dashboard serves as the command center for the store, allowing for seamless management of product content and orders. Fully mobile-web responsive, it provides a fluid, professional experience across any device, highlighting my ability to use AI as a force multiplier while maintaining the technical oversight required to deliver complete, scalable solutions.",
       created: "2026",
       role: "Designer and Developer",
       image: "assets/img/project-31.png",
-      // LINKS: Testing conditional hiding (Only Web visible)
       figmaLink: "",
       xdLink: "",
       claudeLink: "https://scooter-store-admin.vercel.app/dashboard/",
     },
   };
+
+  /* ---------- WORK HALL OF FAME — Lando-style staggered columns ----------
+     Re-flows the existing #portfolio-grid cards into N vertical columns. The
+     even (2nd / 4th) columns start offset down and "catch up" to align as the
+     grid scrolls into view (GSAP scrub). Rebuilds on breakpoint change. Cards
+     keep their data-id so the shared modal handler still wires them. */
+  function initHofGrid() {
+    const grid = document.getElementById("portfolio-grid");
+    if (!grid) return;
+    const allCards = Array.from(grid.querySelectorAll(".hof-card"));
+    if (!allCards.length) return;
+    // The column convergence is the entrance, so drop the generic reveal fade.
+    allCards.forEach((c) => c.classList.remove("reveal"));
+
+    const colsFor = () => (window.innerWidth < 760 ? 2 : 4);
+    let builtCols = 0;
+    let conv = null;
+
+    function build() {
+      const COLS = colsFor();
+      builtCols = COLS;
+      if (conv) {
+        if (conv.scrollTrigger) conv.scrollTrigger.kill();
+        conv.kill();
+        conv = null;
+      }
+      const cols = [];
+      for (let i = 0; i < COLS; i++) {
+        const col = document.createElement("div");
+        col.className = "hof-col" + (i % 2 === 1 ? " hof-col--offset" : "");
+        cols.push(col);
+      }
+      allCards.forEach((card, i) => cols[i % COLS].appendChild(card));
+      grid.innerHTML = "";
+      cols.forEach((c) => grid.appendChild(c));
+
+      const gsap = window.gsap;
+      if (!gsap || !window.ScrollTrigger || prefersReduced) return;
+      const offsetCols = cols.filter((_, i) => i % 2 === 1);
+      if (!offsetCols.length) return;
+      const OFFSET = window.innerWidth < 760 ? 80 : 180;
+      conv = gsap.fromTo(
+        offsetCols,
+        { y: OFFSET },
+        {
+          y: 0,
+          ease: "none",
+          scrollTrigger: {
+            trigger: grid,
+            start: "top 90%",
+            end: "top -10%",
+            scrub: true,
+            invalidateOnRefresh: true,
+          },
+        },
+      );
+    }
+
+    build();
+
+    let rt;
+    window.addEventListener("resize", () => {
+      clearTimeout(rt);
+      rt = setTimeout(() => {
+        if (colsFor() !== builtCols) {
+          build();
+          if (window.ScrollTrigger) window.ScrollTrigger.refresh();
+        }
+      }, 200);
+    });
+  }
+  initHofGrid();
+  // Re-flowing the grid into columns changes layout; recompute ScrollTrigger.
+  if (window.ScrollTrigger) window.ScrollTrigger.refresh();
+
+  /* ---------- HOF scroll-stack pin: freeze when its bottom reaches the
+     viewport bottom so resume / socials / journey / footer scroll up over it */
+  (function () {
+    if (!window.gsap || !window.ScrollTrigger || prefersReduced) return;
+    const hof = document.querySelector(".hof");
+    const footer = document.querySelector(".footer");
+    if (!hof || !footer) return;
+    // The Work grid is white, but GSAP's pin-spacer is transparent. On wide/short
+    // viewports the grid is shorter than the screen, so when it pins (bottom-bottom)
+    // the dark body shows through the spacer as a band above the grid. The grid is
+    // always white, so its spacer is always white too — reuse the flip's class.
+    // GSAP rebuilds pin-spacers on refresh, so re-apply via onRefresh.
+    const whitenHofSpacer = () => {
+      const sp = hof.closest(".pin-spacer");
+      if (sp) sp.classList.add("is-work-white");
+    };
+    window.ScrollTrigger.create({
+      trigger: hof,
+      start: "bottom bottom",
+      endTrigger: footer,
+      end: "bottom top",
+      pin: true,
+      pinSpacing: false,
+      invalidateOnRefresh: true,
+      onRefresh: whitenHofSpacer,
+    });
+    whitenHofSpacer();
+  })();
+
+  /* ---------- Journey entry buffer: start the resume section 120 px below
+     its natural scroll position and ease to 0 over the first ~150 px of
+     scroll. This keeps the HOF "View all work" button visible longer before
+     the Journey section slides up and covers it. */
+  (function () {
+    if (!window.gsap || !window.ScrollTrigger || prefersReduced) return;
+    const resume = document.querySelector(".resume");
+    if (!resume) return;
+    gsap.from(resume, {
+      y: 120,
+      ease: "none",
+      scrollTrigger: {
+        trigger: resume,
+        start: "top bottom",
+        end: "top 72%",
+        scrub: true,
+        invalidateOnRefresh: true,
+      },
+    });
+  })();
+
+  /* ---------- Journey scroll-stack pin: freeze when its bottom reaches the
+     viewport bottom so socials / footer scroll up over it */
+  (function () {
+    if (!window.gsap || !window.ScrollTrigger || prefersReduced) return;
+    const resume = document.querySelector(".resume");
+    const footer = document.querySelector(".footer");
+    if (!resume || !footer) return;
+    window.ScrollTrigger.create({
+      trigger: resume,
+      start: "bottom bottom",
+      endTrigger: footer,
+      end: "bottom top",
+      pin: true,
+      pinSpacing: false,
+      invalidateOnRefresh: true,
+    });
+  })();
+
   const modal = document.getElementById("portfolio-modal");
-  const closeBtn = document.getElementById("modal-close");
-  const items = document.querySelectorAll(".portfolio-item[data-id]");
+  if (modal) {
+    const closeBtn = document.getElementById("modal-close");
+    const figmaBtn = modal.querySelector(".figma-link");
+    const xdBtn = modal.querySelector(".xd-link");
+    const webBtn = modal.querySelector(".website-link");
+    const claudeBtn = modal.querySelector(".claude-link");
+    let lastFocused = null;
 
-  // Select the Link Buttons inside the Modal
-  const figmaBtn = modal.querySelector(".figma-link");
-  const xdBtn = modal.querySelector(".xd-link");
-  const webBtn = modal.querySelector(".website-link");
-  const claudebBtn = modal.querySelector(".claude-link");
+    const FOCUSABLE = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
-  // Function to Open Modal
-  items.forEach((item) => {
-    item.addEventListener("click", function () {
-      const id = this.getAttribute("data-id");
+    function setLink(btn, url) {
+      if (!btn) return;
+      if (url) {
+        btn.href = url;
+        btn.style.display = "inline-flex";
+      } else {
+        btn.style.display = "none";
+      }
+    }
+
+    function openModal(id) {
       const data = portfolioData[id];
+      if (!data) return;
+      const img = document.getElementById("modal-img");
+      img.src = data.image;
+      img.alt = data.title;
+      img.onerror = function () {
+        this.src = "https://via.placeholder.com/600x400?text=Project";
+      };
+      document.getElementById("modal-title").textContent = data.title;
+      document.getElementById("modal-desc").textContent = data.desc;
+      document.getElementById("modal-created").textContent = data.created;
+      document.getElementById("modal-role").textContent = data.role;
+      setLink(figmaBtn, data.figmaLink);
+      setLink(xdBtn, data.xdLink);
+      setLink(webBtn, data.websiteLink);
+      setLink(claudeBtn, data.claudeLink);
+      const isFigmaMake = data.websiteLink && data.websiteLink.includes("figma.site");
+      webBtn.querySelector("img").src = isFigmaMake ? "assets/img/Figma-logo.svg" : "assets/img/web-icon.svg";
+      webBtn.querySelector("span").textContent = isFigmaMake ? "Live Build" : "Website";
+      webBtn.setAttribute("aria-label", isFigmaMake ? "Open live Figma Make build" : "Visit website");
+      lastFocused = document.activeElement;
+      modal.classList.add("open");
+      modal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+      if (lenis) lenis.stop();
+      // Move focus into modal after transition begins
+      requestAnimationFrame(() => closeBtn.focus());
+    }
 
-      if (data) {
-        // Populate Standard Data
-        document.getElementById("modal-img").src = data.image;
-        document.getElementById("modal-img").onerror = function () {
-          this.src = "https://via.placeholder.com/600x400";
-        };
+    function closeModal() {
+      modal.classList.remove("open");
+      modal.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+      if (lenis) lenis.start();
+      // Return focus to the element that triggered the modal
+      if (lastFocused) {
+        lastFocused.focus();
+        lastFocused = null;
+      }
+    }
 
-        document.getElementById("modal-title").textContent = data.title;
-        document.getElementById("modal-desc").textContent = data.desc;
-        document.getElementById("modal-created").textContent = data.created;
-        document.getElementById("modal-role").textContent = data.role;
-
-        // --- HANDLE LINKS (Hide/Show Logic) ---
-
-        // 1. Figma Link
-        if (data.figmaLink) {
-          figmaBtn.href = data.figmaLink;
-          figmaBtn.style.display = "inline-flex"; // Show
-        } else {
-          figmaBtn.style.display = "none"; // Hide
+    // Focus trap — keep Tab/Shift+Tab inside the modal while it's open
+    modal.addEventListener("keydown", (e) => {
+      if (!modal.classList.contains("open") || e.key !== "Tab") return;
+      const focusable = Array.from(modal.querySelectorAll(FOCUSABLE)).filter(
+        (el) => !el.hasAttribute("disabled") && el.offsetParent !== null
+      );
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
         }
-
-        // 2. XD Link
-        if (data.xdLink) {
-          xdBtn.href = data.xdLink;
-          xdBtn.style.display = "inline-flex"; // Show
-        } else {
-          xdBtn.style.display = "none"; // Hide
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
         }
-
-        // 3. Website Link
-        if (data.websiteLink) {
-          webBtn.href = data.websiteLink;
-          webBtn.style.display = "inline-flex"; // Show
-        } else {
-          webBtn.style.display = "none"; // Hide
-        }
-
-        // 4. Claude Link
-        if (data.claudeLink) {
-          claudebBtn.href = data.claudeLink;
-          claudebBtn.style.display = "inline-flex"; // Show
-        } else {
-          claudebBtn.style.display = "none"; // Hide
-        }
-
-        // Show Modal
-        modal.classList.add("open");
-        document.body.style.overflow = "hidden"; // Prevent background scrolling
       }
     });
-  });
 
-  // Function to Close Modal
-  function closeModal() {
-    modal.classList.remove("open");
-    document.body.style.overflow = ""; // Restore scrolling
+    document.querySelectorAll("[data-id]").forEach((el) => {
+      el.addEventListener("click", () => openModal(el.getAttribute("data-id")));
+    });
+    closeBtn.addEventListener("click", closeModal);
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) closeModal();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && modal.classList.contains("open")) closeModal();
+    });
   }
-
-  // Event Listeners for Closing
-  closeBtn.addEventListener("click", closeModal);
-
-  // Close if clicking outside the content (on the dark overlay)
-  modal.addEventListener("click", function (e) {
-    if (e.target === modal) {
-      closeModal();
-    }
-  });
-
-  // Close on Escape key
-  document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape" && modal.classList.contains("open")) {
-      closeModal();
-    }
-  });
-});
+})();
