@@ -613,7 +613,7 @@
         scrollTrigger: {
           trigger: heroSection,
           start: "top top",
-          end: "+=65%",
+          end: () => `+=${window.innerWidth <= 880 ? 140 : 65}%`,
           scrub: 1.1,
           pin: true,
           anticipatePin: 1,
