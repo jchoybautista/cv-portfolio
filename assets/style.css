@@ -630,7 +630,7 @@ section {
 .socials .socials__title { color: #000; font-family: var(--heading); font-size: clamp(32px, 5vw, 56px); }
 .socials .socials__sub {
   font-family: var(--display);
-  color: #000;
+  color: #96e80f;
   font-size: clamp(32px, 5vw, 56px);
   text-transform: uppercase;
   transform: none;
@@ -1087,13 +1087,13 @@ section {
   will-change: transform;
 }
 .about__face--back .hof-cover__kicker {
-  color: #4a7c00;
+  color: #0a0b0a;
 }
 .about__face--back .hof-cover__title {
   color: #0a0b0a;
 }
 .about__face--back .hof-cover__title em {
-  color: #4a7c00;
+  color: #96e80f;
 }
 .about__face--back .hof-cover__lead {
   color: #4a5049;
