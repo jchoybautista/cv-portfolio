@@ -57,13 +57,19 @@
     function distM(px, py) {
       const d = _aboutP * DIST_AMP;
       if (d > 0.01)
-        ctx.moveTo(px + d * Math.sin(py * 0.016 + _t * 1.6), py + d * Math.cos(px * 0.016 + _t * 1.3));
+        ctx.moveTo(
+          px + d * Math.sin(py * 0.016 + _t * 1.6),
+          py + d * Math.cos(px * 0.016 + _t * 1.3),
+        );
       else ctx.moveTo(px, py);
     }
     function distL(px, py) {
       const d = _aboutP * DIST_AMP;
       if (d > 0.01)
-        ctx.lineTo(px + d * Math.sin(py * 0.016 + _t * 1.6), py + d * Math.cos(px * 0.016 + _t * 1.3));
+        ctx.lineTo(
+          px + d * Math.sin(py * 0.016 + _t * 1.6),
+          py + d * Math.cos(px * 0.016 + _t * 1.3),
+        );
       else ctx.lineTo(px, py);
     }
     const THRESHOLDS = [0.18, 0.34, 0.54, 0.78, 1.05, 1.4];
@@ -277,12 +283,15 @@
     const worksEl = document.querySelector(".works");
     if ("IntersectionObserver" in window) {
       const visible = new Set();
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach((e) =>
-          e.isIntersecting ? visible.add(e.target) : visible.delete(e.target)
-        );
-        visible.size > 0 ? start() : stop();
-      }, { threshold: 0 });
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) =>
+            e.isIntersecting ? visible.add(e.target) : visible.delete(e.target),
+          );
+          visible.size > 0 ? start() : stop();
+        },
+        { threshold: 0 },
+      );
       [hero, aboutEl, worksEl].filter(Boolean).forEach((el) => io.observe(el));
     } else {
       start();
@@ -439,10 +448,10 @@
     const t = Math.min(1, Math.max(0, y / 120));
     const isMobile = window.innerWidth <= 768;
     const startW = isMobile ? 165 : 245;
-    const startH = isMobile ? 53  : 78;
-    const shrinkW = isMobile ? 55  : 85;
-    const shrinkH = isMobile ? 17  : 27;
-    navLogo.style.width  = startW - shrinkW * t + "px";
+    const startH = isMobile ? 53 : 78;
+    const shrinkW = isMobile ? 55 : 85;
+    const shrinkH = isMobile ? 17 : 27;
+    navLogo.style.width = startW - shrinkW * t + "px";
     navLogo.style.height = startH - shrinkH * t + "px";
   }
 
@@ -587,7 +596,13 @@
           } // last stroke with ink = the frontier
           cum += len;
         }
-        if (sigPen && penIdx >= 0 && p > 0.002 && p < 0.998 && window.innerWidth > 880) {
+        if (
+          sigPen &&
+          penIdx >= 0 &&
+          p > 0.002 &&
+          p < 0.998 &&
+          window.innerWidth > 880
+        ) {
           try {
             const pt = sigStrokes[penIdx].getPointAtLength(
               Math.min(penLocal, sigLens[penIdx]),
@@ -694,8 +709,8 @@
     const gsap = window.gsap;
     const section = document.querySelector(".stage-about");
     if (!section) return;
-    const left    = section.querySelector(".stage-about__col--left");
-    const right   = section.querySelector(".stage-about__col--right");
+    const left = section.querySelector(".stage-about__col--left");
+    const right = section.querySelector(".stage-about__col--right");
     const blackLayer = document.getElementById("hero-black-layer");
     const flipper = document.getElementById("about-flip");
 
@@ -731,12 +746,22 @@
       gsap.fromTo(
         left,
         { xPercent: -118, opacity: 0 },
-        { xPercent: 0, opacity: 1, ease: "power2.out", scrollTrigger: colTrigger },
+        {
+          xPercent: 0,
+          opacity: 1,
+          ease: "power2.out",
+          scrollTrigger: colTrigger,
+        },
       );
       gsap.fromTo(
         right,
         { xPercent: 118, opacity: 0 },
-        { xPercent: 0, opacity: 1, ease: "power2.out", scrollTrigger: colTrigger },
+        {
+          xPercent: 0,
+          opacity: 1,
+          ease: "power2.out",
+          scrollTrigger: colTrigger,
+        },
       );
     }
 
@@ -749,7 +774,7 @@
     // grid. Mobile gets the scroll-stack transition in the else-if branch below.
     if (!prefersReduced && flipper && window.innerWidth > 880) {
       const front = flipper.querySelector(".about__face--front");
-      const back  = flipper.querySelector(".about__face--back");
+      const back = flipper.querySelector(".about__face--back");
       const FLIP_PX = Math.round(window.innerHeight * 1.4);
 
       // Spacer goes white ONLY once the flip reveals the white "Some of My Work"
@@ -891,26 +916,35 @@
           const g = geom(i);
           if (animate && g2) {
             g2.to(card, {
-              x: g.x, y: g.y, rotation: g.rot, scale: g.scale,
-              duration: 0.7, ease: "power3.out",
+              x: g.x,
+              y: g.y,
+              rotation: g.rot,
+              scale: g.scale,
+              duration: 0.7,
+              ease: "power3.out",
               delay: Math.abs(i - mid) * 0.06,
             });
           } else {
-            card.style.transform =
-              `translate(${g.x}px, ${g.y}px) rotate(${g.rot}deg) scale(${g.scale})`;
+            card.style.transform = `translate(${g.x}px, ${g.y}px) rotate(${g.rot}deg) scale(${g.scale})`;
           }
         });
       };
-      if (prefersReduced || !g2) { applyFan(false); return; }
+      if (prefersReduced || !g2) {
+        applyFan(false);
+        return;
+      }
       g2.set(cards, { x: 0, y: 0, rotation: 0, scale: 1 });
       if ("IntersectionObserver" in window) {
-        const io = new IntersectionObserver((entries) => {
-          entries.forEach((e) => {
-            if (!e.isIntersecting) return;
-            applyFan(true);
-            io.disconnect();
-          });
-        }, { threshold: 0.35 });
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              if (!e.isIntersecting) return;
+              applyFan(true);
+              io.disconnect();
+            });
+          },
+          { threshold: 0.35 },
+        );
         io.observe(deck);
       } else {
         applyFan(true);
@@ -994,7 +1028,10 @@
           onUpdate(self) {
             const p = self.progress;
             nodes.forEach((node, i) => {
-              node.classList.toggle("journey__node--lit", p >= (thresholds[i] ?? 0));
+              node.classList.toggle(
+                "journey__node--lit",
+                p >= (thresholds[i] ?? 0),
+              );
             });
           },
         },
@@ -1350,6 +1387,16 @@
       xdLink: "",
       claudeLink: "https://scooter-store.vercel.app/",
     },
+    30: {
+      title: "Meridian - Crypto & Stock Tracker — Claude Code",
+      desc: "I designed and built Meridian using React 18, leading the design process entirely through my own iterative prompts.\n\nMeridian is another personal project I created to showcase my Claude Code skills. This is a full-stack financial dashboard for tracking live cryptocurrency and stock market data. Built with TypeScript and Supabase, it integrates the CoinGecko, Binance, and Finnhub APIs to deliver real-time prices, interactive charts, and portfolio management in a polished dark-themed UI.\n\nKey features include a live market overview with top 100 cryptocurrencies and major stocks, interactive asset detail pages with candlestick charts and sparklines, an authenticated portfolio tracker with transaction logging and allocation breakdowns, a personalized watchlist, market heatmap, fear & greed index gauge, trending coins, and sector performance panels. Fully responsive mobile-first layout with accessible, keyboard-navigable components.\n\nCryptocurrency prices are streamed in real time via the Binance WebSocket API. Stock prices, however, are sourced from Finnhub's free tier, which enforces strict rate limits and a capped number of daily requests so stock data reflects the most recently fetched price rather than a true live feed. This is a known trade-off of working within free API tiers and would be resolved with a paid plan in a production setting.",
+      created: "2026",
+      role: "Designer and Developer",
+      image: "assets/img/project-32.png",
+      figmaLink: "",
+      xdLink: "",
+      claudeLink: "https://meridian-xi.vercel.app/",
+    },
     29: {
       title: "Velocità Admin Page — Claude Code",
       desc: "As the companion admin page for the Velocità E-Commerce platform, I built this dashboard as a personal project to showcase my end-to-end design and development workflow using Claude. By leveraging Claude Code to build this system with React, Tailwind, and Supabase, I handled everything from the initial interface design to final deployment. My front-end expertise was essential for refining the code to ensure a robust, high-performance experience. This dashboard serves as the command center for the store, allowing for seamless management of product content and orders. Fully mobile-web responsive, it provides a fluid, professional experience across any device, highlighting my ability to use AI as a force multiplier while maintaining the technical oversight required to deliver complete, scalable solutions.",
@@ -1513,7 +1560,8 @@
     const claudeBtn = modal.querySelector(".claude-link");
     let lastFocused = null;
 
-    const FOCUSABLE = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+    const FOCUSABLE =
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
     function setLink(btn, url) {
       if (!btn) return;
@@ -1542,10 +1590,18 @@
       setLink(xdBtn, data.xdLink);
       setLink(webBtn, data.websiteLink);
       setLink(claudeBtn, data.claudeLink);
-      const isFigmaMake = data.websiteLink && data.websiteLink.includes("figma.site");
-      webBtn.querySelector("img").src = isFigmaMake ? "assets/img/Figma-logo.svg" : "assets/img/web-icon.svg";
-      webBtn.querySelector("span").textContent = isFigmaMake ? "Live Build" : "Website";
-      webBtn.setAttribute("aria-label", isFigmaMake ? "Open live Figma Make build" : "Visit website");
+      const isFigmaMake =
+        data.websiteLink && data.websiteLink.includes("figma.site");
+      webBtn.querySelector("img").src = isFigmaMake
+        ? "assets/img/Figma-logo.svg"
+        : "assets/img/web-icon.svg";
+      webBtn.querySelector("span").textContent = isFigmaMake
+        ? "Live Build"
+        : "Website";
+      webBtn.setAttribute(
+        "aria-label",
+        isFigmaMake ? "Open live Figma Make build" : "Visit website",
+      );
       lastFocused = document.activeElement;
       modal.classList.add("open");
       modal.setAttribute("aria-hidden", "false");
@@ -1571,7 +1627,7 @@
     modal.addEventListener("keydown", (e) => {
       if (!modal.classList.contains("open") || e.key !== "Tab") return;
       const focusable = Array.from(modal.querySelectorAll(FOCUSABLE)).filter(
-        (el) => !el.hasAttribute("disabled") && el.offsetParent !== null
+        (el) => !el.hasAttribute("disabled") && el.offsetParent !== null,
       );
       if (!focusable.length) return;
       const first = focusable[0];

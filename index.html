@@ -1,17 +1,24 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" class="no-js">
   <head>
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6QXBRVCDD4"></script>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-6QXBRVCDD4"
+    ></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-6QXBRVCDD4');
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-6QXBRVCDD4");
     </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Jonathan Bautista — Senior UI/UX Designer & Front-End Developer</title>
+    <title>
+      Jonathan Bautista — Senior UI/UX Designer & Front-End Developer
+    </title>
     <meta
       name="description"
       content="Jonathan Bautista — Senior UI/UX Designer & Front-End Developer. 13+ years turning messy ideas into digital products people genuinely enjoy using."
@@ -23,9 +30,18 @@
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://choybautista.github.io/" />
-    <meta property="og:title" content="Jonathan Bautista — Senior UI/UX Designer & Front-End Developer" />
-    <meta property="og:description" content="13+ years turning messy ideas into digital products people genuinely enjoy using. Design vision meets technical reality." />
-    <meta property="og:image" content="https://choybautista.github.io/assets/img/project-30.png" />
+    <meta
+      property="og:title"
+      content="Jonathan Bautista — Senior UI/UX Designer & Front-End Developer"
+    />
+    <meta
+      property="og:description"
+      content="13+ years turning messy ideas into digital products people genuinely enjoy using. Design vision meets technical reality."
+    />
+    <meta
+      property="og:image"
+      content="https://choybautista.github.io/assets/img/project-30.png"
+    />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:locale" content="en_US" />
@@ -33,33 +49,51 @@
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Jonathan Bautista — Senior UI/UX Designer & Front-End Developer" />
-    <meta name="twitter:description" content="13+ years turning messy ideas into digital products people genuinely enjoy using." />
-    <meta name="twitter:image" content="https://choybautista.github.io/assets/img/project-30.png" />
+    <meta
+      name="twitter:title"
+      content="Jonathan Bautista — Senior UI/UX Designer & Front-End Developer"
+    />
+    <meta
+      name="twitter:description"
+      content="13+ years turning messy ideas into digital products people genuinely enjoy using."
+    />
+    <meta
+      name="twitter:image"
+      content="https://choybautista.github.io/assets/img/project-30.png"
+    />
 
     <!-- Structured Data -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "Jonathan Bautista",
-      "jobTitle": "Senior UI/UX Designer & Front-End Developer",
-      "url": "https://choybautista.github.io/",
-      "email": "jchoybautista@gmail.com",
-      "telephone": "+639171825114",
-      "description": "13+ years turning messy ideas into digital products people genuinely enjoy using. Bridging design vision and technical reality across two disciplines and dozens of brands.",
-      "sameAs": [
-        "https://www.linkedin.com/in/jonathan-bautista-92038839/",
-        "https://www.instagram.com/jonathanndroid/",
-        "https://www.facebook.com/jonathanndroid"
-      ],
-      "knowsAbout": ["UI/UX Design", "Front-End Development", "Figma", "HTML5", "CSS3", "JavaScript", "React", "Vue"],
-      "alumniOf": {
-        "@type": "CollegeOrUniversity",
-        "name": "Far Eastern University",
-        "address": { "@type": "PostalAddress", "addressLocality": "Manila" }
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Jonathan Bautista",
+        "jobTitle": "Senior UI/UX Designer & Front-End Developer",
+        "url": "https://choybautista.github.io/",
+        "email": "jchoybautista@gmail.com",
+        "telephone": "+639171825114",
+        "description": "13+ years turning messy ideas into digital products people genuinely enjoy using. Bridging design vision and technical reality across two disciplines and dozens of brands.",
+        "sameAs": [
+          "https://www.linkedin.com/in/jonathan-bautista-92038839/",
+          "https://www.instagram.com/jonathanndroid/",
+          "https://www.facebook.com/jonathanndroid"
+        ],
+        "knowsAbout": [
+          "UI/UX Design",
+          "Front-End Development",
+          "Figma",
+          "HTML5",
+          "CSS3",
+          "JavaScript",
+          "React",
+          "Vue"
+        ],
+        "alumniOf": {
+          "@type": "CollegeOrUniversity",
+          "name": "Far Eastern University",
+          "address": { "@type": "PostalAddress", "addressLocality": "Manila" }
+        }
       }
-    }
     </script>
 
     <script>
@@ -94,122 +128,240 @@
     <main id="main-content" tabindex="-1">
       <!-- ===================== HERO + STATEMENT — shared dark background zone ===================== -->
       <div class="dark-zone">
-
         <!-- Fixed background layer — gradient + contour canvas.
              position: fixed so it stays pinned to the viewport while hero and
              statement content scrolls over it (same effect as landonorris.com). -->
         <div class="hero__dark" aria-hidden="true">
           <!-- Fades in across the About section to shift the canvas olive → black -->
-          <div class="hero__black-layer" id="hero-black-layer" aria-hidden="true"></div>
+          <div
+            class="hero__black-layer"
+            id="hero-black-layer"
+            aria-hidden="true"
+          ></div>
           <canvas class="hero__contours" id="hero-contours"></canvas>
         </div>
 
-      <!-- ===================== HERO ===================== -->
-      <section class="hero" id="home">
-        <div class="hero__stage">
-
-          <!-- Marquee text rows — sit behind video, revealed as panel shrinks on scroll -->
-          <div class="hero__marquee" aria-hidden="true">
-            <div class="hero__marquee-row hero__marquee-row--ltr">
-              <div class="hero__marquee-track">
-                <img src="assets/img/uiuxdesigner.svg" alt="" draggable="false">
-                <img src="assets/img/uiuxdesigner.svg" alt="" draggable="false">
+        <!-- ===================== HERO ===================== -->
+        <section class="hero" id="home">
+          <div class="hero__stage">
+            <!-- Marquee text rows — sit behind video, revealed as panel shrinks on scroll -->
+            <div class="hero__marquee" aria-hidden="true">
+              <div class="hero__marquee-row hero__marquee-row--ltr">
+                <div class="hero__marquee-track">
+                  <img
+                    src="assets/img/uiuxdesigner.svg"
+                    alt=""
+                    draggable="false"
+                  />
+                  <img
+                    src="assets/img/uiuxdesigner.svg"
+                    alt=""
+                    draggable="false"
+                  />
+                </div>
+              </div>
+              <div class="hero__marquee-row hero__marquee-row--rtl">
+                <div class="hero__marquee-track">
+                  <img
+                    src="assets/img/webdeveloper.svg"
+                    alt=""
+                    draggable="false"
+                  />
+                  <img
+                    src="assets/img/webdeveloper.svg"
+                    alt=""
+                    draggable="false"
+                  />
+                </div>
               </div>
             </div>
-            <div class="hero__marquee-row hero__marquee-row--rtl">
-              <div class="hero__marquee-track">
-                <img src="assets/img/webdeveloper.svg" alt="" draggable="false">
-                <img src="assets/img/webdeveloper.svg" alt="" draggable="false">
-              </div>
+
+            <!-- Shrinking video panel (scale animated via ScrollTrigger) -->
+            <div class="hero__panel" id="hero-panel" aria-hidden="true">
+              <!-- Cinematic video fill -->
+              <video
+                class="hero__video"
+                autoplay
+                muted
+                loop
+                playsinline
+                preload="auto"
+              >
+                <source src="C0495a.mp4" type="video/mp4" />
+              </video>
+              <!-- Mood tint -->
+              <div class="hero__tint" aria-hidden="true"></div>
+              <!-- Heavy animated film grain -->
+              <div class="hero__grain" aria-hidden="true"></div>
+              <!-- VHS scanlines -->
+              <div class="hero__scanlines" aria-hidden="true"></div>
+              <!-- Cinematic vignette frame -->
+              <div class="hero__vignette" aria-hidden="true"></div>
             </div>
-          </div>
 
-          <!-- Shrinking video panel (scale animated via ScrollTrigger) -->
-          <div class="hero__panel" id="hero-panel" aria-hidden="true">
-            <!-- Cinematic video fill -->
-            <video class="hero__video" autoplay muted loop playsinline preload="auto">
-              <source src="C0495a.mp4" type="video/mp4">
-            </video>
-            <!-- Mood tint -->
-            <div class="hero__tint" aria-hidden="true"></div>
-            <!-- Heavy animated film grain -->
-            <div class="hero__grain" aria-hidden="true"></div>
-            <!-- VHS scanlines -->
-            <div class="hero__scanlines" aria-hidden="true"></div>
-            <!-- Cinematic vignette frame -->
-            <div class="hero__vignette" aria-hidden="true"></div>
-          </div>
-
-          <!-- Centered signature — its own hero layer (does NOT shrink). The real
+            <!-- Centered signature — its own hero layer (does NOT shrink). The real
                signature is a single hand-drawn stroke path (.hero__sig-mp) that
                writes itself on via stroke-dashoffset, scrubbed to scroll, from its
                start point (top of the first loop) to the end, with a glowing pen
                nib riding the leading edge. -->
-          <div class="hero__sig" id="hero-sig" role="img" aria-label="Jonathan Bautista signature">
-            <svg class="hero__sig-svg" id="hero-sig-svg" viewBox="0 0 2968 2194" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-              <path class="hero__sig-mp" d="M574.848 665.003C563.445 766.893 552.042 868.783 534.035 995.864C516.029 1122.95 491.763 1272.13 463.098 1383.42C434.433 1494.72 402.104 1563.59 365.942 1622.24C329.781 1680.88 290.768 1727.2 254.883 1758.07C218.998 1788.95 187.423 1802.97 160.983 1800.95C134.543 1798.93 114.196 1780.44 93.201 1750.15C72.2057 1719.87 51.1788 1678.34 34.3211 1633.3C17.4635 1588.26 5.41232 1540.96 8.47744 1486.56C11.5426 1432.16 30.0892 1372.07 66.9289 1309.64C103.769 1247.22 158.339 1184.26 320.139 1046.72C481.939 909.176 749.314 698.957 900.954 564.68C1052.59 430.404 1080.4 378.44 1087.07 336.182C1093.74 293.925 1078.44 262.948 1048.19 239.961C1017.93 216.973 973.19 202.914 925.806 197.737C878.421 192.56 829.751 196.693 785.061 207.629C740.371 218.566 701.137 236.182 666.076 265.065C631.015 293.948 601.317 333.565 576.784 382.438C552.251 431.312 533.784 488.242 518.31 566.3C502.836 644.358 490.914 741.82 480.392 915.54C469.871 1089.26 461.111 1336.28 448.872 1513.49C436.633 1690.69 421.181 1790.58 401.863 1873.45C382.545 1956.32 359.83 2019.14 336.211 2067.59C312.592 2116.05 288.757 2148.25 268.441 2170.94C248.124 2193.63 232.048 2205.83 273.774 2086.29C315.501 1966.76 415.518 1715.1 488.243 1545.15C560.968 1375.21 603.37 1294.6 647.771 1221.47C692.172 1148.35 737.288 1085.16 775.2 1039.88C813.111 994.611 842.452 969.176 858.644 963.354C874.836 957.532 876.992 972.094 875.83 1007.13C874.668 1042.17 870.124 1097.24 863.934 1140.66C857.744 1184.07 850.047 1214.15 838.443 1244.9C826.839 1275.66 811.561 1306.18 796.491 1332.28C768.81 1380.23 747.975 1404.86 743.723 1408.45C743.169 1408.91 747.927 1401.84 771.766 1359.46C795.604 1317.08 838.903 1238.39 862.944 1191.59C886.985 1144.78 890.455 1132.26 891.564 1127.68C895.647 1110.83 886.025 1197.59 888.787 1230.5C889.673 1241.07 908.402 1232.94 934.225 1205.26C960.048 1177.58 997.226 1129.01 1015.19 1107.27C1033.16 1085.53 1030.78 1092.09 1028.57 1103.33C1017.72 1158.55 1031.44 1189.36 1037.49 1194.77C1043.89 1200.49 1069.22 1188.21 1106.17 1165.83C1186.3 1117.28 1192.38 1061.3 1193.2 1060.48C1210.62 1043.02 1198.4 1099.26 1205.02 1107.56C1210.72 1114.71 1233.11 1083.25 1259.66 1026.14C1274.14 994.999 1283.39 956.342 1291.17 854.098C1298.95 751.854 1303.12 586.393 1298.11 516.585C1293.09 446.778 1278.75 477.637 1271.67 500.006C1264.59 522.376 1265.21 535.322 1257.39 620.941C1249.57 706.561 1233.28 864.462 1225.32 972.464C1217.36 1080.47 1218.22 1133.78 1222.01 1172.53C1228.06 1234.43 1240.86 1260.27 1243.51 1262.59C1244.59 1263.55 1245.41 1256.7 1263.49 1215.45C1281.57 1174.2 1316.96 1096.89 1338.79 1051.47C1360.63 1006.06 1367.85 994.885 1372.3 991.514C1377.13 987.849 1381.5 1001.65 1388.05 1005.66C1399.03 1012.38 1415.87 988.012 1429.15 966.11C1442.18 944.616 1441.18 922.683 1438.15 916.968C1417.02 877.162 1435.15 1008.65 1441.51 1026.5C1443.89 1033.18 1452.96 1030.29 1459.25 1022.69C1494.38 980.257 1475.64 920.753 1473.28 900.606C1473 898.257 1480.48 940.734 1487.61 1004.56C1490.51 1030.5 1493.81 1043.13 1522.29 941.235C1550.77 839.337 1604.81 622.47 1634.38 479.573C1663.96 336.676 1667.42 274.322 1666.97 218.333C1666.52 162.345 1662.05 114.612 1655.79 78.2542C1649.52 41.8961 1641.6 18.3592 1639 10.2134C1636.4 2.06763 1639.35 10.0263 1639.89 146.554C1640.43 283.082 1638.48 547.938 1639.75 700.047C1641.03 852.157 1645.6 883.493 1651.66 909.19C1657.71 934.888 1665.11 953.996 1671.01 962.474C1676.91 970.951 1681.08 968.218 1688.58 960.796C1707.52 942.055 1732.61 905.672 1761.89 853.545C1777.7 825.394 1790.17 790.986 1800.67 757.622C1820.97 693.13 1826.02 643.24 1824.59 624.985C1823.58 611.976 1804.66 670.969 1796.63 711.649C1791.32 738.513 1797.27 771.144 1806.87 799.311C1809.76 807.803 1822.62 795.781 1829.35 784.76C1842.47 763.249 1844.48 744.575 1845.04 741.517C1849.93 714.782 1846.31 785.313 1850.64 789.569C1852.8 791.692 1857.61 789.478 1862.81 785.49C1892.45 762.806 1889.48 716.469 1887.3 702.523C1886.84 699.565 1883.4 706.51 1881.03 711.596C1878.66 716.682 1876.37 720.094 2056.25 626.452C2236.13 532.811 2598.25 342.014 2782.51 247.135C2966.76 152.257 2962.18 159.079 2959.14 164.469C2956.09 169.858 2954.74 173.608 2949.35 184.061"/>
-            </svg>
-            <span class="hero__sig-pen" id="hero-sig-pen" aria-hidden="true"></span>
+            <div
+              class="hero__sig"
+              id="hero-sig"
+              role="img"
+              aria-label="Jonathan Bautista signature"
+            >
+              <svg
+                class="hero__sig-svg"
+                id="hero-sig-svg"
+                viewBox="0 0 2968 2194"
+                preserveAspectRatio="xMidYMid meet"
+                aria-hidden="true"
+              >
+                <path
+                  class="hero__sig-mp"
+                  d="M574.848 665.003C563.445 766.893 552.042 868.783 534.035 995.864C516.029 1122.95 491.763 1272.13 463.098 1383.42C434.433 1494.72 402.104 1563.59 365.942 1622.24C329.781 1680.88 290.768 1727.2 254.883 1758.07C218.998 1788.95 187.423 1802.97 160.983 1800.95C134.543 1798.93 114.196 1780.44 93.201 1750.15C72.2057 1719.87 51.1788 1678.34 34.3211 1633.3C17.4635 1588.26 5.41232 1540.96 8.47744 1486.56C11.5426 1432.16 30.0892 1372.07 66.9289 1309.64C103.769 1247.22 158.339 1184.26 320.139 1046.72C481.939 909.176 749.314 698.957 900.954 564.68C1052.59 430.404 1080.4 378.44 1087.07 336.182C1093.74 293.925 1078.44 262.948 1048.19 239.961C1017.93 216.973 973.19 202.914 925.806 197.737C878.421 192.56 829.751 196.693 785.061 207.629C740.371 218.566 701.137 236.182 666.076 265.065C631.015 293.948 601.317 333.565 576.784 382.438C552.251 431.312 533.784 488.242 518.31 566.3C502.836 644.358 490.914 741.82 480.392 915.54C469.871 1089.26 461.111 1336.28 448.872 1513.49C436.633 1690.69 421.181 1790.58 401.863 1873.45C382.545 1956.32 359.83 2019.14 336.211 2067.59C312.592 2116.05 288.757 2148.25 268.441 2170.94C248.124 2193.63 232.048 2205.83 273.774 2086.29C315.501 1966.76 415.518 1715.1 488.243 1545.15C560.968 1375.21 603.37 1294.6 647.771 1221.47C692.172 1148.35 737.288 1085.16 775.2 1039.88C813.111 994.611 842.452 969.176 858.644 963.354C874.836 957.532 876.992 972.094 875.83 1007.13C874.668 1042.17 870.124 1097.24 863.934 1140.66C857.744 1184.07 850.047 1214.15 838.443 1244.9C826.839 1275.66 811.561 1306.18 796.491 1332.28C768.81 1380.23 747.975 1404.86 743.723 1408.45C743.169 1408.91 747.927 1401.84 771.766 1359.46C795.604 1317.08 838.903 1238.39 862.944 1191.59C886.985 1144.78 890.455 1132.26 891.564 1127.68C895.647 1110.83 886.025 1197.59 888.787 1230.5C889.673 1241.07 908.402 1232.94 934.225 1205.26C960.048 1177.58 997.226 1129.01 1015.19 1107.27C1033.16 1085.53 1030.78 1092.09 1028.57 1103.33C1017.72 1158.55 1031.44 1189.36 1037.49 1194.77C1043.89 1200.49 1069.22 1188.21 1106.17 1165.83C1186.3 1117.28 1192.38 1061.3 1193.2 1060.48C1210.62 1043.02 1198.4 1099.26 1205.02 1107.56C1210.72 1114.71 1233.11 1083.25 1259.66 1026.14C1274.14 994.999 1283.39 956.342 1291.17 854.098C1298.95 751.854 1303.12 586.393 1298.11 516.585C1293.09 446.778 1278.75 477.637 1271.67 500.006C1264.59 522.376 1265.21 535.322 1257.39 620.941C1249.57 706.561 1233.28 864.462 1225.32 972.464C1217.36 1080.47 1218.22 1133.78 1222.01 1172.53C1228.06 1234.43 1240.86 1260.27 1243.51 1262.59C1244.59 1263.55 1245.41 1256.7 1263.49 1215.45C1281.57 1174.2 1316.96 1096.89 1338.79 1051.47C1360.63 1006.06 1367.85 994.885 1372.3 991.514C1377.13 987.849 1381.5 1001.65 1388.05 1005.66C1399.03 1012.38 1415.87 988.012 1429.15 966.11C1442.18 944.616 1441.18 922.683 1438.15 916.968C1417.02 877.162 1435.15 1008.65 1441.51 1026.5C1443.89 1033.18 1452.96 1030.29 1459.25 1022.69C1494.38 980.257 1475.64 920.753 1473.28 900.606C1473 898.257 1480.48 940.734 1487.61 1004.56C1490.51 1030.5 1493.81 1043.13 1522.29 941.235C1550.77 839.337 1604.81 622.47 1634.38 479.573C1663.96 336.676 1667.42 274.322 1666.97 218.333C1666.52 162.345 1662.05 114.612 1655.79 78.2542C1649.52 41.8961 1641.6 18.3592 1639 10.2134C1636.4 2.06763 1639.35 10.0263 1639.89 146.554C1640.43 283.082 1638.48 547.938 1639.75 700.047C1641.03 852.157 1645.6 883.493 1651.66 909.19C1657.71 934.888 1665.11 953.996 1671.01 962.474C1676.91 970.951 1681.08 968.218 1688.58 960.796C1707.52 942.055 1732.61 905.672 1761.89 853.545C1777.7 825.394 1790.17 790.986 1800.67 757.622C1820.97 693.13 1826.02 643.24 1824.59 624.985C1823.58 611.976 1804.66 670.969 1796.63 711.649C1791.32 738.513 1797.27 771.144 1806.87 799.311C1809.76 807.803 1822.62 795.781 1829.35 784.76C1842.47 763.249 1844.48 744.575 1845.04 741.517C1849.93 714.782 1846.31 785.313 1850.64 789.569C1852.8 791.692 1857.61 789.478 1862.81 785.49C1892.45 762.806 1889.48 716.469 1887.3 702.523C1886.84 699.565 1883.4 706.51 1881.03 711.596C1878.66 716.682 1876.37 720.094 2056.25 626.452C2236.13 532.811 2598.25 342.014 2782.51 247.135C2966.76 152.257 2962.18 159.079 2959.14 164.469C2956.09 169.858 2954.74 173.608 2949.35 184.061"
+                />
+              </svg>
+              <span
+                class="hero__sig-pen"
+                id="hero-sig-pen"
+                aria-hidden="true"
+              ></span>
+            </div>
+
+            <!-- Scroll indicator -->
+            <a class="hero__scroll" href="#message" aria-label="Scroll down">
+              <span class="hero__scroll-label">Scroll</span>
+              <svg
+                class="hero__scroll-arrow"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M12 5v14M5 12l7 7 7-7" />
+              </svg>
+            </a>
           </div>
-
-          <!-- Scroll indicator -->
-          <a class="hero__scroll" href="#message" aria-label="Scroll down">
-            <span class="hero__scroll-label">Scroll</span>
-            <svg class="hero__scroll-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M12 5v14M5 12l7 7 7-7"/>
-            </svg>
-          </a>
-
-        </div>
-      </section>
-      </div><!-- /.dark-zone -->
+        </section>
+      </div>
+      <!-- /.dark-zone -->
 
       <!-- ===================== ABOUT — flip card: columns slide in, then flips to HOF cover ===================== -->
-      <section class="stage-about" id="about" aria-label="About Jonathan Bautista">
+      <section
+        class="stage-about"
+        id="about"
+        aria-label="About Jonathan Bautista"
+      >
         <div class="about__flip" id="about-flip">
-
           <!-- Front face — existing about content -->
           <div class="about__face about__face--front">
             <div class="about__inner stage-about__inner">
-
               <!-- Left rail — slides in from the left -->
-              <aside class="about__aside stage-about__col stage-about__col--left">
+              <aside
+                class="about__aside stage-about__col stage-about__col--left"
+              >
                 <span class="about__kicker">About</span>
                 <h2 class="about__lead">
-                  <span class="accent">13+ years</span> turning concepts into polished products. I bridge <span class="accent">design</span> and <span class="accent">development</span> from wireframe to code, now <span class="accent">AI-accelerated</span>.
+                  <span class="accent">13+ years</span> turning concepts into
+                  polished products. I bridge
+                  <span class="accent">design</span> and
+                  <span class="accent">development</span> from wireframe to
+                  code, now <span class="accent">AI-accelerated</span>.
                 </h2>
 
                 <div class="about__contact">
                   <span class="about__contact-label">Let's connect</span>
                   <div class="about__icons">
-                    <a href="https://www.facebook.com/jonathanndroid" target="_blank" rel="noopener" aria-label="Facebook"><img src="assets/img/facebook-logo.svg" alt="" /></a>
-                    <a href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener" aria-label="Instagram"><img src="assets/img/instagram-logo.svg" alt="" /></a>
-                    <a href="https://www.linkedin.com/in/jonathan-bautista-92038839/" target="_blank" rel="noopener" aria-label="LinkedIn"><img src="assets/img/linkedin-logo.svg" alt="" /></a>
-                    <a href="mailto:jchoybautista@gmail.com" aria-label="Email Jonathan"><img src="assets/img/gmail-logo.svg" alt="" /></a>
-                    <a href="tel:+639171825114" aria-label="Call Jonathan"><img src="assets/img/phone-logo.svg" alt="" /></a>
+                    <a
+                      href="https://www.facebook.com/jonathanndroid"
+                      target="_blank"
+                      rel="noopener"
+                      aria-label="Facebook"
+                      ><img src="assets/img/facebook-logo.svg" alt=""
+                    /></a>
+                    <a
+                      href="https://www.instagram.com/jonathanndroid/"
+                      target="_blank"
+                      rel="noopener"
+                      aria-label="Instagram"
+                      ><img src="assets/img/instagram-logo.svg" alt=""
+                    /></a>
+                    <a
+                      href="https://www.linkedin.com/in/jonathan-bautista-92038839/"
+                      target="_blank"
+                      rel="noopener"
+                      aria-label="LinkedIn"
+                      ><img src="assets/img/linkedin-logo.svg" alt=""
+                    /></a>
+                    <a
+                      href="mailto:jchoybautista@gmail.com"
+                      aria-label="Email Jonathan"
+                      ><img src="assets/img/gmail-logo.svg" alt=""
+                    /></a>
+                    <a href="tel:+639171825114" aria-label="Call Jonathan"
+                      ><img src="assets/img/phone-logo.svg" alt=""
+                    /></a>
                   </div>
-                  <a class="btn about__cv" href="assets/files/jonathan_bautista__April_2026.docx" download>Download CV</a>
+                  <a
+                    class="btn about__cv"
+                    href="assets/files/jonathan_bautista__April_2026.docx"
+                    download
+                    >Download CV</a
+                  >
                 </div>
               </aside>
 
               <!-- Right column — slides in from the right -->
               <div class="about__body stage-about__col stage-about__col--right">
                 <p class="about__p">
-                  I've spent <span class="accent">13+ years</span> as a <span class="accent">Senior UI/UX Designer</span> turning messy ideas into products people actually want to use. I handle the whole cycle from initial research and wireframes to final, high-fidelity prototypes. I've recently added tools like <span class="about__brands">Figma Make</span> and <span class="about__brands">Claude Code</span> to my workflow; they help me speed up the <span class="accent">design-to-code</span> process, so I can spend more time focusing on the user experience while I handle the technical implementation.
+                  I've spent <span class="accent">13+ years</span> as a
+                  <span class="accent">Senior UI/UX Designer</span> turning
+                  messy ideas into products people actually want to use. I
+                  handle the whole cycle from initial research and wireframes to
+                  final, high-fidelity prototypes. I've recently added tools
+                  like <span class="about__brands">Figma Make</span> and
+                  <span class="about__brands">Claude Code</span> to my workflow;
+                  they help me speed up the
+                  <span class="accent">design-to-code</span> process, so I can
+                  spend more time focusing on the user experience while I handle
+                  the technical implementation.
                 </p>
                 <p class="about__p">
-                  My portfolio includes work for major brands like <span class="about__brands">AEON Cambodia, Travelbook PH, Content House Inc., Angel's Pizza, Figaro Coffee, and Yamaha Motors Philippines</span>.
+                  My portfolio includes work for major brands like
+                  <span class="about__brands"
+                    >AEON Cambodia, Travelbook PH, Content House Inc., Angel's
+                    Pizza, Figaro Coffee, and Yamaha Motors Philippines</span
+                  >.
                 </p>
                 <p class="about__p">
-                  Beyond design, I'm a <span class="accent">Front-End Developer</span> who focuses on shipping critical, responsive web projects. I led the mobile-web transition for <span class="about__brands">Smart Communications</span> and <span class="about__brands">Talk 'N Text</span>, and I've built front-end architecture for platforms like <span class="about__brands">beep™, Visor PH, East West Bank, Camel Appliances, It's More Fun in the Philippines, POEA, PRU Life UK, and Bonakid</span>.
+                  Beyond design, I'm a
+                  <span class="accent">Front-End Developer</span> who focuses on
+                  shipping critical, responsive web projects. I led the
+                  mobile-web transition for
+                  <span class="about__brands">Smart Communications</span> and
+                  <span class="about__brands">Talk 'N Text</span>, and I've
+                  built front-end architecture for platforms like
+                  <span class="about__brands"
+                    >beep™, Visor PH, East West Bank, Camel Appliances, It's
+                    More Fun in the Philippines, POEA, PRU Life UK, and
+                    Bonakid</span
+                  >.
                 </p>
                 <p class="about__p about__p--close">
-                  This dual background, knowing how to <span class="accent">design</span> and how to <span class="accent">code</span>, means I can bridge the gap between a vision and the actual build to deliver a better end result for the user.
+                  This dual background, knowing how to
+                  <span class="accent">design</span> and how to
+                  <span class="accent">code</span>, means I can bridge the gap
+                  between a vision and the actual build to deliver a better end
+                  result for the user.
                 </p>
               </div>
-
             </div>
-          </div><!-- /.about__face--front -->
+          </div>
+          <!-- /.about__face--front -->
 
           <!-- Back face — Work cover, revealed by the flip -->
           <div class="about__face about__face--back">
@@ -217,144 +369,485 @@
               <span class="hof-cover__kicker">A Selection of Work</span>
               <h2 class="hof-cover__title">Some of <em>My Work</em></h2>
               <p class="hof-cover__lead">
-                Projects I've designed and shipped over 13+ years, across
-                major brands and, more recently, AI-accelerated builds.
+                Projects I've designed and shipped over 13+ years, across major
+                brands and, more recently, AI-accelerated builds. These projects
+                are designed and built using <strong>Figma</strong>,
+                <strong>Adobe XD</strong>, and <strong>Claude Code</strong>.
               </p>
-              <p class="hof-cover__nda">Much of my most impactful work is covered by NDAs and cannot be shown publicly; I am happy to discuss these projects in detail when we connect.</p>
+              <p class="hof-cover__nda">
+                Much of my most impactful work is covered by NDAs and cannot be
+                shown publicly; I am happy to discuss these projects in detail
+                when we connect.
+              </p>
             </div>
-          </div><!-- /.about__face--back -->
-
-        </div><!-- /.about__flip -->
+          </div>
+          <!-- /.about__face--back -->
+        </div>
+        <!-- /.about__flip -->
       </section>
 
       <!-- ===================== WORK HALL OF FAME (grid) ===================== -->
       <section class="hof" id="work">
-
         <div class="hof__grid" id="portfolio-grid">
-          <button class="hof-card reveal" data-id="28"><span class="hof-card__img"><img src="assets/img/project-30.png" alt="Velocità E-Commerce Website" loading="lazy" /></span><span class="hof-card__name">Velocità E-Commerce</span><span class="hof-card__year">2026</span></button>
-          <button class="hof-card reveal" data-id="29"><span class="hof-card__img"><img src="assets/img/project-31.png" alt="Velocità Admin Page" loading="lazy" /></span><span class="hof-card__name">Velocità Admin</span><span class="hof-card__year">2026</span></button>
-          <button class="hof-card reveal" data-id="27"><span class="hof-card__img"><img src="assets/img/project-29.png" alt="Final Fantasy VII Landing" loading="lazy" /></span><span class="hof-card__name">Final Fantasy VII Landing</span><span class="hof-card__year">2026</span></button>
-          <button class="hof-card reveal" data-id="26"><span class="hof-card__img"><img src="assets/img/project-28.png" alt="Dragon Ball Flappy Goku" loading="lazy" /></span><span class="hof-card__name">Flappy Goku Game</span><span class="hof-card__year">2025</span></button>
-          <button class="hof-card reveal" data-id="25"><span class="hof-card__img"><img src="assets/img/project-27.png" alt="Gacha Social App" loading="lazy" /></span><span class="hof-card__name">Gacha Social App</span><span class="hof-card__year">2025</span></button>
-          <button class="hof-card reveal" data-id="24"><span class="hof-card__img"><img src="assets/img/project-26.png" alt="Vanguard Landing Page" loading="lazy" /></span><span class="hof-card__name">Vanguard Landing</span><span class="hof-card__year">2025</span></button>
-          <button class="hof-card reveal" data-id="23"><span class="hof-card__img"><img src="assets/img/project-25.png" alt="Vanguard Admin Dashboard" loading="lazy" /></span><span class="hof-card__name">Vanguard Admin</span><span class="hof-card__year">2025</span></button>
-          <button class="hof-card reveal" data-id="22"><span class="hof-card__img"><img src="assets/img/project-24.png" alt="KicksMart Mobile App" loading="lazy" /></span><span class="hof-card__name">KicksMart Mobile</span><span class="hof-card__year">2025</span></button>
-          <button class="hof-card reveal" data-id="1"><span class="hof-card__img"><img src="assets/img/project-1.png" alt="NBL Basketball Website" loading="lazy" /></span><span class="hof-card__name">NBL Basketball Redesign</span><span class="hof-card__year">2025</span></button>
-          <button class="hof-card reveal" data-id="2"><span class="hof-card__img"><img src="assets/img/project-3.png" alt="Playtech E-Commerce" loading="lazy" /></span><span class="hof-card__name">Playtech E-Commerce</span><span class="hof-card__year">2025</span></button>
-          <button class="hof-card reveal" data-id="3"><span class="hof-card__img"><img src="assets/img/project-4.png" alt="Codecrafted CV Website" loading="lazy" /></span><span class="hof-card__name">Codecrafted CV</span><span class="hof-card__year">2025</span></button>
-          <button class="hof-card reveal" data-id="4"><span class="hof-card__img"><img src="assets/img/project-5.png" alt="Gamestop E-Commerce" loading="lazy" /></span><span class="hof-card__name">Gamestop E-Commerce</span><span class="hof-card__year">2025</span></button>
-          <button class="hof-card reveal" data-id="5"><span class="hof-card__img"><img src="assets/img/project-23.png" alt="Content House Web App" loading="lazy" /></span><span class="hof-card__name">Content House Web App</span><span class="hof-card__year">2020</span></button>
-          <button class="hof-card reveal" data-id="6"><span class="hof-card__img"><img src="assets/img/project-22.png" alt="Content House Mobile App" loading="lazy" /></span><span class="hof-card__name">Content House Mobile</span><span class="hof-card__year">2020</span></button>
-          <button class="hof-card reveal" data-id="7"><span class="hof-card__img"><img src="assets/img/project-6.png" alt="Content House Marketing Website" loading="lazy" /></span><span class="hof-card__name">Content House Website</span><span class="hof-card__year">2024</span></button>
-          <button class="hof-card reveal" data-id="8"><span class="hof-card__img"><img src="assets/img/project-7.png" alt="Agents Space Artwork Editor" loading="lazy" /></span><span class="hof-card__name">Agents Space Editor</span><span class="hof-card__year">2025</span></button>
-          <button class="hof-card reveal" data-id="9"><span class="hof-card__img"><img src="assets/img/project-8.png" alt="Agents Space Web App" loading="lazy" /></span><span class="hof-card__name">Agents Space Web</span><span class="hof-card__year">2023</span></button>
-          <button class="hof-card reveal" data-id="10"><span class="hof-card__img"><img src="assets/img/project-9.png" alt="Agents Space Mobile App" loading="lazy" /></span><span class="hof-card__name">Agents Space Mobile</span><span class="hof-card__year">2023</span></button>
-          <button class="hof-card reveal" data-id="11"><span class="hof-card__img"><img src="assets/img/project-10.png" alt="Agents Space Marketing Website" loading="lazy" /></span><span class="hof-card__name">Agents Space Website</span><span class="hof-card__year">2024</span></button>
-          <button class="hof-card reveal" data-id="21"><span class="hof-card__img"><img src="assets/img/project-21.png" alt="Aeon Cambodia Mobile App" loading="lazy" /></span><span class="hof-card__name">AEON Cambodia App</span><span class="hof-card__year">2019</span></button>
-          <button class="hof-card reveal" data-id="18"><span class="hof-card__img"><img src="assets/img/project-18.png" alt="Yamaha Motors Mobile App" loading="lazy" /></span><span class="hof-card__name">Yamaha Motors App</span><span class="hof-card__year">2018</span></button>
-          <button class="hof-card reveal" data-id="14"><span class="hof-card__img"><img src="assets/img/project-14.png" alt="MyPocketDoctor" loading="lazy" /></span><span class="hof-card__name">MyPocketDoctor</span><span class="hof-card__year">2016</span></button>
-          <button class="hof-card reveal" data-id="15"><span class="hof-card__img"><img src="assets/img/project-15.png" alt="It's More Fun in the Philippines" loading="lazy" /></span><span class="hof-card__name">It's More Fun in PH</span><span class="hof-card__year">2014</span></button>
-          <button class="hof-card reveal" data-id="16"><span class="hof-card__img"><img src="assets/img/project-16.png" alt="Coreproc Inc. Website" loading="lazy" /></span><span class="hof-card__name">Coreproc Website</span><span class="hof-card__year">2018</span></button>
-          <button class="hof-card reveal" data-id="17"><span class="hof-card__img"><img src="assets/img/project-17.png" alt="Mansmith Conference App" loading="lazy" /></span><span class="hof-card__name">Mansmith 2020 App</span><span class="hof-card__year">2019</span></button>
-          <button class="hof-card reveal" data-id="19"><span class="hof-card__img"><img src="assets/img/project-19.png" alt="Figaro Coffee Mobile App" loading="lazy" /></span><span class="hof-card__name">Figaro Coffee App</span><span class="hof-card__year">2018</span></button>
-          <button class="hof-card reveal" data-id="20"><span class="hof-card__img"><img src="assets/img/project-20.png" alt="Angels Pizza Mobile App" loading="lazy" /></span><span class="hof-card__name">Angel's Pizza App</span><span class="hof-card__year">2018</span></button>
-          <button class="hof-card reveal" data-id="12"><span class="hof-card__img"><img src="assets/img/project-12.jpg" alt="Travelbook PH" loading="lazy" /></span><span class="hof-card__name">Travelbook PH</span><span class="hof-card__year">2014</span></button>
-          <button class="hof-card reveal" data-id="13"><span class="hof-card__img"><img src="assets/img/project-13.png" alt="Nexgo Express Website" loading="lazy" /></span><span class="hof-card__name">Nexgo Express</span><span class="hof-card__year">2016</span></button>
+          <button class="hof-card reveal" data-id="30">
+            <span class="hof-card__img"
+              ><img
+                src="assets/img/project-32.png"
+                alt="Meridian Crypto & Stock Tracker"
+                loading="lazy" /></span
+            ><span class="hof-card__name">Meridian</span
+            ><span class="hof-card__year">2026</span>
+          </button>
+          <button class="hof-card reveal" data-id="28">
+            <span class="hof-card__img"
+              ><img
+                src="assets/img/project-30.png"
+                alt="Velocità E-Commerce Website"
+                loading="lazy" /></span
+            ><span class="hof-card__name">Velocità E-Commerce</span
+            ><span class="hof-card__year">2026</span>
+          </button>
+          <button class="hof-card reveal" data-id="29">
+            <span class="hof-card__img"
+              ><img
+                src="assets/img/project-31.png"
+                alt="Velocità Admin Page"
+                loading="lazy" /></span
+            ><span class="hof-card__name">Velocità Admin</span
+            ><span class="hof-card__year">2026</span>
+          </button>
+          <button class="hof-card reveal" data-id="27">
+            <span class="hof-card__img"
+              ><img
+                src="assets/img/project-29.png"
+                alt="Final Fantasy VII Landing"
+                loading="lazy" /></span
+            ><span class="hof-card__name">Final Fantasy VII Landing</span
+            ><span class="hof-card__year">2026</span>
+          </button>
+          <button class="hof-card reveal" data-id="26">
+            <span class="hof-card__img"
+              ><img
+                src="assets/img/project-28.png"
+                alt="Dragon Ball Flappy Goku"
+                loading="lazy" /></span
+            ><span class="hof-card__name">Flappy Goku Game</span
+            ><span class="hof-card__year">2025</span>
+          </button>
+          <button class="hof-card reveal" data-id="25">
+            <span class="hof-card__img"
+              ><img
+                src="assets/img/project-27.png"
+                alt="Gacha Social App"
+                loading="lazy" /></span
+            ><span class="hof-card__name">Gacha Social App</span
+            ><span class="hof-card__year">2025</span>
+          </button>
+          <button class="hof-card reveal" data-id="24">
+            <span class="hof-card__img"
+              ><img
+                src="assets/img/project-26.png"
+                alt="Vanguard Landing Page"
+                loading="lazy" /></span
+            ><span class="hof-card__name">Vanguard Landing</span
+            ><span class="hof-card__year">2025</span>
+          </button>
+          <button class="hof-card reveal" data-id="23">
+            <span class="hof-card__img"
+              ><img
+                src="assets/img/project-25.png"
+                alt="Vanguard Admin Dashboard"
+                loading="lazy" /></span
+            ><span class="hof-card__name">Vanguard Admin</span
+            ><span class="hof-card__year">2025</span>
+          </button>
+          <button class="hof-card reveal" data-id="22">
+            <span class="hof-card__img"
+              ><img
+                src="assets/img/project-24.png"
+                alt="KicksMart Mobile App"
+                loading="lazy" /></span
+            ><span class="hof-card__name">KicksMart Mobile</span
+            ><span class="hof-card__year">2025</span>
+          </button>
+          <button class="hof-card reveal" data-id="1">
+            <span class="hof-card__img"
+              ><img
+                src="assets/img/project-1.png"
+                alt="NBL Basketball Website"
+                loading="lazy" /></span
+            ><span class="hof-card__name">NBL Basketball Redesign</span
+            ><span class="hof-card__year">2025</span>
+          </button>
+          <button class="hof-card reveal" data-id="2">
+            <span class="hof-card__img"
+              ><img
+                src="assets/img/project-3.png"
+                alt="Playtech E-Commerce"
+                loading="lazy" /></span
+            ><span class="hof-card__name">Playtech E-Commerce</span
+            ><span class="hof-card__year">2025</span>
+          </button>
+          <button class="hof-card reveal" data-id="3">
+            <span class="hof-card__img"
+              ><img
+                src="assets/img/project-4.png"
+                alt="Codecrafted CV Website"
+                loading="lazy" /></span
+            ><span class="hof-card__name">Codecrafted CV</span
+            ><span class="hof-card__year">2025</span>
+          </button>
+          <button class="hof-card reveal" data-id="4">
+            <span class="hof-card__img"
+              ><img
+                src="assets/img/project-5.png"
+                alt="Gamestop E-Commerce"
+                loading="lazy" /></span
+            ><span class="hof-card__name">Gamestop E-Commerce</span
+            ><span class="hof-card__year">2025</span>
+          </button>
+          <button class="hof-card reveal" data-id="5">
+            <span class="hof-card__img"
+              ><img
+                src="assets/img/project-23.png"
+                alt="Content House Web App"
+                loading="lazy" /></span
+            ><span class="hof-card__name">Content House Web App</span
+            ><span class="hof-card__year">2020</span>
+          </button>
+          <button class="hof-card reveal" data-id="6">
+            <span class="hof-card__img"
+              ><img
+                src="assets/img/project-22.png"
+                alt="Content House Mobile App"
+                loading="lazy" /></span
+            ><span class="hof-card__name">Content House Mobile</span
+            ><span class="hof-card__year">2020</span>
+          </button>
+          <button class="hof-card reveal" data-id="7">
+            <span class="hof-card__img"
+              ><img
+                src="assets/img/project-6.png"
+                alt="Content House Marketing Website"
+                loading="lazy" /></span
+            ><span class="hof-card__name">Content House Website</span
+            ><span class="hof-card__year">2024</span>
+          </button>
+          <button class="hof-card reveal" data-id="8">
+            <span class="hof-card__img"
+              ><img
+                src="assets/img/project-7.png"
+                alt="Agents Space Artwork Editor"
+                loading="lazy" /></span
+            ><span class="hof-card__name">Agents Space Editor</span
+            ><span class="hof-card__year">2025</span>
+          </button>
+          <button class="hof-card reveal" data-id="9">
+            <span class="hof-card__img"
+              ><img
+                src="assets/img/project-8.png"
+                alt="Agents Space Web App"
+                loading="lazy" /></span
+            ><span class="hof-card__name">Agents Space Web</span
+            ><span class="hof-card__year">2023</span>
+          </button>
+          <button class="hof-card reveal" data-id="10">
+            <span class="hof-card__img"
+              ><img
+                src="assets/img/project-9.png"
+                alt="Agents Space Mobile App"
+                loading="lazy" /></span
+            ><span class="hof-card__name">Agents Space Mobile</span
+            ><span class="hof-card__year">2023</span>
+          </button>
+          <button class="hof-card reveal" data-id="11">
+            <span class="hof-card__img"
+              ><img
+                src="assets/img/project-10.png"
+                alt="Agents Space Marketing Website"
+                loading="lazy" /></span
+            ><span class="hof-card__name">Agents Space Website</span
+            ><span class="hof-card__year">2024</span>
+          </button>
+          <button class="hof-card reveal" data-id="21">
+            <span class="hof-card__img"
+              ><img
+                src="assets/img/project-21.png"
+                alt="Aeon Cambodia Mobile App"
+                loading="lazy" /></span
+            ><span class="hof-card__name">AEON Cambodia App</span
+            ><span class="hof-card__year">2019</span>
+          </button>
+          <button class="hof-card reveal" data-id="18">
+            <span class="hof-card__img"
+              ><img
+                src="assets/img/project-18.png"
+                alt="Yamaha Motors Mobile App"
+                loading="lazy" /></span
+            ><span class="hof-card__name">Yamaha Motors App</span
+            ><span class="hof-card__year">2018</span>
+          </button>
+          <button class="hof-card reveal" data-id="14">
+            <span class="hof-card__img"
+              ><img
+                src="assets/img/project-14.png"
+                alt="MyPocketDoctor"
+                loading="lazy" /></span
+            ><span class="hof-card__name">MyPocketDoctor</span
+            ><span class="hof-card__year">2016</span>
+          </button>
+          <button class="hof-card reveal" data-id="15">
+            <span class="hof-card__img"
+              ><img
+                src="assets/img/project-15.png"
+                alt="It's More Fun in the Philippines"
+                loading="lazy" /></span
+            ><span class="hof-card__name">It's More Fun in PH</span
+            ><span class="hof-card__year">2014</span>
+          </button>
+          <button class="hof-card reveal" data-id="16">
+            <span class="hof-card__img"
+              ><img
+                src="assets/img/project-16.png"
+                alt="Coreproc Inc. Website"
+                loading="lazy" /></span
+            ><span class="hof-card__name">Coreproc Website</span
+            ><span class="hof-card__year">2018</span>
+          </button>
+          <button class="hof-card reveal" data-id="17">
+            <span class="hof-card__img"
+              ><img
+                src="assets/img/project-17.png"
+                alt="Mansmith Conference App"
+                loading="lazy" /></span
+            ><span class="hof-card__name">Mansmith 2020 App</span
+            ><span class="hof-card__year">2019</span>
+          </button>
+          <button class="hof-card reveal" data-id="19">
+            <span class="hof-card__img"
+              ><img
+                src="assets/img/project-19.png"
+                alt="Figaro Coffee Mobile App"
+                loading="lazy" /></span
+            ><span class="hof-card__name">Figaro Coffee App</span
+            ><span class="hof-card__year">2018</span>
+          </button>
+          <button class="hof-card reveal" data-id="20">
+            <span class="hof-card__img"
+              ><img
+                src="assets/img/project-20.png"
+                alt="Angels Pizza Mobile App"
+                loading="lazy" /></span
+            ><span class="hof-card__name">Angel's Pizza App</span
+            ><span class="hof-card__year">2018</span>
+          </button>
+          <button class="hof-card reveal" data-id="12">
+            <span class="hof-card__img"
+              ><img
+                src="assets/img/project-12.jpg"
+                alt="Travelbook PH"
+                loading="lazy" /></span
+            ><span class="hof-card__name">Travelbook PH</span
+            ><span class="hof-card__year">2014</span>
+          </button>
+          <button class="hof-card reveal" data-id="13">
+            <span class="hof-card__img"
+              ><img
+                src="assets/img/project-13.png"
+                alt="Nexgo Express Website"
+                loading="lazy" /></span
+            ><span class="hof-card__name">Nexgo Express</span
+            ><span class="hof-card__year">2016</span>
+          </button>
         </div>
 
-        <div class="hof__more"><button class="btn" id="load-more-btn">View more</button></div>
+        <div class="hof__more">
+          <button class="btn" id="load-more-btn">View more</button>
+        </div>
       </section>
-
-
 
       <!-- ===================== THE JOURNEY (scrollytelling timeline) ===================== -->
       <section class="resume" id="resume">
         <div class="journey__inner">
-        <div class="journey__head">
-          <span class="journey__kicker">2007–Present</span>
-          <h2 class="journey__title">The <em>Journey</em></h2>
-        </div>
+          <div class="journey__head">
+            <span class="journey__kicker">2007–Present</span>
+            <h2 class="journey__title">The <em>Journey</em></h2>
+          </div>
 
-        <p class="journey__phase">Experience</p>
-        <div class="journey__timeline" id="journey-timeline">
-          <div class="journey__spine" aria-hidden="true"><span class="journey__progress" id="journey-progress"></span></div>
+          <p class="journey__phase">Experience</p>
+          <div class="journey__timeline" id="journey-timeline">
+            <div class="journey__spine" aria-hidden="true">
+              <span class="journey__progress" id="journey-progress"></span>
+            </div>
 
-          <article class="journey__node reveal" data-side="right">
-            <span class="journey__year">2026</span>
-            <h3 class="journey__role">Senior UI/UX Product Designer</h3>
-            <span class="journey__org">OutDesk</span>
-            <ul class="journey__points">
-              <li>Lead the design strategy for the Data Quality Web Application, developing wireframes, high-fidelity mockups, and interactive prototypes.</li>
-              <li>Collaborate directly with clients to translate complex requirements into an intuitive and functional data quality platform.</li>
-              <li>Leverage Generative AI tools to streamline the design-to-code workflow, significantly reducing front-end development turnaround time.</li>
-              <li>Architect user workflows and journey maps to simplify data management processes for end-users.</li>
-              <li>Conduct in-depth competitor analysis and market research on data quality standards to ensure the product remains a leader in the industry.</li>
-              <li>Help developers build my designs accurately by providing clear technical instructions based on my coding experience.</li>
-            </ul>
-          </article>
+            <article class="journey__node reveal" data-side="right">
+              <span class="journey__year">2026</span>
+              <h3 class="journey__role">Senior UI/UX Product Designer</h3>
+              <span class="journey__org">OutDesk</span>
+              <ul class="journey__points">
+                <li>
+                  Lead the design strategy for the Data Quality Web Application,
+                  developing wireframes, high-fidelity mockups, and interactive
+                  prototypes.
+                </li>
+                <li>
+                  Collaborate directly with clients to translate complex
+                  requirements into an intuitive and functional data quality
+                  platform.
+                </li>
+                <li>
+                  Leverage Generative AI tools to streamline the design-to-code
+                  workflow, significantly reducing front-end development
+                  turnaround time.
+                </li>
+                <li>
+                  Architect user workflows and journey maps to simplify data
+                  management processes for end-users.
+                </li>
+                <li>
+                  Conduct in-depth competitor analysis and market research on
+                  data quality standards to ensure the product remains a leader
+                  in the industry.
+                </li>
+                <li>
+                  Help developers build my designs accurately by providing clear
+                  technical instructions based on my coding experience.
+                </li>
+              </ul>
+            </article>
 
-          <article class="journey__node reveal" data-side="left">
-            <span class="journey__year">2020–2025</span>
-            <h3 class="journey__role">Sr. UI/UX Designer</h3>
-            <span class="journey__org">Content House Inc.</span>
-            <ul class="journey__points">
-              <li>Lead a creative team of UI/UX designers, providing mentorship and direction to ensure high-quality design standards across all projects.</li>
-              <li>Design high-fidelity websites and mobile apps using Figma and Adobe XD, focusing on modern aesthetics and a seamless user experience.</li>
-              <li>Develop responsive websites on Squarespace using custom advanced HTML, CSS, JavaScript, and jQuery for a fully tailored look and feel.</li>
-              <li>Direct the visual identity of the company by managing the creation of all marketing materials and brand assets.</li>
-              <li>Collaborate with developers to design and implement Vue.js and React.js components, ensuring a perfect match between the design and the live code.</li>
-              <li>Partner with the CEO, Project Managers, and Engineering teams to align design strategies with business goals and technical requirements.</li>
-            </ul>
-          </article>
+            <article class="journey__node reveal" data-side="left">
+              <span class="journey__year">2020–2025</span>
+              <h3 class="journey__role">Sr. UI/UX Designer</h3>
+              <span class="journey__org">Content House Inc.</span>
+              <ul class="journey__points">
+                <li>
+                  Lead a creative team of UI/UX designers, providing mentorship
+                  and direction to ensure high-quality design standards across
+                  all projects.
+                </li>
+                <li>
+                  Design high-fidelity websites and mobile apps using Figma and
+                  Adobe XD, focusing on modern aesthetics and a seamless user
+                  experience.
+                </li>
+                <li>
+                  Develop responsive websites on Squarespace using custom
+                  advanced HTML, CSS, JavaScript, and jQuery for a fully
+                  tailored look and feel.
+                </li>
+                <li>
+                  Direct the visual identity of the company by managing the
+                  creation of all marketing materials and brand assets.
+                </li>
+                <li>
+                  Collaborate with developers to design and implement Vue.js and
+                  React.js components, ensuring a perfect match between the
+                  design and the live code.
+                </li>
+                <li>
+                  Partner with the CEO, Project Managers, and Engineering teams
+                  to align design strategies with business goals and technical
+                  requirements.
+                </li>
+              </ul>
+            </article>
 
-          <article class="journey__node reveal" data-side="right">
-            <span class="journey__year">2019–2020</span>
-            <h3 class="journey__role">UI/UX Designer</h3>
-            <span class="journey__org">DXC Technology</span>
-            <ul class="journey__points">
-              <li>Design and architect intuitive UI/UX for complex web applications, focusing on user efficiency and a modern visual style.</li>
-              <li>Develop RPA (Robotic Process Automation) solutions using Winautomation to streamline workflows and eliminate repetitive manual tasks.</li>
-              <li>Maintain SharePoint environments, regularly deploying new features, custom pages, and functional updates to improve team collaboration.</li>
-            </ul>
-          </article>
+            <article class="journey__node reveal" data-side="right">
+              <span class="journey__year">2019–2020</span>
+              <h3 class="journey__role">UI/UX Designer</h3>
+              <span class="journey__org">DXC Technology</span>
+              <ul class="journey__points">
+                <li>
+                  Design and architect intuitive UI/UX for complex web
+                  applications, focusing on user efficiency and a modern visual
+                  style.
+                </li>
+                <li>
+                  Develop RPA (Robotic Process Automation) solutions using
+                  Winautomation to streamline workflows and eliminate repetitive
+                  manual tasks.
+                </li>
+                <li>
+                  Maintain SharePoint environments, regularly deploying new
+                  features, custom pages, and functional updates to improve team
+                  collaboration.
+                </li>
+              </ul>
+            </article>
 
-          <article class="journey__node reveal" data-side="left">
-            <span class="journey__year">2014–2019</span>
-            <h3 class="journey__role">Lead UI/UX Designer &amp; Front-End Developer</h3>
-            <span class="journey__org">Coreproc Inc.</span>
-            <ul class="journey__points">
-              <li>Responsible for creating UI/UX designs for websites and mobile apps using Adobe Photoshop, Adobe XD and other wireframe applications.</li>
-              <li>Transform complex designs into fully responsive websites, ensuring a seamless and consistent experience across all screen sizes and devices.</li>
-              <li>Execute precision asset extraction and optimization (formerly PSD slicing) to ensure fast-loading, high-quality visuals for web development.</li>
-              <li>Mentor and provide creative direction to the team, establishing high standards for UI/UX excellence and consistency.</li>
-              <li>Assist other teams with solving UI/UX problems, specifically on the web and mobile view of the website using excellent knowledge and experience with HTML and CSS.</li>
-              <li>Act as a strategic partner to clients, managing communications through meetings and consultations to translate their vision into effective, high-impact design solutions.</li>
-            </ul>
-          </article>
+            <article class="journey__node reveal" data-side="left">
+              <span class="journey__year">2014–2019</span>
+              <h3 class="journey__role">
+                Lead UI/UX Designer &amp; Front-End Developer
+              </h3>
+              <span class="journey__org">Coreproc Inc.</span>
+              <ul class="journey__points">
+                <li>
+                  Responsible for creating UI/UX designs for websites and mobile
+                  apps using Adobe Photoshop, Adobe XD and other wireframe
+                  applications.
+                </li>
+                <li>
+                  Transform complex designs into fully responsive websites,
+                  ensuring a seamless and consistent experience across all
+                  screen sizes and devices.
+                </li>
+                <li>
+                  Execute precision asset extraction and optimization (formerly
+                  PSD slicing) to ensure fast-loading, high-quality visuals for
+                  web development.
+                </li>
+                <li>
+                  Mentor and provide creative direction to the team,
+                  establishing high standards for UI/UX excellence and
+                  consistency.
+                </li>
+                <li>
+                  Assist other teams with solving UI/UX problems, specifically
+                  on the web and mobile view of the website using excellent
+                  knowledge and experience with HTML and CSS.
+                </li>
+                <li>
+                  Act as a strategic partner to clients, managing communications
+                  through meetings and consultations to translate their vision
+                  into effective, high-impact design solutions.
+                </li>
+              </ul>
+            </article>
 
-          <article class="journey__node reveal" data-side="right">
-            <span class="journey__year">2012–2014</span>
-            <h3 class="journey__role">UI/UX Designer &amp; Web Developer</h3>
-            <span class="journey__org">Freelance</span>
-            <ul class="journey__points">
-              <li>Design, develop and deploy fully functional WordPress websites, transforming custom UI/UX concepts into responsive, high-performance web platforms.</li>
-              <li>Execute advanced image retouching and digital compositing to produce polished marketing materials for both digital and print media.</li>
-            </ul>
-          </article>
+            <article class="journey__node reveal" data-side="right">
+              <span class="journey__year">2012–2014</span>
+              <h3 class="journey__role">UI/UX Designer &amp; Web Developer</h3>
+              <span class="journey__org">Freelance</span>
+              <ul class="journey__points">
+                <li>
+                  Design, develop and deploy fully functional WordPress
+                  websites, transforming custom UI/UX concepts into responsive,
+                  high-performance web platforms.
+                </li>
+                <li>
+                  Execute advanced image retouching and digital compositing to
+                  produce polished marketing materials for both digital and
+                  print media.
+                </li>
+              </ul>
+            </article>
+          </div>
+          <!-- /.journey__timeline -->
 
-        </div><!-- /.journey__timeline -->
-
-        <p class="journey__phase journey__phase--edu">Education</p>
-        <div class="journey__studies reveal">
-          <div class="study">
-            <span class="study__year">2003–2007</span>
-            <div class="study__body">
-              <h3 class="study__role">BS, Major in Marketing</h3>
-              <span class="study__org">Far Eastern University — Manila</span>
+          <p class="journey__phase journey__phase--edu">Education</p>
+          <div class="journey__studies reveal">
+            <div class="study">
+              <span class="study__year">2003–2007</span>
+              <div class="study__body">
+                <h3 class="study__role">BS, Major in Marketing</h3>
+                <span class="study__org">Far Eastern University — Manila</span>
+              </div>
             </div>
           </div>
         </div>
-        </div><!-- /.journey__inner -->
+        <!-- /.journey__inner -->
 
         <!-- ===================== PROFESSIONAL SKILLS ===================== -->
         <div class="skills" id="skills">
@@ -452,63 +945,118 @@
             <h2 class="socials__title">What's up</h2>
             <p class="socials__sub">on socials</p>
           </div>
-          <div class="socials__deck" id="socials-deck" aria-label="Social posts">
+          <div
+            class="socials__deck"
+            id="socials-deck"
+            aria-label="Social posts"
+          >
             <div class="social-card">
               <span class="social-card__inner">
-                <img src="assets/img/social-img/622269609_10173109304380425_2377653652911839583_n.jpg" alt="Jonathan Bautista on Instagram" loading="lazy" />
+                <img
+                  src="assets/img/social-img/622269609_10173109304380425_2377653652911839583_n.jpg"
+                  alt="Jonathan Bautista on Instagram"
+                  loading="lazy"
+                />
               </span>
             </div>
             <div class="social-card">
               <span class="social-card__inner">
-                <img src="assets/img/social-img/619297238_10173094427590425_6360426346578615306_n.jpg" alt="Jonathan Bautista on Instagram" loading="lazy" />
+                <img
+                  src="assets/img/social-img/619297238_10173094427590425_6360426346578615306_n.jpg"
+                  alt="Jonathan Bautista on Instagram"
+                  loading="lazy"
+                />
               </span>
             </div>
             <div class="social-card">
               <span class="social-card__inner">
-                <img src="assets/img/social-img/472943340_10170213377230425_7272641040956178723_n.jpg" alt="Jonathan Bautista on Instagram" loading="lazy" />
+                <img
+                  src="assets/img/social-img/472943340_10170213377230425_7272641040956178723_n.jpg"
+                  alt="Jonathan Bautista on Instagram"
+                  loading="lazy"
+                />
               </span>
             </div>
             <div class="social-card">
               <span class="social-card__inner">
-                <img src="assets/img/social-img/518334776_10171503964345425_3681482852784375342_n.jpg" alt="Jonathan Bautista on Instagram" loading="lazy" />
+                <img
+                  src="assets/img/social-img/518334776_10171503964345425_3681482852784375342_n.jpg"
+                  alt="Jonathan Bautista on Instagram"
+                  loading="lazy"
+                />
               </span>
             </div>
             <div class="social-card social-card--feature">
               <span class="social-card__inner">
-                <img src="assets/img/social-img/front-social-img.jpg" alt="Jonathan Bautista" loading="lazy" />
+                <img
+                  src="assets/img/social-img/front-social-img.jpg"
+                  alt="Jonathan Bautista"
+                  loading="lazy"
+                />
               </span>
             </div>
             <div class="social-card">
               <span class="social-card__inner">
-                <img src="assets/img/social-img/622330254_10173105102380425_5303668650741404770_n.jpg" alt="Jonathan Bautista on Instagram" loading="lazy" />
+                <img
+                  src="assets/img/social-img/622330254_10173105102380425_5303668650741404770_n.jpg"
+                  alt="Jonathan Bautista on Instagram"
+                  loading="lazy"
+                />
               </span>
             </div>
             <div class="social-card">
               <span class="social-card__inner">
-                <img src="assets/img/social-img/654205125_10173537328115425_6198341804126813467_n.jpg" alt="Jonathan Bautista on Instagram" loading="lazy" />
+                <img
+                  src="assets/img/social-img/654205125_10173537328115425_6198341804126813467_n.jpg"
+                  alt="Jonathan Bautista on Instagram"
+                  loading="lazy"
+                />
               </span>
             </div>
             <div class="social-card">
               <span class="social-card__inner">
-                <img src="assets/img/social-img/697356148_10173985285230425_5850114333276660702_n.jpg" alt="Jonathan Bautista on Instagram" loading="lazy" />
+                <img
+                  src="assets/img/social-img/697356148_10173985285230425_5850114333276660702_n.jpg"
+                  alt="Jonathan Bautista on Instagram"
+                  loading="lazy"
+                />
               </span>
             </div>
             <div class="social-card">
               <span class="social-card__inner">
-                <img src="assets/img/social-img/653068215_10173537324140425_3521305374682404341_n.jpg" alt="Jonathan Bautista on Instagram" loading="lazy" />
+                <img
+                  src="assets/img/social-img/653068215_10173537324140425_3521305374682404341_n.jpg"
+                  alt="Jonathan Bautista on Instagram"
+                  loading="lazy"
+                />
               </span>
             </div>
           </div>
           <div class="socials__follow">
             <h3 class="socials__follow-title">Follow me on social media</h3>
             <div class="socials__follow-links">
-              <a href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener" aria-label="Instagram">
+              <a
+                href="https://www.instagram.com/jonathanndroid/"
+                target="_blank"
+                rel="noopener"
+                aria-label="Instagram"
+              >
                 <img src="assets/img/instagram-logo.svg" alt="Instagram" />
               </a>
-              <a href="https://www.linkedin.com/in/jonathan-bautista-92038839/" target="_blank" rel="noopener" aria-label="LinkedIn">
+              <a
+                href="https://www.linkedin.com/in/jonathan-bautista-92038839/"
+                target="_blank"
+                rel="noopener"
+                aria-label="LinkedIn"
+              >
                 <img src="assets/img/linkedin-logo.svg" alt="LinkedIn" />
               </a>
-              <a href="https://www.facebook.com/jonathanndroid" target="_blank" rel="noopener" aria-label="Facebook">
+              <a
+                href="https://www.facebook.com/jonathanndroid"
+                target="_blank"
+                rel="noopener"
+                aria-label="Facebook"
+              >
                 <img src="assets/img/facebook-logo.svg" alt="Facebook" />
               </a>
             </div>
@@ -523,22 +1071,44 @@
     <!-- ===================== FOOTER ===================== -->
     <footer class="footer" id="contact">
       <div class="footer__inner">
-
         <div class="footer__identity">
-          <h2 class="footer__tag reveal">Design it.<br /><span class="footer__tag-build">Build it.</span></h2>
+          <h2 class="footer__tag reveal">
+            Design it.<br /><span class="footer__tag-build">Build it.</span>
+          </h2>
         </div>
 
         <div class="footer__contact">
           <span class="footer__contact-label">Available for work</span>
-          <a class="footer__email reveal" href="mailto:jchoybautista@gmail.com">jchoybautista@gmail.com</a>
+          <a class="footer__email reveal" href="mailto:jchoybautista@gmail.com"
+            >jchoybautista@gmail.com</a
+          >
           <div class="footer__social">
-            <a href="https://www.linkedin.com/in/jonathan-bautista-92038839/" target="_blank" rel="noopener" aria-label="LinkedIn"><img src="assets/img/linkedin-logo.svg" alt="" /></a>
-            <a href="https://www.instagram.com/jonathanndroid/" target="_blank" rel="noopener" aria-label="Instagram"><img src="assets/img/instagram-logo.svg" alt="" /></a>
-            <a href="https://www.facebook.com/jonathanndroid" target="_blank" rel="noopener" aria-label="Facebook"><img src="assets/img/facebook-logo.svg" alt="" /></a>
-            <a href="tel:+639171825114" aria-label="Phone"><img src="assets/img/phone-logo.svg" alt="" /></a>
+            <a
+              href="https://www.linkedin.com/in/jonathan-bautista-92038839/"
+              target="_blank"
+              rel="noopener"
+              aria-label="LinkedIn"
+              ><img src="assets/img/linkedin-logo.svg" alt=""
+            /></a>
+            <a
+              href="https://www.instagram.com/jonathanndroid/"
+              target="_blank"
+              rel="noopener"
+              aria-label="Instagram"
+              ><img src="assets/img/instagram-logo.svg" alt=""
+            /></a>
+            <a
+              href="https://www.facebook.com/jonathanndroid"
+              target="_blank"
+              rel="noopener"
+              aria-label="Facebook"
+              ><img src="assets/img/facebook-logo.svg" alt=""
+            /></a>
+            <a href="tel:+639171825114" aria-label="Phone"
+              ><img src="assets/img/phone-logo.svg" alt=""
+            /></a>
           </div>
         </div>
-
       </div>
 
       <div class="footer__base">
@@ -547,7 +1117,9 @@
           <a href="#about">About</a>
           <a href="#work">Work</a>
           <a href="#resume">Journey</a>
-          <a href="assets/files/jonathan_bautista__April_2026.docx" download>Download CV</a>
+          <a href="assets/files/jonathan_bautista__April_2026.docx" download
+            >Download CV</a
+          >
         </nav>
         <span>© 2026 Jonathan Bautista. All rights reserved.</span>
       </div>
@@ -555,31 +1127,85 @@
 
     <!-- ===================== MODAL ===================== -->
     <div id="portfolio-modal" class="modal" aria-hidden="true">
-      <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="modal-title" data-lenis-prevent>
-        <button class="modal__close" id="modal-close" aria-label="Close">&times;</button>
+      <div
+        class="modal__panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+        data-lenis-prevent
+      >
+        <button class="modal__close" id="modal-close" aria-label="Close">
+          &times;
+        </button>
         <div class="modal__body">
           <div class="modal__media"><img id="modal-img" src="" alt="" /></div>
           <div class="modal__info">
             <h2 id="modal-title"></h2>
             <p id="modal-desc"></p>
             <div class="modal__details">
-              <div><span class="modal__label">Created</span><span class="modal__value" id="modal-created"></span></div>
-              <div><span class="modal__label">Role</span><span class="modal__value" id="modal-role"></span></div>
+              <div>
+                <span class="modal__label">Created</span
+                ><span class="modal__value" id="modal-created"></span>
+              </div>
+              <div>
+                <span class="modal__label">Role</span
+                ><span class="modal__value" id="modal-role"></span>
+              </div>
             </div>
             <div class="modal__links">
-              <a href="" class="figma-link" target="_blank" rel="noopener" aria-label="Open in Figma"><img src="assets/img/Figma-logo.svg" alt="" /><span>Figma</span></a>
-              <a href="" class="xd-link" download aria-label="Download XD file"><img src="assets/img/xd-logo.svg" alt="" /><span>Adobe XD</span></a>
-              <a href="" class="website-link" target="_blank" rel="noopener" aria-label="Visit website"><img src="assets/img/web-icon.svg" alt="" /><span>Website</span></a>
-              <a href="" class="claude-link" target="_blank" rel="noopener" aria-label="Visit live build"><img src="assets/img/claudecode.svg" alt="" /><span>Live build</span></a>
+              <a
+                href=""
+                class="figma-link"
+                target="_blank"
+                rel="noopener"
+                aria-label="Open in Figma"
+                ><img src="assets/img/Figma-logo.svg" alt="" /><span
+                  >Figma</span
+                ></a
+              >
+              <a href="" class="xd-link" download aria-label="Download XD file"
+                ><img src="assets/img/xd-logo.svg" alt="" /><span
+                  >Adobe XD</span
+                ></a
+              >
+              <a
+                href=""
+                class="website-link"
+                target="_blank"
+                rel="noopener"
+                aria-label="Visit website"
+                ><img src="assets/img/web-icon.svg" alt="" /><span
+                  >Website</span
+                ></a
+              >
+              <a
+                href=""
+                class="claude-link"
+                target="_blank"
+                rel="noopener"
+                aria-label="Visit live build"
+                ><img src="assets/img/claudecode.svg" alt="" /><span
+                  >Live build</span
+                ></a
+              >
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
-    <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js" defer></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
+      defer
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"
+      defer
+    ></script>
+    <script
+      src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"
+      defer
+    ></script>
     <script src="assets/script.js" defer></script>
   </body>
 </html>

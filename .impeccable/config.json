@@ -1,0 +1,10 @@
+{
+  "detector": {
+    "ignoreRules": [
+      "broken-image",
+      "single-font"
+    ],
+    "ignoreFiles": [],
+    "ignoreValues": []
+  }
+}
