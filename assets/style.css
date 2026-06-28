@@ -2468,3 +2468,111 @@ section {
 @media (prefers-reduced-motion: reduce) {
   .skills__set li, .skills__set li::before { transition: none; }
 }
+
+/* =========================================================
+   Intro splash — Lando-style cold-load cover
+   Full-screen lime panel; the UI/UX wordmark glitch-swaps to </>
+   on a loop while the hero video buffers, then the panel slides up
+   to reveal the page. Lifecycle handled in script.js.
+   ========================================================= */
+html.splash-on,
+html.splash-on body {
+  overflow: hidden;
+}
+
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent);
+  transform: translateY(0);
+  transition: transform 0.9s cubic-bezier(0.76, 0, 0.24, 1) 0.18s;
+  will-change: transform;
+}
+/* exit — the panel slides up and off, revealing the hero beneath */
+html.splash-done .splash {
+  transform: translateY(-100%);
+}
+
+.splash__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.76, 0, 0.24, 1);
+}
+/* logo + loader lift away a touch ahead of the panel */
+html.splash-done .splash__inner {
+  opacity: 0;
+  transform: translateY(-14px);
+}
+
+.splash__logo {
+  position: relative;
+  width: clamp(150px, 26vw, 240px);
+  aspect-ratio: 329 / 139;
+  color: #0a0b0a; /* dark wordmark for contrast on lime */
+}
+
+.splash__morph {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+/* Rounded joins/caps so the </> end-state reads soft, not pointy. The width
+   is 0 by default (keeps the static UI/UX fallback crisp) and is grown by
+   script.js as the morph approaches </>. */
+.splash__morph path {
+  stroke: currentColor;
+  stroke-width: 0;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .splash__logo {
+    animation: splashLogoIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+}
+@keyframes splashLogoIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.splash__loader {
+  margin: clamp(22px, 4vh, 40px) 0 0;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: #0a0b0a;
+}
+.splash__loader::after {
+  content: "";
+  animation: splashDots 1.4s steps(4, end) infinite;
+}
+
+@keyframes splashDots {
+  0%   { content: ""; }
+  25%  { content: "."; }
+  50%  { content: ".."; }
+  75%  { content: "..."; }
+  100% { content: ""; }
+}
+
+/* Reduced motion: no slide/morph — a calm fade-out instead */
+@media (prefers-reduced-motion: reduce) {
+  .splash {
+    transition: opacity 0.5s ease;
+  }
+  html.splash-done .splash {
+    transform: none;
+    opacity: 0;
+  }
+  html.splash-done .splash__inner {
+    transform: none;
+  }
+}

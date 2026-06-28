@@ -331,6 +331,175 @@
     }
   }
 
+  /* ---------- Intro splash (cold-load cover) ----------
+     A full-screen lime panel sits over the page until the hero video can
+     paint its first frame (or a failsafe fires), then slides up to reveal
+     the site — mirroring the landonorris.com cold-load behaviour. The inline
+     <head> script already locked scroll and armed a 7s failsafe; here we
+     reveal as soon as content is genuinely ready and tidy up the DOM. */
+  (function initSplash() {
+    const splash = document.getElementById("splash");
+    if (!splash) return;
+    const html = document.documentElement;
+    const MIN_VISIBLE = prefersReduced ? 300 : 2000; // ensure the loop is seen
+    const FAILSAFE = 7000;
+    const startedAt = performance.now();
+    let revealed = false;
+    let readyArmed = false;
+    let morphTween = null;
+
+    if (lenis) lenis.stop();
+    startMorph();
+
+    function reveal() {
+      if (revealed) return;
+      revealed = true;
+      // Freeze the morph at its current shape while the panel slides away.
+      if (morphTween && typeof morphTween.pause === "function") morphTween.pause();
+      html.classList.add("splash-done"); // triggers the CSS exit transition
+
+      let cleaned = false;
+      function cleanup() {
+        if (cleaned) return;
+        cleaned = true;
+        if (morphTween) morphTween.kill();
+        splash.removeEventListener("transitionend", onEnd);
+        if (splash.parentNode) splash.parentNode.removeChild(splash);
+        html.classList.remove("splash-on");
+        if (lenis) lenis.start();
+        if (window.ScrollTrigger) window.ScrollTrigger.refresh();
+      }
+      function onEnd(e) {
+        if (e.target === splash) cleanup();
+      }
+      splash.addEventListener("transitionend", onEnd);
+      // Belt-and-braces in case transitionend never fires.
+      setTimeout(cleanup, 1300);
+    }
+
+    function armReady() {
+      if (readyArmed) return;
+      readyArmed = true;
+      const wait = Math.max(0, MIN_VISIBLE - (performance.now() - startedAt));
+      setTimeout(reveal, wait);
+    }
+
+    const video = document.querySelector(".hero__video");
+    if (video && !prefersReduced) {
+      if (video.readyState >= 3) {
+        armReady(); // HAVE_FUTURE_DATA — first frame is paintable
+      } else {
+        video.addEventListener("canplay", armReady, { once: true });
+        video.addEventListener("loadeddata", armReady, { once: true });
+        video.addEventListener(
+          "error",
+          () => {
+            // Video failed to load — don't wait on it; fall back to page load.
+            if (document.readyState === "complete") armReady();
+            else window.addEventListener("load", armReady, { once: true });
+          },
+          { once: true },
+        );
+      }
+    } else if (document.readyState === "complete") {
+      armReady();
+    } else {
+      window.addEventListener("load", armReady, { once: true });
+    }
+
+    // Hard failsafe: the splash can never trap the page.
+    setTimeout(reveal, FAILSAFE);
+
+    /* Liquid-morph the UI/UX wordmark into </> and back, on a loop, by
+       interpolating the SVG path data with flubber. Mapping tells a story:
+         U·X (left glyphs)  →  <
+         /   (centre slash) →  /   (it just slides into place)
+         U·I (right glyphs) →  >
+       If flubber or motion is unavailable the static UI/UX wordmark in the
+       markup simply stays put. */
+    function startMorph() {
+      if (prefersReduced || !window.flubber) return;
+      const L = document.getElementById("splashPathL");
+      const M = document.getElementById("splashPathM");
+      const R = document.getElementById("splashPathR");
+      if (!L || !M || !R) return;
+
+      // Source outlines — the individual UI/UX glyphs (left U, X, /, right U, I).
+      const U_LEFT =
+        "M58.6475 23.2554C65.0687 23.7139 66.993 27.4454 66.9742 33.3339C67.0157 47.3849 66.8147 61.4971 66.9577 75.5436C67.0752 87.1074 66.266 95.9651 57.6575 104.683C51.6997 110.77 43.5532 114.22 35.0352 114.262C24.7735 114.33 17.087 112.172 9.54647 104.9C-1.11728 94.6151 0.190975 82.8806 0.193475 69.3769L0.208222 48.0481C0.179972 42.1839 -0.836775 31.8764 1.89398 26.5479C2.55548 25.2574 5.35022 23.8779 6.79847 23.7411C18.102 22.6744 16.2405 34.3926 16.228 41.7889L16.1877 69.9591C16.1782 79.2404 14.4752 89.8424 23.5267 95.6339C32.221 101.197 46.6125 97.9614 50.0297 87.5201C51.3742 83.4121 50.992 76.4249 50.9937 71.9216L50.9852 44.2339C50.9807 39.7449 50.773 35.1071 51.0697 30.6496C51.3812 25.9696 54.3835 23.8679 58.6475 23.2554Z";
+      const X =
+        "M83.0814 23.5249C85.1991 23.3394 87.2141 23.4307 89.0651 24.6024C92.1896 26.5807 104.023 45.3684 106.832 49.5397C107.864 51.0727 109.48 54.2174 111.053 55.1264C112.082 55.7204 113.496 52.8522 114.025 52.0987C117.999 46.4414 122.134 40.8847 126.195 35.2894C128.649 31.9094 131.144 27.6432 134.228 24.8472C134.953 24.1899 135.879 23.8119 136.82 23.5827C139.124 23.0209 141.612 23.3589 143.599 24.6849C145.379 25.8732 146.575 27.7574 146.893 29.8739C147.097 31.1754 146.91 33.4419 146.258 34.5469C143.935 38.4892 140.723 42.6059 138.017 46.3329L120.79 70.0662C122.056 72.2349 124.599 75.7359 126.062 77.8934L136.955 93.9192C138.453 96.1247 141.692 100.649 142.673 102.834C143.19 103.979 143.42 105.232 143.343 106.486C143.17 109.231 141.838 110.898 139.893 112.596C131.459 117.887 127.205 107.991 123.281 102.422C119.021 96.3769 115.107 89.9677 110.742 83.9972C106.225 90.1202 101.751 96.2747 97.3204 102.46C95.5334 104.931 91.9344 110.205 89.9184 112.083C88.9326 113.019 87.7094 113.668 86.3814 113.958C82.1284 114.93 77.7209 111.987 76.9496 107.597C76.0966 103.294 79.6226 99.5889 81.9911 96.2322C88.2501 87.3617 95.0324 78.6847 101.186 69.7364C97.9549 65.0064 78.0809 36.6434 77.3046 33.8532C76.6969 31.6694 76.8826 29.3142 77.9931 27.3224C79.1444 25.2572 80.8834 24.1967 83.0814 23.5249Z";
+      const SLASH =
+        "M213.049 0.000400243C216.999 -0.0310998 220.474 1.7959 221.542 5.7799C222.607 9.7464 219.664 14.3257 217.984 17.8412L211.539 31.3182L190.834 74.6791L171.542 115.076L165.802 127.178C163.167 132.733 162.324 137.113 155.789 138.618C152.049 138.768 147.686 135.643 147.385 131.923C147.023 127.455 151.059 120.802 152.972 116.835L161.049 99.9282L188.359 42.7261L200.914 16.3799C202.379 13.3022 203.822 10.1907 205.334 7.13691C207.377 3.00466 208.162 0.8174 213.049 0.000400243Z";
+      const U_RIGHT =
+        "M288.96 23.2559C295.05 23.6151 297.38 26.9171 297.417 32.7581L297.397 63.7989C297.41 70.7184 297.925 83.9939 296.377 90.1851C294.955 95.6899 292.087 100.714 288.07 104.736C282.055 110.88 273.805 114.316 265.207 114.256C254.997 114.264 247.457 112.067 239.985 104.863C229.317 94.5759 230.64 82.2341 230.645 68.7436L230.662 48.2981C230.68 41.4434 228.217 25.5954 236.752 23.7704C239.002 23.2766 241.357 23.7391 243.255 25.0474C244.542 25.9526 245.897 27.4334 246.225 28.9846C247.02 32.7576 246.73 37.8371 246.725 41.7449L246.695 69.6664C246.692 73.5656 246.465 81.3941 247.025 84.8926C247.685 89.0364 249.975 92.7436 253.385 95.1896C262.012 101.405 277.2 98.1671 280.55 87.4546C281.82 83.3981 281.45 76.6709 281.45 72.3101L281.442 44.1006C281.44 40.5369 281.412 36.9711 281.4 33.4081C281.392 30.8206 281.52 28.4234 283.147 26.2689C284.765 24.1261 286.472 23.6861 288.96 23.2559Z";
+      const I =
+        "M319.817 23.2607C329.939 24.0567 328.142 33.3695 328.144 40.8777L328.152 61.9305L328.149 89.96C328.147 95.0117 328.177 100.041 328.062 105.092C327.944 110.328 325.939 113.084 320.659 114.186C317.234 113.997 313.012 112.302 312.459 108.417C311.904 104.508 312.109 100.09 312.114 96.1172L312.112 76.8457L312.104 47.3078C312.104 42.0888 312.037 36.881 312.204 31.6642C312.374 26.3777 314.599 24.003 319.817 23.2607Z";
+
+      // Targets — slim chevrons + slash that spell </> in the same 329×139
+      // box. They're intentionally thin; the rounded stroke grown below gives
+      // them their weight and soft, non-pointy corners.
+      const LT = "M114 30L40 69.5L114 109L114 99L56 69.5L114 40Z";
+      const SLASH2 = "M155 109L184 31L174 31L145 109Z";
+      const GT = "M215 30L289 69.5L215 109L215 99L273 69.5L215 40Z";
+
+      const opt = { maxSegmentLength: 4 };
+      let iL, iM, iR;
+      try {
+        iL = window.flubber.combine([U_LEFT, X], LT, Object.assign({ single: true }, opt));
+        iM = window.flubber.interpolate(SLASH, SLASH2, opt);
+        iR = window.flubber.combine([U_RIGHT, I], GT, Object.assign({ single: true }, opt));
+      } catch (e) {
+        return; // morph unavailable — keep the static wordmark
+      }
+
+      const MAX_STROKE = 15; // grows the rounded outline as UI/UX → </>
+      const state = { v: 0 };
+      function apply() {
+        const sw = state.v * MAX_STROKE + "px";
+        L.setAttribute("d", iL(state.v));
+        M.setAttribute("d", iM(state.v));
+        R.setAttribute("d", iR(state.v));
+        L.style.strokeWidth = M.style.strokeWidth = R.style.strokeWidth = sw;
+      }
+      apply();
+
+      if (window.gsap) {
+        morphTween = window.gsap.to(state, {
+          v: 1,
+          duration: 0.85,
+          ease: "power2.inOut",
+          repeat: -1,
+          yoyo: true,
+          repeatDelay: 0.75,
+          delay: 0.55, // let UI/UX read first
+          onUpdate: apply,
+        });
+      } else {
+        // requestAnimationFrame ping-pong fallback (no GSAP).
+        const FWD = 850, HOLD = 750, DELAY = 550;
+        const cycle = FWD * 2 + HOLD * 2;
+        const t0 = performance.now() + DELAY;
+        const ease = (t) =>
+          t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+        let raf = 0;
+        function loop(now) {
+          let p = (((now - t0) % cycle) + cycle) % cycle;
+          let v;
+          if (p < FWD) v = p / FWD;
+          else if (p < FWD + HOLD) v = 1;
+          else if (p < FWD * 2 + HOLD) v = 1 - (p - FWD - HOLD) / FWD;
+          else v = 0;
+          state.v = ease(v);
+          apply();
+          raf = requestAnimationFrame(loop);
+        }
+        raf = requestAnimationFrame(loop);
+        morphTween = { kill: () => cancelAnimationFrame(raf) };
+      }
+    }
+  })();
+
   /* ---------- Anchor links via Lenis ---------- */
   document.querySelectorAll('a[href^="#"]').forEach((a) => {
     a.addEventListener("click", (e) => {
