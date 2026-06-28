@@ -1564,7 +1564,7 @@
       image: "assets/img/project-33.png",
       figmaLink: "",
       xdLink: "",
-      claudeLink: "",
+      claudeLink: "https://meridian-landing-nine.vercel.app/",
     },
     30: {
       title: "Meridian - Crypto & Stock Tracker — Claude Code",
