@@ -1556,6 +1556,16 @@
       xdLink: "",
       claudeLink: "https://scooter-store.vercel.app/",
     },
+    31: {
+      title: "Meridian Landing Page — Claude Code",
+      desc: "I designed and built the marketing landing page for Meridian, a personal project created to show how I use AI to build better apps faster. Using React 18, TypeScript, and Vite, I led the entire design and coding process through my own clear instructions for Claude Code. Every design and technical choice was guided by me.\n\nThe page features a bar at the top that shows live cryptocurrency prices and interactive pictures that show how the app works. I also added smooth animations that move as you scroll down the page to keep things interesting. The project is fully finished and live on the internet using Vercel.",
+      created: "2026",
+      role: "Designer and Developer",
+      image: "assets/img/project-33.png",
+      figmaLink: "",
+      xdLink: "",
+      claudeLink: "",
+    },
     30: {
       title: "Meridian - Crypto & Stock Tracker — Claude Code",
       desc: "I designed and built Meridian using React 18, leading the design process entirely through my own iterative prompts.\n\nMeridian is another personal project I created to showcase my Claude Code skills. This is a full-stack financial dashboard for tracking live cryptocurrency and stock market data. Built with TypeScript and Supabase, it integrates the CoinGecko, Binance, and Finnhub APIs to deliver real-time prices, interactive charts, and portfolio management in a polished dark-themed UI.\n\nKey features include a live market overview with top 100 cryptocurrencies and major stocks, interactive asset detail pages with candlestick charts and sparklines, an authenticated portfolio tracker with transaction logging and allocation breakdowns, a personalized watchlist, market heatmap, fear & greed index gauge, trending coins, and sector performance panels. Fully responsive mobile-first layout with accessible, keyboard-navigable components.\n\nCryptocurrency prices are streamed in real time via the Binance WebSocket API. Stock prices, however, are sourced from Finnhub's free tier, which enforces strict rate limits and a capped number of daily requests so stock data reflects the most recently fetched price rather than a true live feed. This is a known trade-off of working within free API tiers and would be resolved with a paid plan in a production setting.",
