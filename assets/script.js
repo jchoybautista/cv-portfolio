@@ -1227,28 +1227,6 @@
     });
   });
 
-  /* ---------- Load more ---------- */
-  const cards = Array.from(document.querySelectorAll(".hof-card"));
-  const loadMoreBtn = document.getElementById("load-more-btn");
-  const PER_LOAD = 12;
-  let visible = 16;
-  cards.forEach((c, i) => {
-    if (i >= visible) c.classList.add("hidden");
-  });
-  if (loadMoreBtn) {
-    if (cards.length <= visible) loadMoreBtn.style.display = "none";
-    loadMoreBtn.addEventListener("click", () => {
-      const hidden = cards.filter((c) => c.classList.contains("hidden"));
-      hidden.slice(0, PER_LOAD).forEach((c) => {
-        c.classList.remove("hidden");
-        c.classList.add("in"); // already in view region; ensure visible
-      });
-      if (!document.querySelector(".hof-card.hidden")) {
-        loadMoreBtn.style.display = "none";
-      }
-      if (window.ScrollTrigger) window.ScrollTrigger.refresh();
-    });
-  }
 
   /* ===================================================== */
   /* ---------- Portfolio modal ---------- */
