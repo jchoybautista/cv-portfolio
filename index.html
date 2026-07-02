@@ -193,6 +193,11 @@
         <section class="hero" id="home">
           <div class="hero__stage">
             <!-- Marquee text rows — sit behind video, revealed as panel shrinks on scroll -->
+            <!-- Each track holds duplicated copies so the -50% loop is seamless
+                 (the second half is already in place as the first scrolls off).
+                 Desktop needs only 2 copies (one image is wider than the
+                 viewport); mobile's smaller text needs 4 (see the ≤880 CSS that
+                 reveals the extra copies) so no gap opens at the loop point. -->
             <div class="hero__marquee" aria-hidden="true">
               <div class="hero__marquee-row hero__marquee-row--ltr">
                 <div class="hero__marquee-track">
@@ -202,6 +207,18 @@
                     draggable="false"
                   />
                   <img
+                    src="assets/img/uiuxdesigner.svg"
+                    alt=""
+                    draggable="false"
+                  />
+                  <img
+                    class="hero__marquee-extra"
+                    src="assets/img/uiuxdesigner.svg"
+                    alt=""
+                    draggable="false"
+                  />
+                  <img
+                    class="hero__marquee-extra"
                     src="assets/img/uiuxdesigner.svg"
                     alt=""
                     draggable="false"
@@ -216,6 +233,18 @@
                     draggable="false"
                   />
                   <img
+                    src="assets/img/webdeveloper.svg"
+                    alt=""
+                    draggable="false"
+                  />
+                  <img
+                    class="hero__marquee-extra"
+                    src="assets/img/webdeveloper.svg"
+                    alt=""
+                    draggable="false"
+                  />
+                  <img
+                    class="hero__marquee-extra"
                     src="assets/img/webdeveloper.svg"
                     alt=""
                     draggable="false"
@@ -246,6 +275,13 @@
               <!-- Cinematic vignette frame -->
               <div class="hero__vignette" aria-hidden="true"></div>
             </div>
+
+            <!-- Mobile-only hero wordmark. On phones the hero doesn't shrink,
+               so the JONATHAN BAUTISTA wordmark sits over the photo with the
+               signature directly beneath it (grouped, mid-screen). Hidden on
+               desktop, where the shrinking video + top-left nav logo do the job.
+               Reveals on splash exit via the "hero:intro" event (see script.js). -->
+            <span class="hero__name" id="hero-name" aria-hidden="true"></span>
 
             <!-- Centered signature — its own hero layer (does NOT shrink). The real
                signature is a single hand-drawn stroke path (.hero__sig-mp) that
@@ -717,8 +753,6 @@
             ><span class="hof-card__year">2016</span>
           </button>
         </div>
-
-
       </section>
 
       <!-- ===================== THE JOURNEY (scrollytelling timeline) ===================== -->
@@ -997,8 +1031,8 @@
       <section class="socials" id="socials">
         <div class="socials__stage" id="socials-stage">
           <div class="section-head socials__head">
-            <h2 class="socials__title">What's up</h2>
-            <p class="socials__sub">on socials</p>
+            <h2 class="socials__title">Everything else</h2>
+            <p class="socials__sub">behind pixels</p>
           </div>
           <div
             class="socials__deck"

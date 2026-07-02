@@ -355,7 +355,8 @@
       if (revealed) return;
       revealed = true;
       // Freeze the morph at its current shape while the panel slides away.
-      if (morphTween && typeof morphTween.pause === "function") morphTween.pause();
+      if (morphTween && typeof morphTween.pause === "function")
+        morphTween.pause();
       html.classList.add("splash-done"); // triggers the CSS exit transition
 
       let cleaned = false;
@@ -368,6 +369,7 @@
         html.classList.remove("splash-on");
         if (lenis) lenis.start();
         if (window.ScrollTrigger) window.ScrollTrigger.refresh();
+        document.dispatchEvent(new CustomEvent("hero:intro"));
       }
       function onEnd(e) {
         if (e.target === splash) cleanup();
@@ -446,9 +448,17 @@
       const opt = { maxSegmentLength: 4 };
       let iL, iM, iR;
       try {
-        iL = window.flubber.combine([U_LEFT, X], LT, Object.assign({ single: true }, opt));
+        iL = window.flubber.combine(
+          [U_LEFT, X],
+          LT,
+          Object.assign({ single: true }, opt),
+        );
         iM = window.flubber.interpolate(SLASH, SLASH2, opt);
-        iR = window.flubber.combine([U_RIGHT, I], GT, Object.assign({ single: true }, opt));
+        iR = window.flubber.combine(
+          [U_RIGHT, I],
+          GT,
+          Object.assign({ single: true }, opt),
+        );
       } catch (e) {
         return; // morph unavailable — keep the static wordmark
       }
@@ -477,7 +487,9 @@
         });
       } else {
         // requestAnimationFrame ping-pong fallback (no GSAP).
-        const FWD = 850, HOLD = 750, DELAY = 550;
+        const FWD = 850,
+          HOLD = 750,
+          DELAY = 550;
         const cycle = FWD * 2 + HOLD * 2;
         const t0 = performance.now() + DELAY;
         const ease = (t) =>
@@ -631,6 +643,12 @@
       progressBar.style.width = (h > 0 ? (y / h) * 100 : 0) + "%";
     }
     if (!lenis) updateLogoSize(y);
+    // Mobile: the hero shows a large centered wordmark instead of the top-left
+    // nav logo. Hide the nav logo while the hero fills the screen, reveal it
+    // once the user scrolls down past it (CSS handles the fade).
+    if (nav && window.innerWidth <= 880) {
+      nav.classList.toggle("nav--hero", y < window.innerHeight * 0.6);
+    }
   }
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
@@ -712,162 +730,195 @@
     bars.forEach(fillBar);
   }
 
-  /* ---------- GSAP hero scroll animation ---------- */
-  if (window.gsap && window.ScrollTrigger && !prefersReduced) {
+  /* ---------- Hero signature: measure + draw helpers ----------
+     Shared by the desktop scroll-scrub timeline and the mobile on-load
+     entrance below. A single hand-drawn stroke path writes itself on via
+     stroke-dashoffset; the drawSig/measureSig logic is generic over any
+     list of `.hero__sig-mp` paths, so one path just works. */
+  const heroSection = document.querySelector(".hero");
+  const heroPanel = document.getElementById("hero-panel");
+  const heroIsMobile = window.innerWidth <= 880;
+
+  const sigSvg = document.getElementById("hero-sig-svg");
+  const sigPen = document.getElementById("hero-sig-pen");
+  const SIG_VB_X = 0,
+    SIG_VB_Y = 0,
+    SIG_VB_W = 2968; // matches viewBox
+  const sigStrokes = Array.prototype.slice.call(
+    document.querySelectorAll("#hero-sig-svg .hero__sig-mp"),
+  );
+  let sigLens = [],
+    sigTotal = 0;
+
+  function measureSig() {
+    sigLens = sigStrokes.map((p) => p.getTotalLength());
+    sigTotal = sigLens.reduce((a, b) => a + b, 0);
+    sigStrokes.forEach((p, i) => {
+      const L = sigLens[i];
+      // dash = stroke length, gap = oversized so NO wrapped dash (and its
+      // round cap) can poke back into view at the hidden offset.
+      p.style.strokeDasharray = L + " " + (L * 2 + 20);
+      p.style.strokeDashoffset = L; // fully hidden until written
+    });
+  }
+  function drawSig(prog) {
+    const p = Math.max(0, Math.min(1, prog));
+    const target = p * sigTotal; // total ink length to reveal so far
+    let cum = 0,
+      penIdx = -1,
+      penLocal = 0;
+    for (let i = 0; i < sigStrokes.length; i++) {
+      const len = sigLens[i];
+      const drawn = Math.max(0, Math.min(len, target - cum));
+      sigStrokes[i].style.strokeDashoffset = String(len - drawn);
+      if (drawn > 0) {
+        penIdx = i;
+        penLocal = drawn;
+      } // last stroke with ink = the frontier
+      cum += len;
+    }
+    if (
+      sigPen &&
+      penIdx >= 0 &&
+      p > 0.002 &&
+      p < 0.998 &&
+      window.innerWidth > 880
+    ) {
+      try {
+        const pt = sigStrokes[penIdx].getPointAtLength(
+          Math.min(penLocal, sigLens[penIdx]),
+        );
+        const scale = sigSvg.clientWidth / SIG_VB_W;
+        sigPen.style.transform = `translate(${(pt.x - SIG_VB_X) * scale}px, ${(pt.y - SIG_VB_Y) * scale}px)`;
+        sigPen.style.opacity = "1";
+      } catch (e) {}
+    } else if (sigPen) {
+      sigPen.style.opacity = "0";
+    }
+  }
+  if (sigStrokes.length && !prefersReduced) {
+    measureSig();
+    drawSig(0);
+    window.addEventListener("resize", () => {
+      if (window.ScrollTrigger) window.ScrollTrigger.refresh();
+    });
+  }
+
+  /* ---------- Desktop hero: GSAP scroll-pin timeline ----------
+     Panel shrinks to a small centered box + signature draws, both scrubbed
+     to scroll. Mobile never runs this — see the on-load intro below. */
+  if (
+    window.gsap &&
+    window.ScrollTrigger &&
+    !prefersReduced &&
+    !heroIsMobile &&
+    heroSection &&
+    heroPanel
+  ) {
     const gsap = window.gsap;
     gsap.registerPlugin(window.ScrollTrigger);
 
-    const heroSection = document.querySelector(".hero");
-    const heroPanel = document.getElementById("hero-panel");
-
-    if (heroSection && heroPanel) {
-      // Signature: a single hand-drawn stroke path that writes itself on via
-      // stroke-dashoffset, scrubbed to scroll — drawing from its start point
-      // (top of the first loop) through to the end, with a glowing pen nib
-      // riding the leading edge. The drawSig/measureSig logic is generic over
-      // any list of `.hero__sig-mp` paths, so one path just works.
-      const sigEl = document.getElementById("hero-sig");
-      const sigSvg = document.getElementById("hero-sig-svg");
-      const sigPen = document.getElementById("hero-sig-pen");
-      const SIG_VB_X = 0,
-        SIG_VB_Y = 0,
-        SIG_VB_W = 2968; // matches viewBox
-      const sigStrokes = Array.prototype.slice.call(
-        document.querySelectorAll("#hero-sig-svg .hero__sig-mp"),
-      );
-      let sigLens = [],
-        sigTotal = 0;
-
-      function measureSig() {
-        sigLens = sigStrokes.map((p) => p.getTotalLength());
-        sigTotal = sigLens.reduce((a, b) => a + b, 0);
-        sigStrokes.forEach((p, i) => {
-          const L = sigLens[i];
-          // dash = stroke length, gap = oversized so NO wrapped dash (and its
-          // round cap) can poke back into view at the hidden offset.
-          p.style.strokeDasharray = L + " " + (L * 2 + 20);
-          p.style.strokeDashoffset = L; // fully hidden until written
-        });
-      }
-      function drawSig(prog) {
-        const p = Math.max(0, Math.min(1, prog));
-        const target = p * sigTotal; // total ink length to reveal so far
-        let cum = 0,
-          penIdx = -1,
-          penLocal = 0;
-        for (let i = 0; i < sigStrokes.length; i++) {
-          const len = sigLens[i];
-          const drawn = Math.max(0, Math.min(len, target - cum));
-          sigStrokes[i].style.strokeDashoffset = String(len - drawn);
-          if (drawn > 0) {
-            penIdx = i;
-            penLocal = drawn;
-          } // last stroke with ink = the frontier
-          cum += len;
-        }
-        if (
-          sigPen &&
-          penIdx >= 0 &&
-          p > 0.002 &&
-          p < 0.998 &&
-          window.innerWidth > 880
-        ) {
-          try {
-            const pt = sigStrokes[penIdx].getPointAtLength(
-              Math.min(penLocal, sigLens[penIdx]),
-            );
-            const scale = sigSvg.clientWidth / SIG_VB_W;
-            sigPen.style.transform = `translate(${(pt.x - SIG_VB_X) * scale}px, ${(pt.y - SIG_VB_Y) * scale}px)`;
-            sigPen.style.opacity = "1";
-          } catch (e) {}
-        } else if (sigPen) {
-          sigPen.style.opacity = "0";
-        }
-      }
-      if (sigStrokes.length) {
-        measureSig();
-        drawSig(0);
-        window.addEventListener("resize", () => {
-          if (window.ScrollTrigger) window.ScrollTrigger.refresh();
-        });
-      }
-
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: heroSection,
-          start: "top top",
-          end: () => `+=${window.innerWidth <= 880 ? 140 : 65}%`,
-          scrub: window.innerWidth <= 880 ? 0.3 : 1.1,
-          pin: true,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            _heroP = self.progress;
-            updateLogoColor();
-          },
-          onRefresh: (self) => {
-            _heroP = self ? self.progress : 0;
-            updateLogoColor();
-          },
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: heroSection,
+        start: "top top",
+        end: () => `+=65%`,
+        scrub: 1.1,
+        pin: true,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          _heroP = self.progress;
+          updateLogoColor();
         },
-      });
+        onRefresh: (self) => {
+          _heroP = self ? self.progress : 0;
+          updateLogoColor();
+        },
+      },
+    });
 
-      // Panel scales to exactly 943×608px regardless of viewport size.
+    // Panel scales to exactly 943×608px regardless of viewport size.
+    tl.to(
+      heroPanel,
+      {
+        scaleX: () =>
+          Math.min(
+            1,
+            Math.min(943 / window.innerWidth, 608 / window.innerHeight),
+          ),
+        scaleY: () =>
+          Math.min(
+            1,
+            Math.min(943 / window.innerWidth, 608 / window.innerHeight),
+          ),
+        borderRadius: 64,
+        ease: "none",
+        duration: 1,
+        force3D: true,
+      },
+      0,
+    );
+
+    // The centered signature writes itself off the same scrubbed timeline, so
+    // it stays in lockstep with the shrink and un-writes when scrolling up.
+    if (sigStrokes.length) {
+      const sigState = { p: 0 };
       tl.to(
-        heroPanel,
+        sigState,
         {
-          scaleX: () =>
-            Math.min(
-              1,
-              Math.min(943 / window.innerWidth, 608 / window.innerHeight),
-            ),
-          scaleY: () =>
-            Math.min(
-              1,
-              Math.min(943 / window.innerWidth, 608 / window.innerHeight),
-            ),
-          borderRadius: 64,
+          p: 1,
           ease: "none",
           duration: 1,
-          force3D: true,
+          onUpdate: () => {
+            const y = window.scrollY || document.documentElement.scrollTop;
+            drawSig(y < 3 ? 0 : sigState.p);
+          },
         },
         0,
       );
 
-      // The centered signature writes itself off the same scrubbed timeline, so
-      // it stays in lockstep with the shrink and un-writes when scrolling up.
-      if (sigStrokes.length) {
-        const sigState = { p: 0 };
-        tl.to(
-          sigState,
-          {
-            p: 1,
-            ease: "none",
-            duration: 1,
-            onUpdate: () => {
-              const y = window.scrollY || document.documentElement.scrollTop;
-              drawSig(y < 3 ? 0 : sigState.p);
-            },
-          },
-          0,
-        );
+      // After signature completes, hold the pin for an extra scroll beat
+      // before the hero unpins and the next section scrolls in.
+      tl.to({}, { duration: 0.15 });
 
-        // After signature completes, hold the pin for an extra scroll beat
-        // before the hero unpins and the next section scrolls in.
-        tl.to({}, { duration: 0.15 });
-
-        // Instantly snap sig to hidden the moment native scroll hits zero —
-        // bypasses GSAP scrub lag and Lenis lerp settle time.
-        window.addEventListener(
-          "scroll",
-          function () {
-            if ((window.scrollY || document.documentElement.scrollTop) === 0)
-              drawSig(0);
-          },
-          { passive: true },
-        );
-      }
+      // Instantly snap sig to hidden the moment native scroll hits zero —
+      // bypasses GSAP scrub lag and Lenis lerp settle time.
+      window.addEventListener(
+        "scroll",
+        function () {
+          if ((window.scrollY || document.documentElement.scrollTop) === 0)
+            drawSig(0);
+        },
+        { passive: true },
+      );
     }
+  }
+
+  /* ---------- Mobile hero: no scroll animation ----------
+     The video panel and marquee are static (CSS handles the layout). The
+     JONATHAN BAUTISTA wordmark slides in first, then — once its transition
+     ends — the signature draws itself in beneath it. Fires exactly once, right
+     as the intro splash disappears (see initSplash's cleanup(), which
+     dispatches "hero:intro"). The top-left nav logo stays hidden while the
+     hero fills the screen (see onScroll's nav--hero toggle) and fades in once
+     the user scrolls past it. */
+  if (heroIsMobile && !prefersReduced) {
+    const heroName = document.getElementById("hero-name");
+    document.addEventListener(
+      "hero:intro",
+      function () {
+        if (heroName) heroName.classList.add("is-in");
+        if (sigStrokes.length) {
+          setTimeout(() => {
+            sigStrokes.forEach((p) => {
+              p.style.strokeDashoffset = "0";
+            });
+          }, 700); // starts once the wordmark's 0.7s transition has finished
+        }
+      },
+      { once: true },
+    );
   }
 
   /* ---------- ABOUT — columns slide in, then section pins and flips to HOF cover ----------
@@ -1227,7 +1278,6 @@
     });
   });
 
-
   /* ===================================================== */
   /* ---------- Portfolio modal ---------- */
   /* ===================================================== */
@@ -1463,7 +1513,7 @@
     },
     22: {
       title: "KicksMart E-Commerce App — Figma Make (AI)",
-      desc: "This is just a personal project that demonstrates a high-speed approach to mobile e-commerce design and prototyping. I designed and built the foundational Splash Screen and Home Page mockups. For efficiency, the remaining app pages were generated using Figma AI and quickly assembled into an interactive prototype. This exercise prioritizes showcasing rapid ideation and leveraging AI tools in the design workflow, resulting in a functional, albeit unpolished, proof-of-concept. This design is for mobile only.",
+      desc: "This is just a personal project that demonstrates a high-speed approach to mobile e-commerce design and prototyping. I designed and built the JUST the foundational Splash Screen and Home Page mockups. For efficiency, the remaining app pages were generated using Figma AI and quickly assembled into an interactive prototype. This exercise prioritizes showcasing rapid ideation and leveraging AI tools in the design workflow, resulting in a functional, albeit unpolished, proof-of-concept. This design is for mobile only.",
       created: "2025",
       role: "Designer and Developer",
       image: "assets/img/project-24.png",
