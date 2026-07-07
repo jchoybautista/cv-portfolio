@@ -5,6 +5,7 @@
 
 # Claude local memory and settings
 .claude/
+.impeccable/
 
 # macOS
 .DS_Store

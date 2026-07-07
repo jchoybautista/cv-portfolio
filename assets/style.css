@@ -3022,3 +3022,126 @@ html.splash-done .splash__inner {
     transform: none;
   }
 }
+
+/* ===================== CUSTOM CURSOR =====================
+   Dot rides the pointer 1:1; the ring lags behind it (lerp in JS).
+   Both invert against whatever they cross (difference blend) so they
+   stay visible over the dark zones, the white HOF/socials sections and
+   the hero video. Over work/social cards the ring swells into a lime
+   "View" badge. JS adds .has-cursor-fx only on fine pointers with
+   motion allowed, so touch devices and reduced-motion never see this. */
+html.has-cursor-fx,
+html.has-cursor-fx * {
+  cursor: none !important;
+}
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9800; /* above modal (9500) + grain (9000), below skip-link */
+  pointer-events: none;
+}
+.cursor__dot,
+.cursor__ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity 0.3s var(--ease);
+}
+.cursor.is-visible .cursor__dot,
+.cursor.is-visible .cursor__ring {
+  opacity: 1;
+}
+.cursor__dot-in,
+.cursor__ring-in {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+}
+.cursor__dot-in {
+  width: 7px;
+  height: 7px;
+  background: #fff;
+  mix-blend-mode: difference;
+  transition: transform 0.3s var(--ease), opacity 0.3s var(--ease);
+}
+.cursor__ring-in {
+  width: 38px;
+  height: 38px;
+  border: 1.5px solid #fff;
+  mix-blend-mode: difference;
+  display: grid;
+  place-items: center;
+  transition:
+    width 0.35s var(--ease),
+    height 0.35s var(--ease),
+    background-color 0.35s var(--ease),
+    border-color 0.35s var(--ease),
+    transform 0.25s var(--ease);
+}
+.cursor__label {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #0a0b0a;
+  opacity: 0;
+  transition: opacity 0.25s var(--ease);
+}
+/* Over generic links / buttons: ring opens up, dot shrinks away */
+.cursor.is-link .cursor__ring-in {
+  width: 56px;
+  height: 56px;
+}
+.cursor.is-link .cursor__dot-in {
+  transform: translate(-50%, -50%) scale(0.45);
+}
+/* Over work / social cards: lime "View" badge, no blend inversion */
+.cursor.is-card .cursor__ring-in {
+  width: 86px;
+  height: 86px;
+  background: var(--accent);
+  border-color: var(--accent);
+  mix-blend-mode: normal;
+}
+.cursor.is-card .cursor__label {
+  opacity: 1;
+}
+.cursor.is-card .cursor__dot-in {
+  opacity: 0;
+}
+/* Pressed: everything tucks in a touch */
+.cursor.is-down .cursor__ring-in {
+  transform: translate(-50%, -50%) scale(0.85);
+}
+
+/* Magnetic elements move via GSAP-inline transforms — take transform out
+   of their CSS transitions so the two systems never fight, and drop the
+   CSS hover-lift (the magnet pull replaces it). */
+html.has-cursor-fx .btn,
+html.has-cursor-fx .about__icons a,
+html.has-cursor-fx .footer__social a,
+html.has-cursor-fx .socials__follow-links a,
+html.has-cursor-fx .modal__links a {
+  transition-property: color, background-color, border-color, box-shadow, opacity;
+}
+html.has-cursor-fx .btn:hover,
+html.has-cursor-fx .about__icons a:hover,
+html.has-cursor-fx .footer__social a:hover,
+html.has-cursor-fx .socials__follow-links a:hover,
+html.has-cursor-fx .modal__links a:hover {
+  transform: none;
+}
+
+/* Follow-title: nowrap overflows narrow phones — let it wrap there */
+@media (max-width: 720px) {
+  .socials__follow-title {
+    white-space: normal;
+    font-size: 20px;
+    padding: 0 16px;
+  }
+}
