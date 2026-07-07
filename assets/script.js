@@ -94,6 +94,28 @@
     let field = null;
     const dpr = 1; // faint decorative lines — full res isn't worth the fill cost
 
+    // Pointer-reactive source — one extra Gaussian that eases toward the
+    // cursor, so the topo lines swell and re-route around the mouse. Fine
+    // pointers only; amp eases to 0 when the pointer leaves the window.
+    const mouse = { x: 0.5, y: 0.5, tx: 0.5, ty: 0.5, amp: 0, tamp: 0 };
+    if (
+      !prefersReduced &&
+      window.matchMedia("(hover: hover) and (pointer: fine)").matches
+    ) {
+      window.addEventListener(
+        "mousemove",
+        (e) => {
+          mouse.tx = e.clientX / Math.max(1, W);
+          mouse.ty = e.clientY / Math.max(1, H);
+          mouse.tamp = 1;
+        },
+        { passive: true },
+      );
+      document.documentElement.addEventListener("mouseleave", () => {
+        mouse.tamp = 0;
+      });
+    }
+
     function resize() {
       W = canvas.clientWidth;
       H = canvas.clientHeight;
@@ -116,6 +138,8 @@
         if (b.x < -0.1 || b.x > 1.1) b.vx *= -1;
         if (b.y < -0.1 || b.y > 1.1) b.vy *= -1;
       }
+      const mAmp = 1.15 * mouse.amp;
+      const mInv = 1 / (2 * 0.09 * 0.09); // cursor source spread
       for (let r = 0; r < rows; r++) {
         const ny = (r * sy) / H;
         for (let c = 0; c < cols; c++) {
@@ -128,6 +152,11 @@
             const dx = nx - b.x,
               dy = ny - b.y;
             v += amp * Math.exp(-(dx * dx + dy * dy) / (2 * sig * sig));
+          }
+          if (mAmp > 0.01) {
+            const mdx = nx - mouse.x,
+              mdy = ny - mouse.y;
+            v += mAmp * Math.exp(-(mdx * mdx + mdy * mdy) * mInv);
           }
           field[r * cols + c] = v;
         }
@@ -242,6 +271,10 @@
       if (now - last < FRAME_MS) return;
       last = now;
       _t = now * 0.001;
+      // ease the cursor source toward the pointer / its resting amplitude
+      mouse.x += (mouse.tx - mouse.x) * 0.14;
+      mouse.y += (mouse.ty - mouse.y) * 0.14;
+      mouse.amp += (mouse.tamp - mouse.amp) * 0.07;
       computeField(_t);
       drawContours();
     }
@@ -1411,6 +1444,131 @@
       pinSpacing: false,
       invalidateOnRefresh: true,
     });
+  })();
+
+  /* ---------- Custom cursor — dot + lagging ring ----------
+     Fine pointers with motion allowed only. The dot tracks the pointer 1:1;
+     the ring lerps behind it. States (link / card / pressed) are CSS classes
+     so all the styling lives in the stylesheet. Built entirely from JS so
+     touch devices never carry the markup. */
+  (function initCursor() {
+    if (prefersReduced) return;
+    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches)
+      return;
+
+    const root = document.createElement("div");
+    root.className = "cursor";
+    root.setAttribute("aria-hidden", "true");
+    root.innerHTML =
+      '<span class="cursor__ring"><span class="cursor__ring-in">' +
+      '<span class="cursor__label">View</span></span></span>' +
+      '<span class="cursor__dot"><span class="cursor__dot-in"></span></span>';
+    document.body.appendChild(root);
+    const ring = root.querySelector(".cursor__ring");
+    const dot = root.querySelector(".cursor__dot");
+    document.documentElement.classList.add("has-cursor-fx");
+
+    let mx = -100,
+      my = -100,
+      rx = -100,
+      ry = -100,
+      shown = false,
+      rafId = null;
+
+    function loop() {
+      rafId = requestAnimationFrame(loop);
+      rx += (mx - rx) * 0.16;
+      ry += (my - ry) * 0.16;
+      dot.style.transform = "translate(" + mx + "px," + my + "px)";
+      ring.style.transform = "translate(" + rx + "px," + ry + "px)";
+    }
+    rafId = requestAnimationFrame(loop);
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      } else if (!rafId) {
+        rafId = requestAnimationFrame(loop);
+      }
+    });
+
+    window.addEventListener(
+      "mousemove",
+      (e) => {
+        mx = e.clientX;
+        my = e.clientY;
+        if (!shown) {
+          // snap the ring to the entry point so it doesn't fly across the page
+          rx = mx;
+          ry = my;
+          shown = true;
+          root.classList.add("is-visible");
+        }
+      },
+      { passive: true },
+    );
+    document.documentElement.addEventListener("mouseleave", () => {
+      shown = false;
+      root.classList.remove("is-visible");
+    });
+    window.addEventListener("mousedown", () => root.classList.add("is-down"));
+    window.addEventListener("mouseup", () => root.classList.remove("is-down"));
+
+    // Hover states via delegation — cards win over generic interactives.
+    document.addEventListener(
+      "mouseover",
+      (e) => {
+        const t = e.target;
+        if (!t || !t.closest) return;
+        const card = t.closest(".hof-card, .social-card");
+        const link = card
+          ? null
+          : t.closest("a, button, [role='button'], .tab");
+        root.classList.toggle("is-card", !!card);
+        root.classList.toggle("is-link", !!link);
+      },
+      { passive: true },
+    );
+  })();
+
+  /* ---------- Magnetic hover — buttons + round icon links ----------
+     Elements ease toward the cursor while hovered and spring back on leave.
+     Uses GSAP quickTo (transform x/y only). The CSS hover-lift on these
+     elements is disabled under .has-cursor-fx so the two never conflict. */
+  (function initMagnetic() {
+    if (prefersReduced || !window.gsap) return;
+    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches)
+      return;
+    const PULL = 0.32;
+    document
+      .querySelectorAll(
+        ".btn, .about__icons a, .footer__social a, .socials__follow-links a, .modal__links a",
+      )
+      .forEach((el) => {
+        const xTo = window.gsap.quickTo(el, "x", {
+          duration: 0.4,
+          ease: "power3.out",
+        });
+        const yTo = window.gsap.quickTo(el, "y", {
+          duration: 0.4,
+          ease: "power3.out",
+        });
+        el.addEventListener("mousemove", (e) => {
+          const r = el.getBoundingClientRect();
+          // untransformed centre — subtract the current pull so easing
+          // toward the cursor doesn't feed back into the next offset
+          const cx =
+            r.left + r.width / 2 - (window.gsap.getProperty(el, "x") || 0);
+          const cy =
+            r.top + r.height / 2 - (window.gsap.getProperty(el, "y") || 0);
+          xTo((e.clientX - cx) * PULL);
+          yTo((e.clientY - cy) * PULL);
+        });
+        el.addEventListener("mouseleave", () => {
+          xTo(0);
+          yTo(0);
+        });
+      });
   })();
 
   const modal = document.getElementById("portfolio-modal");
