@@ -1595,7 +1595,7 @@
       image: "assets/img/project-28.png",
       figmaLink: "",
       xdLink: "",
-      websiteLink: "https://sniff-ahead-92042786.figma.site",
+      websiteLink: "https://flappy-goku-topaz.vercel.app/",
     },
     27: {
       title: "Final Fantasy VII Marketing Landing Page — Claude Code",
