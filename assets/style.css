@@ -1990,6 +1990,31 @@ section {
   line-height: 1.75;
   margin-bottom: 24px;
 }
+.modal__info h4 {
+  font-family: var(--heading);
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+.modal__info ul {
+  list-style: circle;
+  padding-left: 1.2em;
+  margin-bottom: 24px;
+}
+.modal__info li {
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.75;
+  margin-bottom: 12px;
+}
+.modal__info li:last-child {
+  margin-bottom: 0;
+}
+.modal__info li strong {
+  color: var(--text);
+  font-weight: 600;
+}
 .modal__details {
   display: flex;
   gap: 40px;

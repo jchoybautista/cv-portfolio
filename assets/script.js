@@ -1619,7 +1619,7 @@
     },
     32: {
       title: "WeSave: Savings & Expenses Tracker - Claude Code",
-      desc: "I built WeSave using Flutter and Dart, guided entirely by my own prompts through Claude Code. It's a cross-platform budget and expense tracker for Android and iOS that I originally made for my wife and me to track our savings and spending together, though it works just as well for any couple or individual.\n\nHighlights:\n\nAI-Assisted Build: Prototyped and built from scratch for mobile using Claude Code, Flutter, and Dart.\n\nReal-Time Sync: Powered by Supabase and an offline cache, letting partners link accounts with a code and keep balances, expenses, and income updated live.\n\nSolid Engineering: Built with strict security rules, WCAG 2.1 AA accessibility standards (with light and dark mode support), and 206 passing tests.\n\nAlways-On Demo: Includes a one-tap demo mode with pre-loaded data so anyone can test the app instantly without signing up or worrying about server downtime.",
+      desc: "<p>I designed and built WeSave using Flutter and Dart, guided entirely by my own iterative prompts through Claude Code. It's a cross-platform budget and expense tracker for Android and iOS that I originally made for my wife and me to track our savings and spending together, though it works just as well for any couple or individual.</p><h4>Highlights</h4><ul><li><strong>AI-Assisted Design &amp; Build:</strong> Fully designed, prototyped, and built from scratch for mobile using Claude Code, Flutter, and Dart.</li><li><strong>Real-Time Sync:</strong> Powered by Supabase and an offline cache, letting partners link accounts with a code and keep balances, expenses, and income updated live.</li><li><strong>Solid Engineering:</strong> Built with strict security rules, WCAG 2.1 AA accessibility standards (with light and dark mode support), and 206 passing tests.</li><li><strong>Always-On Demo:</strong> Includes a one-tap demo mode with pre-loaded data so anyone can test the app instantly without signing up or worrying about server downtime.</li></ul>",
       created: "2026",
       role: "Designer and Developer",
       image: "assets/img/project-34.png",
@@ -1958,7 +1958,7 @@
         this.src = "https://via.placeholder.com/600x400?text=Project";
       };
       document.getElementById("modal-title").textContent = data.title;
-      document.getElementById("modal-desc").textContent = data.desc;
+      document.getElementById("modal-desc").innerHTML = data.desc;
       document.getElementById("modal-created").textContent = data.created;
       document.getElementById("modal-role").textContent = data.role;
       setLink(figmaBtn, data.figmaLink);
