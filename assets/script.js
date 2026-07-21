@@ -1970,12 +1970,10 @@
       webBtn.querySelector("img").src = isFigmaMake
         ? "assets/img/Figma-logo.svg"
         : "assets/img/web-icon.svg";
-      webBtn.querySelector("span").textContent = isFigmaMake
-        ? "Live Build"
-        : "Website";
+      webBtn.querySelector("span").textContent = "Live build";
       webBtn.setAttribute(
         "aria-label",
-        isFigmaMake ? "Open live Figma Make build" : "Visit website",
+        isFigmaMake ? "Open live Figma Make build" : "Visit live build",
       );
       lastFocused = document.activeElement;
       modal.classList.add("open");
