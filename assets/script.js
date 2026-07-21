@@ -1617,6 +1617,16 @@
       xdLink: "",
       claudeLink: "https://scooter-store.vercel.app/",
     },
+    32: {
+      title: "WeSave: Savings & Expenses Tracker - Claude Code",
+      desc: "I built WeSave using Flutter and Dart, guided entirely by my own prompts through Claude Code. It's a cross-platform budget and expense tracker for Android and iOS that I originally made for my wife and me to track our savings and spending together, though it works just as well for any couple or individual.\n\nHighlights:\n\nAI-Assisted Build: Prototyped and built from scratch for mobile using Claude Code, Flutter, and Dart.\n\nReal-Time Sync: Powered by Supabase and an offline cache, letting partners link accounts with a code and keep balances, expenses, and income updated live.\n\nSolid Engineering: Built with strict security rules, WCAG 2.1 AA accessibility standards (with light and dark mode support), and 206 passing tests.\n\nAlways-On Demo: Includes a one-tap demo mode with pre-loaded data so anyone can test the app instantly without signing up or worrying about server downtime.",
+      created: "2026",
+      role: "Designer and Developer",
+      image: "assets/img/project-34.png",
+      figmaLink: "",
+      xdLink: "",
+      claudeLink: "https://wesave-alpha.vercel.app/",
+    },
     31: {
       title: "Meridian Landing Page — Claude Code",
       desc: "I designed and built the marketing landing page for Meridian, a personal project created to show how I use AI to build better apps faster. Using React 18, TypeScript, and Vite, I led the entire design and coding process through my own clear instructions for Claude Code. Every design and technical choice was guided by me.\n\nThe page features a bar at the top that shows live cryptocurrency prices and interactive pictures that show how the app works. I also added smooth animations that move as you scroll down the page to keep things interesting. The project is fully finished and live on the internet using Vercel.",
