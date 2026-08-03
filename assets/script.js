@@ -1617,6 +1617,16 @@
       xdLink: "",
       claudeLink: "https://scooter-store.vercel.app/",
     },
+    33: {
+      title: "WeSave Landing Page - Claude Code",
+      desc: "<p>I designed and built the WeSave landing page using Next.js, TypeScript, and Tailwind CSS, guided entirely by my own iterative prompts through Claude Code. It's a marketing site for my WeSave app, featuring an editorial, motion-rich design that shows what the product actually does through real, animated app screens rather than flat mockups.</p><h4>Highlights</h4><ul><li><strong>AI-Assisted Design and Build:</strong> Fully designed, prototyped, and built from scratch with Claude Code, Next.js, TypeScript, and Tailwind CSS, matching the visual identity of the app perfectly.</li><li><strong>Cinematic Scroll Motion:</strong> Smooth scrolling, pinned sections, and reveal animations that include an interactive sequence showing an expense sync between two phones in real time as you scroll.</li><li><strong>Live WebGL Background:</strong> A custom animated background flows continuously behind the page in the app color palette, with built-in fallbacks for reduced motion and low power.</li><li><strong>Real App Screens:</strong> Actual screenshots captured straight from the live demo, shown auto-scrolling inside device frames so the interface moves like a real product.</li><li><strong>Fast and Discoverable:</strong> Fully mobile responsive, statically rendered for speed, and optimized for SEO and sharing out of the box.</li></ul>",
+      created: "2026",
+      role: "Designer and Developer",
+      image: "assets/img/project-35.png",
+      figmaLink: "",
+      xdLink: "",
+      claudeLink: "https://wesave-landing.vercel.app/",
+    },
     32: {
       title: "WeSave: Savings & Expenses Tracker - Claude Code",
       desc: "<p>I designed and built WeSave using Flutter and Dart, guided entirely by my own iterative prompts through Claude Code. It's a cross-platform budget and expense tracker for Android and iOS that I originally made for my wife and me to track our savings and spending together, though it works just as well for any couple or individual.</p><h4>Highlights</h4><ul><li><strong>AI-Assisted Design &amp; Build:</strong> Fully designed, prototyped, and built from scratch for mobile using Claude Code, Flutter, and Dart.</li><li><strong>Real-Time Sync:</strong> Powered by Supabase and an offline cache, letting partners link accounts with a code and keep balances, expenses, and income updated live.</li><li><strong>Solid Engineering:</strong> Built with strict security rules, WCAG 2.1 AA accessibility standards (with light and dark mode support), and 206 passing tests.</li><li><strong>Always-On Demo:</strong> Includes a one-tap demo mode with pre-loaded data so anyone can test the app instantly without signing up or worrying about server downtime.</li></ul>",
