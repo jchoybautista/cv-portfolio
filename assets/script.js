@@ -1627,6 +1627,16 @@
       xdLink: "",
       claudeLink: "https://wesave-landing.vercel.app/",
     },
+    34: {
+      title: "JobTrackr - Claude Code",
+      desc: "<p>I designed and built JobTrackr using Next.js, TypeScript, Tailwind CSS, and Supabase, guided entirely by my own iterative prompts through Claude Code. It's a job-hunt command center that turns a scattered search into a single visual pipeline, so applications never get lost in a spreadsheet or inbox again.</p><h4>Highlights</h4><ul><li><strong>AI-Assisted Design and Build:</strong> Fully designed, prototyped, and built from scratch with Claude Code, Next.js, TypeScript, Tailwind CSS, and Supabase.</li><li><strong>Kanban Application Board:</strong> Drag-and-drop columns for Saved, Screening, Interview, Technical, and Final stages, with salary range, priority, and \"days silent\" follow-up flags visible at a glance.</li><li><strong>Built-In CV Builder:</strong> A dedicated resume workspace alongside the tracker, so applications and the documents behind them live in one place.</li><li><strong>Reminders and Insights:</strong> Automated reminders surface stalled applications, backed by a dashboard and applications log for a full view of the search.</li><li><strong>Always-On Demo:</strong> Includes a one-tap demo mode with pre-loaded data so anyone can try the board instantly before creating an account.</li></ul>",
+      created: "2026",
+      role: "Designer and Developer",
+      image: "assets/img/project-36.png",
+      figmaLink: "",
+      xdLink: "",
+      claudeLink: "https://jobtrackr-9mqd.vercel.app/login",
+    },
     32: {
       title: "WeSave: Savings & Expenses Tracker - Claude Code",
       desc: "<p>I designed and built WeSave using Flutter and Dart, guided entirely by my own iterative prompts through Claude Code. It's a cross-platform budget and expense tracker for Android and iOS that I originally made for my wife and me to track our savings and spending together, though it works just as well for any couple or individual.</p><h4>Highlights</h4><ul><li><strong>AI-Assisted Design &amp; Build:</strong> Fully designed, prototyped, and built from scratch for mobile using Claude Code, Flutter, and Dart.</li><li><strong>Real-Time Sync:</strong> Powered by Supabase and an offline cache, letting partners link accounts with a code and keep balances, expenses, and income updated live.</li><li><strong>Solid Engineering:</strong> Built with strict security rules, WCAG 2.1 AA accessibility standards (with light and dark mode support), and 206 passing tests.</li><li><strong>Always-On Demo:</strong> Includes a one-tap demo mode with pre-loaded data so anyone can test the app instantly without signing up or worrying about server downtime.</li></ul>",
